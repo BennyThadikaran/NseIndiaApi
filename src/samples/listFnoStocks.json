@@ -1,0 +1,70 @@
+{
+  "name": "SECURITIES IN F&O",
+  "advance": {
+    "advances": 104,
+    "declines": 78,
+    "unchanged": 2
+  },
+  "timestamp": "16-Oct-2023 15:30:11",
+  "data": [
+    {
+      "symbol": "GNFC",
+      "identifier": "",
+      "series": "EQ",
+      "open": "636.9",
+      "dayHigh": "676.35",
+      "dayLow": "629",
+      "lastPrice": "666.2",
+      "previousClose": "634.9",
+      "change": 31.3,
+      "pChange": 4.93,
+      "totalTradedVolume": 7345604,
+      "totalTradedValue": 4880713121.76,
+      "lastUpdateTime": "18-SEP-2023",
+      "yearHigh": "735",
+      "yearLow": "484.45",
+      "nearWKH": 9.36054421768707,
+      "nearWKL": -37.51677159665602,
+      "perChange365d": -9.05,
+      "date365dAgo": "14-Oct-2022",
+      "chart365dPath": "https://nsearchives.nseindia.com/365d/GNFC-EQ.svg",
+      "date30dAgo": "15-Sep-2023",
+      "perChange30d": -2.45,
+      "chart30dPath": "https://nsearchives.nseindia.com/30d/GNFC-EQ.svg",
+      "chartTodayPath": "https://nsearchives.nseindia.com/today/GNFCEQN.svg",
+      "meta": {
+        "symbol": "GNFC",
+        "companyName": "Gujarat Narmada Valley Fertilizers and Chemicals Limited",
+        "industry": "FERTILISERS",
+        "activeSeries": ["EQ"],
+        "debtSeries": [],
+        "tempSuspendedSeries": [],
+        "isFNOSec": true,
+        "isCASec": false,
+        "isSLBSec": true,
+        "isDebtSec": false,
+        "isSuspended": false,
+        "isETFSec": false,
+        "isDelisted": false,
+        "isin": "INE113A01013"
+      }
+    }
+  ],
+  "metadata": {
+    "timeVal": "16-Oct-2023 15:30:11",
+    "ffmc_sum": null
+  },
+  "marketStatus": {
+    "market": "Capital Market",
+    "marketStatus": "Closed",
+    "tradeDate": "16-Oct-2023",
+    "index": "NIFTY 50",
+    "last": 19731.75,
+    "variation": -19.299999999999272,
+    "percentChange": -0.1,
+    "marketStatusMessage": "Normal Market has Closed"
+  },
+  "date30dAgo": "15-Sep-2023",
+  "date365dAgo": "14-Oct-2022"
+}
+

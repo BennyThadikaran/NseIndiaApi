@@ -1,0 +1,30 @@
+{
+  "expiry": "26-Oct-2023",
+  "timestamp": "16-Oct-2023 15:30:00",
+  "underlying": 19731.75,
+  "atm": 19750,
+  "maxpain": 19700,
+  "maxCoi": 20000,
+  "maxPoi": 19000,
+  "coiTotal": 762939,
+  "poiTotal": 921820,
+  "pcr": 1.21,
+  "chain": {
+    "17750": {
+      "pe": {
+        "last": 2,
+        "oi": 3554,
+        "chg": null,
+        "iv": 26.88
+      },
+      "ce": {
+        "last": 2006,
+        "oi": 3554,
+        "chg": null,
+        "iv": 0
+      },
+      "pcr": 3.86
+    }
+  }
+}
+

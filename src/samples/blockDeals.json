@@ -1,0 +1,26 @@
+{
+  "timestamp": "11-Oct-2023 08:49:44",
+  "data": [],
+  "totalTradedValue": 0,
+  "totalTradedVolume": 0,
+  "Session 2": {
+    "advances": 0,
+    "declines": 0,
+    "unchanged": 0
+  },
+  "Session 1": {
+    "advances": 0,
+    "declines": 0,
+    "unchanged": 0
+  },
+  "marketStatus": {
+    "market": "Capital Market",
+    "marketStatus": "Closed",
+    "tradeDate": "16-Oct-2023",
+    "index": "NIFTY 50",
+    "last": 19731.75,
+    "variation": -19.299999999999272,
+    "percentChange": -0.1,
+    "marketStatusMessage": "Normal Market has Closed"
+  }
+}

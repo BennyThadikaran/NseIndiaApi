@@ -1,0 +1,18 @@
+{
+  "symbol": "TCS",
+  "companyName": "Tata Consultancy Services Limited",
+  "industry": "COMPUTERS - SOFTWARE",
+  "activeSeries": [
+    "EQ"
+  ],
+  "debtSeries": [],
+  "tempSuspendedSeries": [],
+  "isFNOSec": true,
+  "isCASec": false,
+  "isSLBSec": true,
+  "isDebtSec": false,
+  "isSuspended": false,
+  "isETFSec": false,
+  "isDelisted": false,
+  "isin": "INE467B01029"
+}

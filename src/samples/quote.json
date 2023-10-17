@@ -1,0 +1,107 @@
+{
+  "info": {
+    "symbol": "INFY",
+    "companyName": "Infosys Limited",
+    "industry": "COMPUTERS - SOFTWARE",
+    "activeSeries": ["EQ"],
+    "debtSeries": [],
+    "tempSuspendedSeries": [],
+    "isFNOSec": true,
+    "isCASec": false,
+    "isSLBSec": true,
+    "isDebtSec": false,
+    "isSuspended": false,
+    "isETFSec": false,
+    "isDelisted": false,
+    "isin": "INE009A01021",
+    "isTop10": false,
+    "identifier": "INFYEQN"
+  },
+  "metadata": {
+    "series": "EQ",
+    "symbol": "INFY",
+    "isin": "INE009A01021",
+    "status": "Listed",
+    "listingDate": "08-Feb-1995",
+    "industry": "Computers - Software & Consulting",
+    "lastUpdateTime": "16-Oct-2023 16:00:00",
+    "pdSectorPe": 26.46,
+    "pdSymbolPe": 24.43,
+    "pdSectorInd": "NIFTY IT                                          "
+  },
+  "securityInfo": {
+    "boardStatus": "Main",
+    "tradingStatus": "Active",
+    "tradingSegment": "Normal Market",
+    "sessionNo": "-",
+    "slb": "Yes",
+    "classOfShare": "Equity",
+    "derivatives": "Yes",
+    "surveillance": {
+      "surv": null,
+      "desc": null
+    },
+    "faceValue": 5,
+    "issuedSize": 4150384120
+  },
+  "sddDetails": {
+    "SDDAuditor": "-",
+    "SDDStatus": "-"
+  },
+  "priceInfo": {
+    "lastPrice": 1432.95,
+    "change": 1.7999999999999545,
+    "pChange": 0.12577297977150922,
+    "previousClose": 1431.15,
+    "open": 1432.1,
+    "close": 1434.15,
+    "vwap": 1438.44,
+    "lowerCP": "1288.05",
+    "upperCP": "1574.25",
+    "pPriceBand": "No Band",
+    "basePrice": 1431.15,
+    "intraDayHighLow": {
+      "min": 1430,
+      "max": 1443.6,
+      "value": 1432.95
+    },
+    "weekHighLow": {
+      "min": 1185.3,
+      "minDate": "17-Apr-2023",
+      "max": 1672.6,
+      "maxDate": "01-Dec-2022",
+      "value": 1432.95
+    },
+    "iNavValue": null,
+    "checkINAV": false
+  },
+  "industryInfo": {
+    "macro": "Information Technology",
+    "sector": "Information Technology",
+    "industry": "IT - Software",
+    "basicIndustry": "Computers - Software & Consulting"
+  },
+  "preOpenMarket": {
+    "preopen": [
+      {
+        "price": 1288.05,
+        "buyQty": 0,
+        "sellQty": 41
+      }
+    ],
+    "ato": {
+      "buy": 6754,
+      "sell": 2255
+    },
+    "IEP": 1432.1,
+    "totalTradedVolume": 31102,
+    "finalPrice": 1432.1,
+    "finalQuantity": 31102,
+    "lastUpdateTime": "16-Oct-2023 09:07:30",
+    "totalBuyQuantity": 159682,
+    "totalSellQuantity": 126875,
+    "atoBuyQty": 6754,
+    "atoSellQty": 2255
+  }
+}
+

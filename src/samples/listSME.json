@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "symbol": "DENTALKART",
+      "series": "SM",
+      "open": 501.95,
+      "dayHigh": 543,
+      "dayLow": 482.05,
+      "lastPrice": 542.9,
+      "change": 51.64999999999998,
+      "pChange": 10.51399491094147,
+      "previousClose": 491.25,
+      "totalTradedVolume": 135000,
+      "totalTradedValue": 69284700,
+      "yearHigh": 553.9,
+      "yearLow": 237,
+      "nearWKH": 1.9859180357465247,
+      "nearWKL": -129.0717299578059,
+      "ca": " ",
+      "chartTodayPath": "https://nsearchives.nseindia.com/today/DENTALKARTSMN.svg",
+      "perChange365d": "-",
+      "date365dAgo": "-",
+      "chart365dPath": "-",
+      "date30dAgo": "15-Sep-2023",
+      "perChange30d": 19.21,
+      "chart30dPath": "https://nsearchives.nseindia.com/30d/DENTALKART-SM.svg"
+    }
+  ],
+  "timestamp": "16-Oct-2023 16:00:00",
+  "adv": 86,
+  "dec": 92,
+  "noChg": 46,
+  "totalTradedValue": 1743286783.6,
+  "totalTradedVolume": 13920120,
+  "marketStatus": {
+    "market": "Capital Market",
+    "marketStatus": "Closed",
+    "tradeDate": "16-Oct-2023",
+    "index": "NIFTY 50",
+    "last": 19731.75,
+    "variation": -19.299999999999272,
+    "percentChange": -0.1,
+    "marketStatusMessage": "Normal Market has Closed"
+  }
+}
+

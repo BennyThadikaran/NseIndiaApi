@@ -1,0 +1,48 @@
+{
+  "data": [
+    {
+      "key": "BROAD MARKET INDICES",
+      "index": "NIFTY 50",
+      "indexSymbol": "NIFTY 50",
+      "last": 19731.75,
+      "variation": -19.3,
+      "percentChange": -0.1,
+      "open": 19737.25,
+      "high": 19781.3,
+      "low": 19691.85,
+      "previousClose": 19751.05,
+      "yearHigh": 20222.45,
+      "yearLow": 16828.35,
+      "pe": "22.29",
+      "pb": "3.46",
+      "dy": "1.36",
+      "declines": "27",
+      "advances": "22",
+      "unchanged": "1",
+      "perChange365d": 14.93,
+      "date365dAgo": "14-Oct-2022",
+      "chart365dPath": "https://nsearchives.nseindia.com/365d/NIFTY-50.svg",
+      "date30dAgo": "15-Sep-2023",
+      "perChange30d": -2.19,
+      "chart30dPath": "https://nsearchives.nseindia.com/30d/NIFTY-50.svg",
+      "chartTodayPath": "https://nsearchives.nseindia.com/today/NIFTY-50.svg",
+      "previousDay": 19751.05,
+      "oneWeekAgo": 19689.85,
+      "oneMonthAgo": 20192.35,
+      "oneYearAgo": 17185.7
+    }
+  ],
+  "timestamp": "16-Oct-2023 15:30:00",
+  "advances": 2507,
+  "declines": 2342,
+  "unchanged": 53,
+  "dates": {
+    "previousDay": "13-Oct-2023",
+    "oneWeekAgo": "10-Oct-2023",
+    "oneMonthAgo": "15-Sep-2023",
+    "oneYearAgo": "14-Oct-2022"
+  },
+  "date30dAgo": "15-Sep-2023",
+  "date365dAgo": "14-Oct-2022"
+}
+

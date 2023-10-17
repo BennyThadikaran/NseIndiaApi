@@ -1,0 +1,66 @@
+{
+  "timestamp": "16-Oct-2023 16:00:28",
+  "data": [
+    {
+      "symbol": "SGBNOV23",
+      "open": "6024.99",
+      "high": "6024.99",
+      "low": "6014.9",
+      "issue_price": "2684",
+      "ltP": "6014.9",
+      "chn": "151.89",
+      "per": "2.59",
+      "qty": "2",
+      "trdVal": "12039.88",
+      "wkhi": "6246",
+      "wklo": "5001",
+      "xDt": null,
+      "cAct": null,
+      "yPC": 16.477536793183575,
+      "mPC": 1.3462510530749727,
+      "prevClose": "5863.01",
+      "nearWKH": 3.6999679795068903,
+      "nearWKL": -20.273945210957802,
+      "maturityDate": "NOV23",
+      "chartTodayPath": "https://nsearchives.nseindia.com/today/SGBNOV23GBN.svg",
+      "perChange365d": 15.98,
+      "date365dAgo": "14-Oct-2022",
+      "chart365dPath": "https://nsearchives.nseindia.com/365d/SGBNOV23-GB.svg",
+      "date30dAgo": "15-Sep-2023",
+      "perChange30d": 1.35,
+      "chart30dPath": "https://nsearchives.nseindia.com/30d/SGBNOV23-GB.svg",
+      "meta": {
+        "symbol": "SGBNOV23",
+        "companyName": "Sovereign Gold Bonds 2.75% NOV 2023 Tr-I",
+        "activeSeries": ["GB"],
+        "debtSeries": [],
+        "tempSuspendedSeries": [],
+        "isFNOSec": false,
+        "isCASec": false,
+        "isSLBSec": false,
+        "isDebtSec": false,
+        "isSuspended": false,
+        "isETFSec": false,
+        "isDelisted": false,
+        "isin": "IN0020150085"
+      }
+    }
+  ],
+  "advances": 44,
+  "declines": 7,
+  "unchanged": 14,
+  "totalTradedValue": 103663321.83,
+  "totalTradedVolume": 17496,
+  "totalPercentChange": 23.520000000000003,
+  "marketStatus": {
+    "market": "Capital Market",
+    "marketStatus": "Closed",
+    "tradeDate": "16-Oct-2023",
+    "index": "NIFTY 50",
+    "last": 19731.75,
+    "variation": -19.299999999999272,
+    "percentChange": -0.1,
+    "marketStatusMessage": "Normal Market has Closed"
+  }
+}
+

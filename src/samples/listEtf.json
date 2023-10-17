@@ -1,0 +1,66 @@
+{
+  "timestamp": "16-Oct-2023 16:00:28",
+  "data": [
+    {
+      "symbol": "DSPPVBKETF",
+      "assets": "DSP Nifty Private Bank ETF",
+      "open": "23.6",
+      "high": "25.15",
+      "low": "23.03",
+      "ltP": "25.15",
+      "chn": "1.96",
+      "per": "8.45",
+      "qty": "6667",
+      "trdVal": "159007.95",
+      "nav": "23.1302",
+      "wkhi": "28.06",
+      "wklo": "22.45",
+      "xDt": "-",
+      "cAct": "-",
+      "yPC": "Infinity",
+      "mPC": 5.406538139145009,
+      "prevClose": "23.19",
+      "nearWKH": 10.37063435495367,
+      "nearWKL": -12.026726057906457,
+      "chartTodayPath": "https://nsearchives.nseindia.com/today/DSPPVBKETFEQN.svg",
+      "perChange365d": "-",
+      "date365dAgo": "-",
+      "chart365dPath": "-",
+      "date30dAgo": "15-Sep-2023",
+      "perChange30d": 0.38,
+      "chart30dPath": "https://nsearchives.nseindia.com/30d/DSPPVBKETF-EQ.svg",
+      "meta": {
+        "symbol": "DSPPVBKETF",
+        "companyName": "DSP Mutual Fund - DSP Nifty Private Bank ETF",
+        "activeSeries": ["EQ"],
+        "debtSeries": [],
+        "tempSuspendedSeries": [],
+        "isFNOSec": false,
+        "isCASec": false,
+        "isSLBSec": false,
+        "isDebtSec": false,
+        "isSuspended": false,
+        "isETFSec": true,
+        "isDelisted": false,
+        "isin": "INF740KA1TA7"
+      }
+    }
+  ],
+  "advances": 101,
+  "declines": 66,
+  "unchanged": 11,
+  "navDate": "15-Oct-2023",
+  "totalTradedValue": 5310248567.55,
+  "totalTradedVolume": 33663974,
+  "marketStatus": {
+    "market": "Capital Market",
+    "marketStatus": "Closed",
+    "tradeDate": "16-Oct-2023",
+    "index": "NIFTY 50",
+    "last": 19731.75,
+    "variation": -19.299999999999272,
+    "percentChange": -0.1,
+    "marketStatusMessage": "Normal Market has Closed"
+  }
+}
+

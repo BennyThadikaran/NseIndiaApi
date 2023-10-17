@@ -1,0 +1,56 @@
+[
+  {
+    "market": "Capital Market",
+    "marketStatus": "Closed",
+    "tradeDate": "16-Oct-2023",
+    "index": "NIFTY 50",
+    "last": 19731.75,
+    "variation": -19.299999999999272,
+    "percentChange": -0.1,
+    "marketStatusMessage": "Normal Market has Closed"
+  },
+  {
+    "market": "Currency",
+    "marketStatus": "Closed",
+    "tradeDate": "16-Oct-2023",
+    "index": "",
+    "last": "",
+    "variation": "",
+    "percentChange": "",
+    "marketStatusMessage": "Market is Closed"
+  },
+  {
+    "market": "Commodity",
+    "marketStatus": "Closed",
+    "tradeDate": "16-Oct-2023",
+    "index": "",
+    "last": "",
+    "variation": "",
+    "percentChange": "",
+    "marketStatusMessage": "Market is Closed"
+  },
+  {
+    "market": "Debt",
+    "marketStatus": "Closed",
+    "tradeDate": "16-Oct-2023",
+    "index": "",
+    "last": "",
+    "variation": "",
+    "percentChange": "",
+    "marketStatusMessage": "Market is Closed"
+  },
+  {
+    "market": "currencyfuture",
+    "marketStatus": "Closed",
+    "tradeDate": "16-Oct-2023",
+    "index": "",
+    "last": "83.2775",
+    "variation": "",
+    "percentChange": "",
+    "marketStatusMessage": "Market is Closed",
+    "expiryDate": "20-Oct-2023",
+    "underlying": "USDINR",
+    "tradeDateFormatted": "16-Oct-2023",
+    "slickclass": "slick-item"
+  }
+]

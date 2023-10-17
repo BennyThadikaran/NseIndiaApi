@@ -1,0 +1,81 @@
+{
+  "records": {
+    "expiryDates": [
+      "19-Oct-2023",
+      "26-Oct-2023",
+      "02-Nov-2023",
+      "09-Nov-2023",
+      "16-Nov-2023",
+      "30-Nov-2023",
+      "28-Dec-2023",
+      "28-Mar-2024",
+      "27-Jun-2024",
+      "26-Sep-2024",
+      "26-Dec-2024",
+      "26-Jun-2025",
+      "24-Dec-2025",
+      "25-Jun-2026",
+      "31-Dec-2026",
+      "24-Jun-2027",
+      "30-Dec-2027",
+      "29-Jun-2028"
+    ],
+    "data": [
+      {
+        "strikePrice": 11000,
+        "expiryDate": "28-Dec-2023",
+        "PE": {
+          "strikePrice": 11000,
+          "expiryDate": "28-Dec-2023",
+          "underlying": "NIFTY",
+          "identifier": "OPTIDXNIFTY28-12-2023PE11000.00",
+          "openInterest": 41.5,
+          "changeinOpenInterest": 0,
+          "pchangeinOpenInterest": 0,
+          "totalTradedVolume": 0,
+          "impliedVolatility": 0,
+          "lastPrice": 1.4,
+          "change": 0,
+          "pChange": 0,
+          "totalBuyQuantity": 4700,
+          "totalSellQuantity": 0,
+          "bidQty": 1050,
+          "bidprice": 1.05,
+          "askQty": 0,
+          "askPrice": 0,
+          "underlyingValue": 19731.75
+        },
+        "CE": {
+          "strikePrice": 11000,
+          "expiryDate": "28-Dec-2023",
+          "underlying": "NIFTY",
+          "identifier": "OPTIDXNIFTY28-12-2023CE11000.00",
+          "openInterest": 141,
+          "changeinOpenInterest": 0,
+          "pchangeinOpenInterest": 0,
+          "totalTradedVolume": 0,
+          "impliedVolatility": 0,
+          "lastPrice": 8850,
+          "change": 0,
+          "pChange": 0,
+          "totalBuyQuantity": 450,
+          "totalSellQuantity": 0,
+          "bidQty": 450,
+          "bidprice": 8697.8,
+          "askQty": 0,
+          "askPrice": 0,
+          "underlyingValue": 19731.75
+        }
+      }
+    ],
+    "CE": {
+      "totOI": 1900303,
+      "totVol": 21685287
+    },
+    "PE": {
+      "totOI": 1645321,
+      "totVol": 18289001
+    }
+  }
+}
+
