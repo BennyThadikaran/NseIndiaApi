@@ -1,9 +1,9 @@
-from requests import Session
 import pickle
-from requests.exceptions import ReadTimeout
-from typing import Literal
-from datetime import datetime
 from pathlib import Path
+from requests import Session
+from requests.exceptions import ReadTimeout
+from typing import Literal, Any
+from datetime import datetime
 from zipfile import ZipFile
 from mthrottle import Throttle
 
@@ -17,6 +17,17 @@ th = Throttle(throttleConfig, 10)
 
 
 class NSE:
+
+    '''An unofficial Python API for the NSE India stock exchange.
+
+    Methods will raise
+        - a ``TimeoutError`` if request takes too long.
+        - a ``ConnectionError`` if request failed for any reason.
+
+    :param download_folder: A folder/dir to save downloaded files and cookie files
+    :type download_folder: pathlib.Path or str
+    :raise ValueError: if ``download_folder`` is not a folder/dir
+    '''
 
     SEGMENT_EQUITY = 'equities'
     SEGMENT_SME = 'sme'
@@ -36,11 +47,9 @@ class NSE:
     archive_url = 'https://archives.nseindia.com'
 
     def __init__(self, download_folder: str | Path):
-        '''Initialise NSE
-        Params:
-        download_folder - A folder to store downloaded files and cookie files'''
+        '''Initialise NSE'''
 
-        uAgent = 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'
+        uAgent = 'Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/118.0'
 
         headers = {
             'User-Agent': uAgent,
@@ -139,7 +148,7 @@ class NSE:
 
         return fname
 
-    def __req(self, url, params=None, timeout=30):
+    def __req(self, url, params=None, timeout=10):
         '''Make a http request'''
 
         th.check()
@@ -159,23 +168,36 @@ class NSE:
         return r
 
     def exit(self):
-        '''Close the requests session'''
+        '''Close the ``requests`` session.
+
+        *Use at the end of script or when class is no longer required.*
+
+        *Not required when using the ``with`` statement.*'''
 
         self.session.close()
 
-    def status(self):
-        '''Returns market status'''
+    def status(self) -> list[dict]:
+        '''Returns market status
+
+        :return: Market status of all NSE market segments
+        :rtype: list[dict]
+        '''
 
         return self.__req(f'{self.base_url}/marketStatus').json()['marketState']
 
-    def equityBhavcopy(self, date: datetime, folder: str | Path | None = None):
-        '''Download the daily report for Equity bhav copy for specified date
+    def equityBhavcopy(self, date: datetime, folder: str | Path | None = None) -> Path:
+        '''Download the daily Equity bhavcopy report for specified ``date``
         and return the saved file path.
 
-        Params:
-        date - Date of bhavcopy to download
-        folder[Optional] - Save to folder. If not specified,
-                use download_folder specified during class initializataion.'''
+        :param date: Date of bhavcopy to download
+        :type date: datetime.datetime
+        :param folder: Optional folder/dir path to save file. If not specified, use ``download_folder`` specified during class initializataion.
+        :type folder: pathlib.Path or str
+        :raise ValueError: if ``folder`` is not a folder/dir.
+        :raise FileNotFoundError: if download failed or file corrupted
+        :return: Path to saved file
+        :rtype: pathlib.Path
+        '''
 
         date_str = date.strftime('%d%b%Y').upper()
         month = date_str[2:5]
@@ -197,13 +219,16 @@ class NSE:
         return NSE.__unzip(file, file.parent)
 
     def deliveryBhavcopy(self, date: datetime, folder: str | Path | None = None):
-        '''Download the daily report for Equity delivery data for specified
-        date and return saved file path.
+        '''Download the daily Equity delivery report for specified ``date`` and return saved file path.
 
-        Params:
-        date - Date of bhavcopy to download
-        folder[Optional] - Save to folder. If not specified,
-                use download_folder specified during class initializataion.'''
+        :param date: Date of delivery bhavcopy to download
+        :type date: datetime.datetime
+        :param folder: Optional folder/dir path to save file. If not specified, use ``download_folder`` specified during class initializataion.
+        :type folder: pathlib.Path or str
+        :raise ValueError: if ``folder`` is not a folder/dir
+        :raise FileNotFoundError: if download failed or file corrupted
+        :return: Path to saved file
+        :rtype: pathlib.Path'''
 
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
@@ -220,13 +245,17 @@ class NSE:
         return file
 
     def indicesBhavcopy(self, date: datetime, folder: str | Path | None = None):
-        '''Download the daily report for Equity Index for specified date
+        '''Download the daily Equity Indices report for specified ``date``
         and return the saved file path.
 
-        Params:
-        date - Date of bhavcopy to download
-        folder[Optional] - Save to folder. If not specified,
-                use download_folder specified during class initializataion.'''
+        :param date: Date of Indices bhavcopy to download
+        :type date: datetime.datetime
+        :param folder: Optional folder/dir path to save file. If not specified, use ``download_folder`` specified during class initializataion.
+        :type folder: pathlib.Path or str
+        :raise ValueError: if ``folder`` is not a folder/dir
+        :raise FileNotFoundError: if download failed or file corrupted
+        :return: Path to saved file
+        :rtype: pathlib.Path'''
 
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
@@ -241,13 +270,17 @@ class NSE:
         return file
 
     def fnoBhavcopy(self, date: datetime, folder: str | Path | None = None):
-        '''Download the daily report for FnO bhavcopy for specified date
+        '''Download the daily FnO bhavcopy report for specified ``date``
         and return the saved file path.
 
-        Params:
-        date - Date of bhavcopy to download
-        folder[Optional] - Save to folder. If not specified,
-                use download_folder specified during class initializataion.'''
+        :param date: Date of FnO bhavcopy to download
+        :type date: datetime.datetime
+        :param folder: Optional folder path to save file. If not specified, use ``download_folder`` specified during class initializataion.
+        :type folder: pathlib.Path or str
+        :raise ValueError: if ``folder`` is not a dir/folder
+        :raise FileNotFoundError: if download failed or file corrupted
+        :return: Path to saved file
+        :rtype: pathlib.Path'''
 
         dt_str = date.strftime('%d%b%Y').upper()
 
@@ -267,18 +300,27 @@ class NSE:
         return NSE.__unzip(file, folder=file.parent)
 
     def actions(self,
-                segment: Literal['equities', 'sme', 'debt', 'mf'],
+                segment: Literal['equities', 'sme', 'debt', 'mf'] = 'equities',
                 symbol: str | None = None,
-                from_dt: datetime | None = None,
-                to_dt: datetime | None = None):
-        '''Get all corporate actions for specified dates or all forthcoming,
-        Optionally specify symbol to get actions only for that symbol.
+                from_date: datetime | None = None,
+                to_date: datetime | None = None) -> list[dict]:
+        '''Get all forthcoming corporate actions.
 
-        Params:
-        segment - One of equities, sme, debt or mf
-        symbol[Optional] - Stock symbol
-        from_dt[Optional] - From Datetime
-        to_dt[Optional] - To Datetime'''
+        If ``symbol`` is specified, only actions for the ``symbol`` is returned.
+
+        If ``from_data`` and ``to_date`` are specified, actions within the date range are returned
+
+        :param segment: One of ``equities``, ``sme``, ``debt`` or ``mf``. Default ``equities``
+        :type segment: str
+        :param symbol: Optional Stock symbol
+        :type symbol: str or None
+        :param from_date: Optional from date
+        :type from_date: datetime.datetime
+        :param to_date: Optional to date
+        :type to_date: datetime.datetime
+        :raise ValueError: if ``from_date`` is greater than ``to_date``
+        :return: A list of corporate actions
+        :rtype: list[dict]'''
 
         fmt = '%d-%m-%Y'
 
@@ -289,21 +331,137 @@ class NSE:
         if symbol:
             params['symbol'] = symbol
 
-        if from_dt and to_dt:
+        if from_date and to_date:
+            if from_date > to_date:
+                raise ValueError(
+                    "'from_date' cannot be greater than 'to_date'")
+
             params.update({
-                'from_date': from_dt.strftime(fmt),
-                'to_date': to_dt.strftime(fmt)
+                'from_date': from_date.strftime(fmt),
+                'to_date': to_date.strftime(fmt)
             })
 
         url = f'{self.base_url}/corporates-corporateActions'
 
         return self.__req(url, params=params).json()
 
-    def equityMetaInfo(self, symbol):
-        '''Meta info for equity symbols.
+    def announcements(self,
+                      index: Literal['equities',
+                                     'sme',
+                                     'debt',
+                                     'mf',
+                                     'invitsreits'] = 'equities',
+                      symbol: str | None = None,
+                      fno=False,
+                      from_date: datetime | None = None,
+                      to_date: datetime | None = None) -> list[dict]:
+        '''Get all corporate announcements for current date.
 
-        Params:
-        symbol - Equity symbol'''
+        If symbol is specified, only announcements for the symbol is returned.
+
+        If from_date and to_date are specified, announcements within the date range are returned
+
+        :param index: One of `equities`, `sme`, `debt` or `mf`. Default ``equities``
+        :type index: str
+        :param symbol: Optional Stock symbol
+        :type symbol: str or None
+        :param fno: Only FnO stocks
+        :type fno: bool
+        :param from_date: Optional from date
+        :type from_date: datetime.datetime
+        :param to_date: Optional to date
+        :type to_date: datetime.datetime
+        :raise ValueError: if ``from_date`` is greater than ``to_date``
+        :return: A list of corporate actions
+        :rtype: list[dict]'''
+
+        fmt = '%d-%m-%Y'
+
+        params: dict[str, Any] = {
+            'index': index
+        }
+
+        if symbol:
+            params['symbol'] = symbol
+
+        if fno:
+            params['fo_sec'] = True
+
+        if from_date and to_date:
+            if from_date > to_date:
+                raise ValueError(
+                    "'from_date' cannot be greater than 'to_date'")
+
+            params.update({
+                'from_date': from_date.strftime(fmt),
+                'to_date': to_date.strftime(fmt)
+            })
+
+        url = f'{self.base_url}/corporate-announcements'
+
+        return self.__req(url, params=params).json()
+
+    def boardMeetings(self,
+                      index: Literal['equities', 'sme'] = 'equities',
+                      symbol: str | None = None,
+                      fno: bool = False,
+                      from_date: datetime | None = None,
+                      to_date: datetime | None = None) -> list[dict]:
+        '''Get all forthcoming board meetings.
+
+        If symbol is specified, only board meetings for the symbol is returned.
+
+        If ``from_date`` and ``to_date`` are specified, board meetings within the date range are returned
+
+        :param index: One of ``equities`` or ``sme``. Default ``equities``
+        :type index: str
+        :param symbol: Optional Stock symbol
+        :type symbol: str or None
+        :param fno: Only FnO stocks
+        :type fno: bool
+        :param from_date: Optional from date
+        :type from_date: datetime.datetime
+        :param to_date: Optional to date
+        :type to_date: datetime.datetime
+        :raise ValueError: if ``from_date`` is greater than ``to_date``
+        :return: A list of corporate board meetings
+        :rtype: list[dict]'''
+
+        fmt = '%d-%m-%Y'
+
+        params: dict[str, Any] = {
+            'index': index
+        }
+
+        if symbol:
+            params['symbol'] = symbol
+
+        if fno:
+            params['fo_sec'] = True
+
+        if from_date and to_date:
+            if from_date > to_date:
+                raise ValueError(
+                    "'from_date' cannot be greater than 'to_date'")
+
+            params.update({
+                'from_date': from_date.strftime(fmt),
+                'to_date': to_date.strftime(fmt)
+            })
+
+        url = f'{self.base_url}/corporate-board-meetings'
+
+        return self.__req(url, params=params).json()
+
+    def equityMetaInfo(self, symbol) -> dict:
+        '''Meta info for equity symbols. Provides useful info like stock name, code, industry, isin code, current stock status like suspended, delisted etc.
+
+        Other info includes if stock is an FnO, ETF or Debt security
+
+        :param symbol: Equity symbol code
+        :type symbol: str
+        :return: Stock meta info
+        :rtype: dict'''
 
         url = f'{self.base_url}/equity-meta-info'
 
@@ -312,14 +470,17 @@ class NSE:
     def quote(self,
               symbol,
               type: Literal['equity', 'fno'] = 'equity',
-              section: Literal['trade_info'] | None = None):
-        """Returns price quotes and other data for equity or derivative symbols
+              section: Literal['trade_info'] | None = None) -> dict:
+        """Price quotes and other data for equity or derivative symbols
 
-        Params:
-        symbol - Equity symbol
-        type[Default 'equity'] - One of 'equity' or 'fno'
-        section[Optional] - If specified must be 'trade_info'
-        """
+        :param symbol: Equity symbol code
+        :type symbol: str
+        :param type: One of ``equity`` or ``fno``. Default ``equity``
+        :type type: str
+        :param section: Optional. If specified must be ``trade_info``
+        :raise ValueError: if ``section`` does not equal ``trade_info``
+        :return: Price quote and other stock meta info
+        :rtype: dict"""
 
         if type == 'equity':
             url = f'{self.base_url}/quote-equity'
@@ -332,17 +493,19 @@ class NSE:
 
         if section:
             if section != 'trade_info':
-                raise ValueError('Section if specified must be trade_info')
+                raise ValueError("'Section' if specified must be 'trade_info'")
 
             params['section'] = section
 
         return self.__req(url, params=params).json()
 
-    def stockQuote(self, symbol):
-        '''Returns a formatted dictionary of OCHLV data for equity symbol
+    def equityQuote(self, symbol) -> dict[str, str | float]:
+        '''A convenience method that extracts date and OCHLV data from ``NSE.quote`` for given stock ``symbol``
 
-        Params:
-        symbol - Equity symbol'''
+        :param symbol: Equity symbol code
+        :type symbol: str
+        :return: Date and OCHLV data
+        :rtype: dict[str, str | float]'''
 
         q = self.quote(symbol, type='equity')
         v = self.quote(symbol, type='equity', section='trade_info')
@@ -359,42 +522,46 @@ class NSE:
             'volume': v['securityWiseDP']['quantityTraded'],
         }
 
-    def gainers(self, data: dict, count: int | None = None):
-        '''Top gainers (percent change above zero).
-        Returns all stocks or limit to integer count
+    def gainers(self, data: dict, count: int | None = None) -> list[dict]:
+        '''Top gainers by percent change above zero.
 
-        Params:
-        data - Output of one of NSE.listIndexStocks,
-                                NSE.listSME,
-                                NSE.listFnoStocks
-        count - Number of results to return. If None, returns all results'''
+        :param data: - Output of one of ``NSE.listIndexStocks``, ``NSE.listSME``, ``NSE.listFnoStocks``
+        :type data: dict
+        :param count: Optional. Limit number of result returned
+        :type count: int
+        :return: List of top gainers
+        :rtype: list[dict]'''
 
         return sorted(filter(lambda dct: dct['pChange'] > 0, data['data']),
                       key=lambda dct: dct['pChange'],
                       reverse=True)[:count]
 
-    def losers(self, data: dict, count: int | None = None):
-        '''Top losers (percent change below zero).
-        Returns all stocks or limit to integer count
+    def losers(self, data: dict, count: int | None = None) -> list[dict]:
+        '''Top losers by percent change below zero.
 
-        Params:
-        data - Output of one of NSE.listIndexStocks,
-                                NSE.listSME,
-                                NSE.listFnoStocks
-        count - Number of result to return. If None, returns all result'''
+        :param data: - Output of one of ``NSE.listIndexStocks``, ``NSE.listSME``, ``NSE.listFnoStocks``
+        :type data: dict
+        :param count: Optional. Limit number of result returned
+        :type count: int
+        :return: List of top losers
+        :rtype: list[dict]'''
 
         return sorted(filter(lambda dct: dct['pChange'] < 0, data['data']),
                       key=lambda dct: dct['pChange'])[:count]
 
     def listFnoStocks(self):
-        '''List all Futures and Options (FNO) stocks'''
+        '''List all Futures and Options (FNO) stocks
+
+        :return: A dictionary. The ``data`` key is a list of all FnO stocks represented by a dictionary with the symbol name and other metadata.'''
 
         url = f'{self.base_url}/equity-stockIndices'
 
         return self.__req(url, params={'index': 'SECURITIES IN F&O'}).json()
 
     def listIndices(self):
-        '''List all indices'''
+        '''List all indices
+
+        :return: A dictionary. The ``data`` key is a list of all Indices represented by a dictionary with the symbol code and other metadata.'''
 
         url = f'{self.base_url}/allIndices'
 
@@ -403,36 +570,48 @@ class NSE:
     def listIndexStocks(self, index):
         '''List all stocks by index
 
-        Params:
-        index - Market Index Name'''
+        :param index: Market Index Name
+        :type index: str
+        :return: A dictionary. The ``data`` key is a list of all stocks represented by a dictionary with the symbol code and other metadata.'''
 
         return self.__req(f'{self.base_url}/equity-stockIndices', params={
             'index': index.upper()
         }).json()
 
     def listEtf(self):
-        '''List all etf stocks'''
+        '''List all etf stocks
+
+        :return: A dictionary. The ``data`` key is a list of all ETF's represented by a dictionary with the symbol code and other metadata.'''
 
         return self.__req(f'{self.base_url}/etf').json()
 
-    def listSME(self):
-        '''List all sme stocks'''
+    def listSme(self):
+        '''List all sme stocks
+
+        :return: A dictionary. The ``data`` key is a list of all SME's represented by a dictionary with the symbol code and other metadata.'''
 
         return self.__req(f'{self.base_url}/live-analysis-emerge').json()
 
     def listSgb(self):
-        '''List all sovereign gold bonds'''
+        '''List all sovereign gold bonds
+
+        :return: A dictionary. The ``data`` key is a list of all SGB's represented by a dictionary with the symbol code and other metadata.'''
 
         return self.__req(f'{self.base_url}/sovereign-gold-bonds').json()
 
-    def blockDeals(self):
-        '''Block deals'''
+    def blockDeals(self) -> dict:
+        '''Block deals
+
+        :return: Block deals. ``data`` key is a list of all block deal (Empty list if no block deals).
+        :rtype: dict'''
 
         return self.__req(f'{self.base_url}/block-deal').json()
 
     def fnoLots(self) -> dict[str, int]:
-        '''Return a dictionary containing lot size of FnO stocks.
-        Keys are stock symbols and values are lot sizes'''
+        '''Get the lot size of FnO stocks.
+
+        :return: A dictionary with symbol code as keys and lot sizes for values
+        :rtype: dict[str, int]'''
 
         url = 'https://nsearchives.nseindia.com/content/fo/fo_mktlots.csv'
 
@@ -454,14 +633,13 @@ class NSE:
                     symbol: Literal['banknifty',
                                     'nifty',
                                     'finnifty',
-                                    'niftyit'] | str):
-        """Raw option chain from api for Index futures or FNO stocks
+                                    'niftyit'] | str) -> dict:
+        """Unprocessed option chain from NSE for Index futures or FNO stocks
 
-        Params:
-        symbol - FnO stock or index futures code.
-                 For Index futures, must be one of 'banknifty', 'nifty',
-                 'finnifty', 'niftyit'
-        """
+        :param symbol: FnO stock or index futures code. For Index futures, must be one of ``banknifty``, ``nifty``, ``finnifty``, ``niftyit``
+        :type symbol: str
+        :return: Option chain for all expiries
+        :rtype: dict"""
 
         if symbol in self.__optionIndex:
             url = f'{self.base_url}/option-chain-indices'
@@ -477,12 +655,15 @@ class NSE:
         return data
 
     @staticmethod
-    def maxpain(optionChain, expiryDate: datetime) -> float:
-        '''Returns the options strike price with Max Pain
+    def maxpain(optionChain: dict, expiryDate: datetime) -> float:
+        '''Get the max pain strike price
 
-        Params:
-        optionChain - Output of NSE.optionChain
-        expiryDate - Expiry date'''
+        :param optionChain: Output of NSE.optionChain
+        :type optionChain: dict
+        :param expiryDate: Options expiry date
+        :type expiryDate: datetime.datetime
+        :return: max pain strike price
+        :rtype: float'''
 
         out = {}
 
@@ -518,12 +699,25 @@ class NSE:
                                                  'nifty',
                                                  'finnifty',
                                                  'niftyit'],
-                           expiryDate: datetime):
-        '''Returns a dictionary of option chain with related statistics
+                           expiryDate: datetime) -> dict[str, str | float | int]:
+        '''Filter raw option chain by ``expiryDate`` and calculate various statistics required for analysis. This makes it easy to build an option chain for analysis using a simple loop.
 
-        Params:
-        symbol - FnO stock or Index futures code
-        expiryDate - Expiry date'''
+        Statistics include:
+            - Max Pain,
+            - Strike price with max Call and Put Open Interest,
+            - Total Call and Put Open Interest
+            - Total PCR ratio
+            - PCR for every strike price
+            - Every strike price has Last price, Open Interest, Change, Implied Volatility for both Call and Put
+
+        Other included values: At the Money (ATM) strike price, Underlying strike price, Expiry date.
+
+        :param symbol: FnO stock or Index futures symbol code. If Index futures must be one of ``banknifty``, ``nifty``, ``finnifty``, ``niftyit``.
+        :type symbol: str
+        :param expiryDate: Option chain Expiry date
+        :type expiryDate: datetime.datetime
+        :return: Option chain filtered by ``expiryDate``
+        :rtype: dict[str, str | float | int]'''
 
         data = self.optionChain(symbol)
 
@@ -606,18 +800,25 @@ class NSE:
 
         return oc
 
-    def advanceDecline(self):
-        '''Advance decline for all NSE indices'''
+    def advanceDecline(self) -> list[dict[str, str]]:
+        '''Advance decline for all Market indices
+
+        :return: Advance decline values for all market indices
+        :rtype: list[ dict[str, str] ]'''
 
         url = 'https://www1.nseindia.com/common/json/indicesAdvanceDeclines.json'
 
         return self.__req(url).json()['data']
 
-    def holidays(self, type: Literal['trading', 'clearing'] = 'trading'):
-        """Returns NSE holiday list
+    def holidays(self, type: Literal['trading', 'clearing'] = 'trading') -> dict[str, list[dict]]:
+        """NSE holiday list
 
-        Params:
-        type[Default 'trading'] - One of 'trading' or 'clearing'"""
+        ``CM`` key in dictionary stands for Capital markets (Equity Market).
+
+        :param type: Default ``trading``. One of ``trading`` or ``clearing``
+        :type type: str
+        :return: Market holidays for all market segments.
+        :rtype: dict[str, list[dict]]"""
 
         url = f'{self.base_url}/holiday-master'
 
