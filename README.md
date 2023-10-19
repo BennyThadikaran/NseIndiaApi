@@ -2,7 +2,7 @@
 
 An unofficial Python API for the NSE India stock exchange.
 
-Python version: >= 3.8
+Python version: >= 3.9
 
 ## Install with PIP
 
