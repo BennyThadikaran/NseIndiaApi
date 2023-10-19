@@ -13,7 +13,6 @@ jobs:
       uses: sphinx-notes/pages@v3
       with:
         publish: false
-        sphinx_version: 7.2.6
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
