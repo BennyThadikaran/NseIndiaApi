@@ -5,6 +5,8 @@ on: push
 jobs:
   pages:
     runs-on: ubuntu-20.04
+    permissions:
+      contents: write
     steps:
     - id: deployment
       uses: sphinx-notes/pages@v3
