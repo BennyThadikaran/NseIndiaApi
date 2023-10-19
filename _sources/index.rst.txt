@@ -8,7 +8,7 @@ Welcome to NSE's documentation!
 
 **NSE** is an Unofficial Python Api for NSE India stock exchange
 
-Python version: >= 3.8
+Python version: >= 3.9
 
 GitHub Source: `BennyThadikaran/NseIndiaApi <https://github.com/BennyThadikaran/NseIndiaApi>`_
 
