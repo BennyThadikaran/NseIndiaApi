@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="">
+<html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Welcome to NSE’s documentation!" href="index.html" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
+    <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
         <title>Usage - nse 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
@@ -191,16 +191,16 @@
         </div>
         <article role="main">
           <section id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h1>
+<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h1>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
 <p>To use <code class="docutils literal notranslate"><span class="pre">nse</span></code>, first install it using pip:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>nse
 </pre></div>
 </div>
 </section>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h2>
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nse</span> <span class="kn">import</span> <span class="n">NSE</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
@@ -215,35 +215,593 @@
 </pre></div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Using ‘with’ statement</span><a class="headerlink" href="#id1" title="Permalink to this code">#</a></div>
+<div class="code-block-caption"><span class="caption-text">Using ‘with’ statement</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">NSE</span><span class="p">(</span><span class="n">download_folder</span><span class="o">=</span><span class="n">DIR</span><span class="p">)</span> <span class="k">as</span> <span class="n">nse</span><span class="p">:</span>
     <span class="n">status</span> <span class="o">=</span> <span class="n">nse</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <section id="api">
-<h3>API<a class="headerlink" href="#api" title="Permalink to this heading">#</a></h3>
+<h3>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="nse.NSE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nse.</span></span><span class="sig-name descname"><span class="pre">NSE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE" title="Link to this definition">#</a></dt>
+<dd><p>An Unofficial Python API for the NSE India stock exchange.</p>
+<dl class="simple">
+<dt>Methods will raise</dt><dd><ul class="simple">
+<li><p>a <code class="docutils literal notranslate"><span class="pre">TimeoutError</span></code> if request takes too long.</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">ConnectionError</span></code> if request failed for any reason.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>download_folder</strong> (<em>pathlib.Path</em><em> or </em><em>str</em>) – A folder/dir to save downloaded files and cookie files</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> is not a folder/dir</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 <section id="general-methods">
-<h2>General Methods<a class="headerlink" href="#general-methods" title="Permalink to this heading">#</a></h2>
+<h2>General Methods<a class="headerlink" href="#general-methods" title="Link to this heading">#</a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.exit">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">exit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.exit" title="Link to this definition">#</a></dt>
+<dd><p>Close the <code class="docutils literal notranslate"><span class="pre">requests</span></code> session.</p>
+<p><em>Use at the end of script or when class is no longer required.</em></p>
+<p><em>Not required when using the ``with`` statement.</em></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.status">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.status" title="Link to this definition">#</a></dt>
+<dd><p>Returns market status</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/status.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Market status of all NSE market segments</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.holidays">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">holidays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'trading'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'clearing'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'trading'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.holidays" title="Link to this definition">#</a></dt>
+<dd><p>NSE holiday list</p>
+<p><code class="docutils literal notranslate"><span class="pre">CM</span></code> key in dictionary stands for Capital markets (Equity Market).</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/holidays.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type</strong> (<em>str</em>) – Default <code class="docutils literal notranslate"><span class="pre">trading</span></code>. One of <code class="docutils literal notranslate"><span class="pre">trading</span></code> or <code class="docutils literal notranslate"><span class="pre">clearing</span></code></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Market holidays for all market segments.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, list[dict]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.blockDeals">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">blockDeals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.blockDeals" title="Link to this definition">#</a></dt>
+<dd><p>Block deals</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/blockDeals.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Block deals. <code class="docutils literal notranslate"><span class="pre">data</span></code> key is a list of all block deal (Empty list if no block deals).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="stocks-quotes-and-market-info">
-<h2>Stocks Quotes and Market info<a class="headerlink" href="#stocks-quotes-and-market-info" title="Permalink to this heading">#</a></h2>
+<h2>Stocks Quotes and Market info<a class="headerlink" href="#stocks-quotes-and-market-info" title="Link to this heading">#</a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.equityMetaInfo">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">equityMetaInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.equityMetaInfo" title="Link to this definition">#</a></dt>
+<dd><p>Meta info for equity symbols.</p>
+<p>Provides useful info like stock name, code, industry, ISIN code, current status like suspended, delisted etc.</p>
+<p>Also has info if stock is an FnO, ETF or Debt security</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/equityMetaInfo.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>symbol</strong> (<em>str</em>) – Equity symbol code</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Stock meta info</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.quote">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">quote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'equity'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'fno'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'equity'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'trade_info'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.quote" title="Link to this definition">#</a></dt>
+<dd><p>Price quotes and other data for equity or derivative symbols</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/quote.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – Equity symbol code</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – One of <code class="docutils literal notranslate"><span class="pre">equity</span></code> or <code class="docutils literal notranslate"><span class="pre">fno</span></code>. Default <code class="docutils literal notranslate"><span class="pre">equity</span></code></p></li>
+<li><p><strong>section</strong> – Optional. If specified must be <code class="docutils literal notranslate"><span class="pre">trade_info</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">section</span></code> does not equal <code class="docutils literal notranslate"><span class="pre">trade_info</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Price quote and other stock meta info</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.equityQuote">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">equityQuote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.equityQuote" title="Link to this definition">#</a></dt>
+<dd><p>A convenience method that extracts date and OCHLV data from <code class="docutils literal notranslate"><span class="pre">NSE.quote</span></code> for given stock <code class="docutils literal notranslate"><span class="pre">symbol</span></code></p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/equityQuote.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>symbol</strong> (<em>str</em>) – Equity symbol code</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Date and OCHLV data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, str | float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.gainers">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">gainers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.gainers" title="Link to this definition">#</a></dt>
+<dd><p>Top gainers by percent change above zero.</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/gainers.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em>) – <ul>
+<li><p>Output of one of <code class="docutils literal notranslate"><span class="pre">NSE.listIndexStocks</span></code>, <code class="docutils literal notranslate"><span class="pre">NSE.listSME</span></code>, <code class="docutils literal notranslate"><span class="pre">NSE.listFnoStocks</span></code></p></li>
+</ul>
+</p></li>
+<li><p><strong>count</strong> (<em>int</em>) – Optional. Limit number of result returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of top gainers</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.losers">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">losers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.losers" title="Link to this definition">#</a></dt>
+<dd><p>Top losers by percent change below zero.</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/losers.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em>) – <ul>
+<li><p>Output of one of <code class="docutils literal notranslate"><span class="pre">NSE.listIndexStocks</span></code>, <code class="docutils literal notranslate"><span class="pre">NSE.listSME</span></code>, <code class="docutils literal notranslate"><span class="pre">NSE.listFnoStocks</span></code></p></li>
+</ul>
+</p></li>
+<li><p><strong>count</strong> (<em>int</em>) – Optional. Limit number of result returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of top losers</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.advanceDecline">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">advanceDecline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.advanceDecline" title="Link to this definition">#</a></dt>
+<dd><p>Advance decline for all Market indices</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/advanceDecline.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Advance decline values for all market indices</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[ dict[str, str] ]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="list-stocks">
-<h2>List Stocks<a class="headerlink" href="#list-stocks" title="Permalink to this heading">#</a></h2>
+<h2>List Stocks<a class="headerlink" href="#list-stocks" title="Link to this heading">#</a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.listFnoStocks">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listFnoStocks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listFnoStocks" title="Link to this definition">#</a></dt>
+<dd><p>List all Futures and Options (FNO) stocks</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listFnoStocks.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary. The <code class="docutils literal notranslate"><span class="pre">data</span></code> key is a list of all FnO stocks represented by a dictionary with the symbol name and other metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.listIndices">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listIndices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listIndices" title="Link to this definition">#</a></dt>
+<dd><p>List all indices</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listIndices.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary. The <code class="docutils literal notranslate"><span class="pre">data</span></code> key is a list of all Indices represented by a dictionary with the symbol code and other metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.listIndexStocks">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listIndexStocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listIndexStocks" title="Link to this definition">#</a></dt>
+<dd><p>List all stocks by index</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listIndexStocks.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>str</em>) – Market Index Name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary. The <code class="docutils literal notranslate"><span class="pre">data</span></code> key is a list of all stocks represented by a dictionary with the symbol code and other metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.listEtf">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listEtf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listEtf" title="Link to this definition">#</a></dt>
+<dd><p>List all etf stocks</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listEtf.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary. The <code class="docutils literal notranslate"><span class="pre">data</span></code> key is a list of all ETF’s represented by a dictionary with the symbol code and other metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.listSme">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listSme</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listSme" title="Link to this definition">#</a></dt>
+<dd><p>List all sme stocks</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listSme.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary. The <code class="docutils literal notranslate"><span class="pre">data</span></code> key is a list of all SME’s represented by a dictionary with the symbol code and other metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.listSgb">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listSgb</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listSgb" title="Link to this definition">#</a></dt>
+<dd><p>List all sovereign gold bonds</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listSgb.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary. The <code class="docutils literal notranslate"><span class="pre">data</span></code> key is a list of all SGB’s represented by a dictionary with the symbol code and other metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="download-nse-reports">
-<h2>Download NSE reports<a class="headerlink" href="#download-nse-reports" title="Permalink to this heading">#</a></h2>
+<h2>Download NSE reports<a class="headerlink" href="#download-nse-reports" title="Link to this heading">#</a></h2>
 <p>Reports are saved to filesystem and a <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object is returned.</p>
 <p>By default, all methods save the file to the <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> specified during initialization. Optionally all methods accept a <code class="docutils literal notranslate"><span class="pre">folder</span></code> argument if wish to save to another folder.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.equityBhavcopy">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">equityBhavcopy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#nse.NSE.equityBhavcopy" title="Link to this definition">#</a></dt>
+<dd><p>Download the daily Equity bhavcopy report for specified <code class="docutils literal notranslate"><span class="pre">date</span></code>
+and return the saved file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>date</strong> (<em>datetime.datetime</em>) – Date of bhavcopy to download</p></li>
+<li><p><strong>folder</strong> (<em>pathlib.Path</em><em> or </em><em>str</em>) – Optional folder/dir path to save file. If not specified, use <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> specified during class initializataion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">folder</span></code> is not a folder/dir.</p></li>
+<li><p><strong>FileNotFoundError</strong> – if download failed or file corrupted</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to saved file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.deliveryBhavcopy">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">deliveryBhavcopy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.deliveryBhavcopy" title="Link to this definition">#</a></dt>
+<dd><p>Download the daily Equity delivery report for specified <code class="docutils literal notranslate"><span class="pre">date</span></code> and return saved file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>date</strong> (<em>datetime.datetime</em>) – Date of delivery bhavcopy to download</p></li>
+<li><p><strong>folder</strong> (<em>pathlib.Path</em><em> or </em><em>str</em>) – Optional folder/dir path to save file. If not specified, use <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> specified during class initializataion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">folder</span></code> is not a folder/dir</p></li>
+<li><p><strong>FileNotFoundError</strong> – if download failed or file corrupted</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to saved file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.indicesBhavcopy">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">indicesBhavcopy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.indicesBhavcopy" title="Link to this definition">#</a></dt>
+<dd><p>Download the daily Equity Indices report for specified <code class="docutils literal notranslate"><span class="pre">date</span></code>
+and return the saved file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>date</strong> (<em>datetime.datetime</em>) – Date of Indices bhavcopy to download</p></li>
+<li><p><strong>folder</strong> (<em>pathlib.Path</em><em> or </em><em>str</em>) – Optional folder/dir path to save file. If not specified, use <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> specified during class initializataion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">folder</span></code> is not a folder/dir</p></li>
+<li><p><strong>FileNotFoundError</strong> – if download failed or file corrupted</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to saved file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.fnoBhavcopy">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">fnoBhavcopy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.fnoBhavcopy" title="Link to this definition">#</a></dt>
+<dd><p>Download the daily FnO bhavcopy report for specified <code class="docutils literal notranslate"><span class="pre">date</span></code>
+and return the saved file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>date</strong> (<em>datetime.datetime</em>) – Date of FnO bhavcopy to download</p></li>
+<li><p><strong>folder</strong> (<em>pathlib.Path</em><em> or </em><em>str</em>) – Optional folder path to save file. If not specified, use <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> specified during class initializataion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">folder</span></code> is not a dir/folder</p></li>
+<li><p><strong>FileNotFoundError</strong> – if download failed or file corrupted</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to saved file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="corporate-announcements-and-actions">
-<h2>Corporate Announcements and Actions<a class="headerlink" href="#corporate-announcements-and-actions" title="Permalink to this heading">#</a></h2>
+<h2>Corporate Announcements and Actions<a class="headerlink" href="#corporate-announcements-and-actions" title="Link to this heading">#</a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.actions">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'equities'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'sme'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'debt'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'mf'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'equities'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.actions" title="Link to this definition">#</a></dt>
+<dd><p>Get all forthcoming corporate actions.</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/actions.json">Sample response</a></p>
+<p>If <code class="docutils literal notranslate"><span class="pre">symbol</span></code> is specified, only actions for the <code class="docutils literal notranslate"><span class="pre">symbol</span></code> is returned.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">from_data</span></code> and <code class="docutils literal notranslate"><span class="pre">to_date</span></code> are specified, actions within the date range are returned</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – One of <code class="docutils literal notranslate"><span class="pre">equities</span></code>, <code class="docutils literal notranslate"><span class="pre">sme</span></code>, <code class="docutils literal notranslate"><span class="pre">debt</span></code> or <code class="docutils literal notranslate"><span class="pre">mf</span></code>. Default <code class="docutils literal notranslate"><span class="pre">equities</span></code></p></li>
+<li><p><strong>symbol</strong> (<em>str</em><em> or </em><em>None</em>) – Optional Stock symbol</p></li>
+<li><p><strong>from_date</strong> (<em>datetime.datetime</em>) – Optional from date</p></li>
+<li><p><strong>to_date</strong> (<em>datetime.datetime</em>) – Optional to date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">from_date</span></code> is greater than <code class="docutils literal notranslate"><span class="pre">to_date</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of corporate actions</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.announcements">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">announcements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'equities'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'sme'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'debt'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'mf'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'invitsreits'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'equities'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fno</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.announcements" title="Link to this definition">#</a></dt>
+<dd><p>Get all corporate announcements for current date.</p>
+<p>If symbol is specified, only announcements for the symbol is returned.</p>
+<p>If from_date and to_date are specified, announcements within the date range are returned</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/announcements.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>str</em>) – One of <cite>equities</cite>, <cite>sme</cite>, <cite>debt</cite> or <cite>mf</cite>. Default <code class="docutils literal notranslate"><span class="pre">equities</span></code></p></li>
+<li><p><strong>symbol</strong> (<em>str</em><em> or </em><em>None</em>) – Optional Stock symbol</p></li>
+<li><p><strong>fno</strong> (<em>bool</em>) – Only FnO stocks</p></li>
+<li><p><strong>from_date</strong> (<em>datetime.datetime</em>) – Optional from date</p></li>
+<li><p><strong>to_date</strong> (<em>datetime.datetime</em>) – Optional to date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">from_date</span></code> is greater than <code class="docutils literal notranslate"><span class="pre">to_date</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of corporate actions</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.boardMeetings">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">boardMeetings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'equities'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'sme'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'equities'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fno</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.boardMeetings" title="Link to this definition">#</a></dt>
+<dd><p>Get all forthcoming board meetings.</p>
+<p>If symbol is specified, only board meetings for the symbol is returned.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">from_date</span></code> and <code class="docutils literal notranslate"><span class="pre">to_date</span></code> are specified, board meetings within the date range are returned</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/boardMeetings.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>str</em>) – One of <code class="docutils literal notranslate"><span class="pre">equities</span></code> or <code class="docutils literal notranslate"><span class="pre">sme</span></code>. Default <code class="docutils literal notranslate"><span class="pre">equities</span></code></p></li>
+<li><p><strong>symbol</strong> (<em>str</em><em> or </em><em>None</em>) – Optional Stock symbol</p></li>
+<li><p><strong>fno</strong> (<em>bool</em>) – Only FnO stocks</p></li>
+<li><p><strong>from_date</strong> (<em>datetime.datetime</em>) – Optional from date</p></li>
+<li><p><strong>to_date</strong> (<em>datetime.datetime</em>) – Optional to date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">from_date</span></code> is greater than <code class="docutils literal notranslate"><span class="pre">to_date</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of corporate board meetings</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="futures-and-options-fno">
-<h2>Futures and Options (FnO)<a class="headerlink" href="#futures-and-options-fno" title="Permalink to this heading">#</a></h2>
+<h2>Futures and Options (FnO)<a class="headerlink" href="#futures-and-options-fno" title="Link to this heading">#</a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.fnoLots">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">fnoLots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.fnoLots" title="Link to this definition">#</a></dt>
+<dd><p>Get the lot size of FnO stocks.</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fnoLots.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary with symbol code as keys and lot sizes for values</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.optionChain">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">optionChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'banknifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'nifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'finnifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'niftyit'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.optionChain" title="Link to this definition">#</a></dt>
+<dd><p>Unprocessed option chain from NSE for Index futures or FNO stocks</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/optionChain.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>symbol</strong> (<em>str</em>) – FnO stock or index futures code. For Index futures, must be one of <code class="docutils literal notranslate"><span class="pre">banknifty</span></code>, <code class="docutils literal notranslate"><span class="pre">nifty</span></code>, <code class="docutils literal notranslate"><span class="pre">finnifty</span></code>, <code class="docutils literal notranslate"><span class="pre">niftyit</span></code></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Option chain for all expiries</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.compileOptionChain">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">compileOptionChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'banknifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'nifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'finnifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'niftyit'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiryDate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.compileOptionChain" title="Link to this definition">#</a></dt>
+<dd><p>Filter raw option chain by <code class="docutils literal notranslate"><span class="pre">expiryDate</span></code> and calculate various statistics required for analysis. This makes it easy to build an option chain for analysis using a simple loop.</p>
+<dl class="simple">
+<dt>Statistics include:</dt><dd><ul class="simple">
+<li><p>Max Pain,</p></li>
+<li><p>Strike price with max Call and Put Open Interest,</p></li>
+<li><p>Total Call and Put Open Interest</p></li>
+<li><p>Total PCR ratio</p></li>
+<li><p>PCR for every strike price</p></li>
+<li><p>Every strike price has Last price, Open Interest, Change, Implied Volatility for both Call and Put</p></li>
+</ul>
+</dd>
+</dl>
+<p>Other included values: At the Money (ATM) strike price, Underlying strike price, Expiry date.</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/compileOptionChain.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – FnO stock or Index futures symbol code. If Index futures must be one of <code class="docutils literal notranslate"><span class="pre">banknifty</span></code>, <code class="docutils literal notranslate"><span class="pre">nifty</span></code>, <code class="docutils literal notranslate"><span class="pre">finnifty</span></code>, <code class="docutils literal notranslate"><span class="pre">niftyit</span></code>.</p></li>
+<li><p><strong>expiryDate</strong> (<em>datetime.datetime</em>) – Option chain Expiry date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Option chain filtered by <code class="docutils literal notranslate"><span class="pre">expiryDate</span></code></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, str | float | int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.maxpain">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">maxpain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optionChain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiryDate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#nse.NSE.maxpain" title="Link to this definition">#</a></dt>
+<dd><p>Get the max pain strike price</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>optionChain</strong> (<em>dict</em>) – Output of NSE.optionChain</p></li>
+<li><p><strong>expiryDate</strong> (<em>datetime.datetime</em>) – Options expiry date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>max pain strike price</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -297,15 +855,57 @@
 <li><a class="reference internal" href="#">Usage</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#example">Example</a><ul>
-<li><a class="reference internal" href="#api">API</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#nse.NSE"><code class="docutils literal notranslate"><span class="pre">NSE</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#general-methods">General Methods</a></li>
-<li><a class="reference internal" href="#stocks-quotes-and-market-info">Stocks Quotes and Market info</a></li>
-<li><a class="reference internal" href="#list-stocks">List Stocks</a></li>
-<li><a class="reference internal" href="#download-nse-reports">Download NSE reports</a></li>
-<li><a class="reference internal" href="#corporate-announcements-and-actions">Corporate Announcements and Actions</a></li>
-<li><a class="reference internal" href="#futures-and-options-fno">Futures and Options (FnO)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#general-methods">General Methods</a><ul>
+<li><a class="reference internal" href="#nse.NSE.exit"><code class="docutils literal notranslate"><span class="pre">NSE.exit()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.status"><code class="docutils literal notranslate"><span class="pre">NSE.status()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.holidays"><code class="docutils literal notranslate"><span class="pre">NSE.holidays()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.blockDeals"><code class="docutils literal notranslate"><span class="pre">NSE.blockDeals()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stocks-quotes-and-market-info">Stocks Quotes and Market info</a><ul>
+<li><a class="reference internal" href="#nse.NSE.equityMetaInfo"><code class="docutils literal notranslate"><span class="pre">NSE.equityMetaInfo()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.quote"><code class="docutils literal notranslate"><span class="pre">NSE.quote()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.equityQuote"><code class="docutils literal notranslate"><span class="pre">NSE.equityQuote()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.gainers"><code class="docutils literal notranslate"><span class="pre">NSE.gainers()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.losers"><code class="docutils literal notranslate"><span class="pre">NSE.losers()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.advanceDecline"><code class="docutils literal notranslate"><span class="pre">NSE.advanceDecline()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#list-stocks">List Stocks</a><ul>
+<li><a class="reference internal" href="#nse.NSE.listFnoStocks"><code class="docutils literal notranslate"><span class="pre">NSE.listFnoStocks()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.listIndices"><code class="docutils literal notranslate"><span class="pre">NSE.listIndices()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.listIndexStocks"><code class="docutils literal notranslate"><span class="pre">NSE.listIndexStocks()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.listEtf"><code class="docutils literal notranslate"><span class="pre">NSE.listEtf()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.listSme"><code class="docutils literal notranslate"><span class="pre">NSE.listSme()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.listSgb"><code class="docutils literal notranslate"><span class="pre">NSE.listSgb()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#download-nse-reports">Download NSE reports</a><ul>
+<li><a class="reference internal" href="#nse.NSE.equityBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.equityBhavcopy()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.deliveryBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.deliveryBhavcopy()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.indicesBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.indicesBhavcopy()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.fnoBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.fnoBhavcopy()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#corporate-announcements-and-actions">Corporate Announcements and Actions</a><ul>
+<li><a class="reference internal" href="#nse.NSE.actions"><code class="docutils literal notranslate"><span class="pre">NSE.actions()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.announcements"><code class="docutils literal notranslate"><span class="pre">NSE.announcements()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.boardMeetings"><code class="docutils literal notranslate"><span class="pre">NSE.boardMeetings()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#futures-and-options-fno">Futures and Options (FnO)</a><ul>
+<li><a class="reference internal" href="#nse.NSE.fnoLots"><code class="docutils literal notranslate"><span class="pre">NSE.fnoLots()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.optionChain"><code class="docutils literal notranslate"><span class="pre">NSE.optionChain()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.compileOptionChain"><code class="docutils literal notranslate"><span class="pre">NSE.compileOptionChain()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.maxpain"><code class="docutils literal notranslate"><span class="pre">NSE.maxpain()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -317,9 +917,9 @@
       
     </aside>
   </div>
-</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=f6245a2f"></script>
+</div><script src="_static/documentation_options.js?v=d45e8c67"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
     </body>
 </html>
