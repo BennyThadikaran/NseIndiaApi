@@ -163,3 +163,4 @@ bin/
 lib64
 pyvenv.cfg
 *.pkl
+docs/build
