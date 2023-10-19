@@ -87,6 +87,8 @@ Reports are saved to filesystem and a ``pathlib.Path`` object is returned.
 
 By default, all methods save the file to the ``download_folder`` specified during initialization. Optionally all methods accept a ``folder`` argument if wish to save to another folder.
 
+Zip files are automatically extracted and saved to file.
+
 .. automethod:: nse.NSE.equityBhavcopy
 
 .. automethod:: nse.NSE.deliveryBhavcopy
