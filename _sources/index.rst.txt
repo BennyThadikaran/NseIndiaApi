@@ -10,6 +10,8 @@ Welcome to NSE's documentation!
 
 Python version: >= 3.10
 
+All network requests through NSE are rate limited or throttled to 3 requests per second. This allows making large number of requests without overloading the server or getting blocked.
+
 GitHub Source: `BennyThadikaran/NseIndiaApi <https://github.com/BennyThadikaran/NseIndiaApi>`_
 
 Contents
