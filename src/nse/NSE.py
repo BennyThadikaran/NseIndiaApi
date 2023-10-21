@@ -21,8 +21,8 @@ class NSE:
     '''An Unofficial Python API for the NSE India stock exchange.
 
     Methods will raise
-        - a ``TimeoutError`` if request takes too long.
-        - a ``ConnectionError`` if request failed for any reason.
+        - ``TimeoutError`` if request takes too long.
+        - ``ConnectionError`` if request failed for any reason.
 
     :param download_folder: A folder/dir to save downloaded files and cookie files
     :type download_folder: pathlib.Path or str
@@ -189,7 +189,7 @@ class NSE:
 
     def equityBhavcopy(self, date: datetime, folder: str | Path | None = None) -> Path:
         '''Download the daily Equity bhavcopy report for specified ``date``
-        and return the saved file path.
+        and return the saved filepath.
 
         :param date: Date of bhavcopy to download
         :type date: datetime.datetime
