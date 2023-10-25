@@ -1,4 +1,4 @@
-# :moneybag: NseIndiaApi
+# 💰 NseIndiaApi
 
 An unofficial Python API for the NSE India stock exchange.
 
@@ -6,12 +6,14 @@ Python version: >= 3.10
 
 If you ❤️ my work so far, please 🌟 this repo.
 
-## :alien: Documentation
+## 👽 Documentation
+
 [https://bennythadikaran.github.io/NseIndiaApi](https://bennythadikaran.github.io/NseIndiaApi)
 
-## :fire: Usage
+## 🔥 Usage
 
 **Install with Pip**
+
 ```bash
 pip install -U nse
 ```
@@ -19,6 +21,7 @@ pip install -U nse
 The class accepts a single argument `download_folder`, a `str` filepath, or a `pathlib object`. The folder stores cookie and any downloaded files.
 
 **Simple example**
+
 ```python
 from nse import NSE
 from pathlib import Path
