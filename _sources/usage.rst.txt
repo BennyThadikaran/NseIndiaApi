@@ -109,6 +109,8 @@ Corporate Announcements and Actions
 Futures and Options (FnO)
 -------------------------
 
+.. automethod:: nse.NSE.getFuturesExpiry
+
 .. automethod:: nse.NSE.fnoLots
 
 .. automethod:: nse.NSE.optionChain
