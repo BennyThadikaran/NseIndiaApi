@@ -732,6 +732,27 @@ class NSE:
 
         return max(out.keys(), key=(lambda k: out[k]))
 
+    def getFuturesExpiry(self) -> list[str]:
+        '''
+        Get current, next and far month expiry as a sorted list
+        with order guaranteed.
+
+        Its easy to calculate the last thursday of the month.
+        But you need to consider holidays.
+
+        This serves as a lightweight lookup option.
+
+        :return: Sorted list of current, next and far month expiry
+        :rtype: list[str]
+        '''
+
+        res: dict = self.__req(f'{self.base_url}/liveEquity-derivatives',
+                               params={'index': 'nse50_fut'}).json()
+
+        data = tuple(i['expiryDate'] for i in res['data'])
+
+        return sorted(data, key=lambda x: datetime.strptime(x, '%d-%b-%Y'))
+
     def compileOptionChain(self,
                            symbol: str | Literal['banknifty',
                                                  'nifty',
