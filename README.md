@@ -10,6 +10,10 @@ If you ❤️ my work so far, please 🌟 this repo.
 
 [https://bennythadikaran.github.io/NseIndiaApi](https://bennythadikaran.github.io/NseIndiaApi)
 
+## Updates
+
+- Added a new method: NSE.getFuturesExpiry ([See Documentation for details](https://bennythadikaran.github.io/NseIndiaApi/usage.html#nse.NSE.getFuturesExpiry))
+
 ## 🔥 Usage
 
 **Install with Pip**
