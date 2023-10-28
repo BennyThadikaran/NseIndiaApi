@@ -139,9 +139,9 @@ class NSE:
                               stream=True,
                               timeout=15) as r:
 
-            contentLength = r.headers.get('content-length')
+            contentType = r.headers.get('content-type')
 
-            if contentLength and int(contentLength) < 5000:
+            if contentType and 'text/html' in contentType:
                 raise RuntimeError(
                     'NSE file is unavailable or not yet updated.')
 
