@@ -135,16 +135,19 @@ class NSE:
 
         th.check()
 
-        try:
-            with self.session.get(url,
-                                  stream=True,
-                                  timeout=15) as r:
+        with self.session.get(url,
+                              stream=True,
+                              timeout=15) as r:
 
-                with fname.open(mode='wb') as f:
-                    for chunk in r.iter_content(chunk_size=1000000):
-                        f.write(chunk)
-        except Exception as e:
-            exit(f'Download error. Try again later: {e!r}')
+            contentLength = r.headers.get('content-length')
+
+            if contentLength and int(contentLength) < 5000:
+                raise RuntimeError(
+                    'NSE file is unavailable or not yet updated.')
+
+            with fname.open(mode='wb') as f:
+                for chunk in r.iter_content(chunk_size=1000000):
+                    f.write(chunk)
 
         return fname
 
@@ -197,6 +200,7 @@ class NSE:
         :type folder: pathlib.Path or str
         :raise ValueError: if ``folder`` is not a folder/dir.
         :raise FileNotFoundError: if download failed or file corrupted
+        :raise RuntimeError: if report unavailable or not yet updated.
         :return: Path to saved file
         :rtype: pathlib.Path
         '''
@@ -214,7 +218,7 @@ class NSE:
 
         file = self.__download(url, folder)
 
-        if not file.is_file() or file.stat().st_size < 5000:
+        if not file.is_file():
             file.unlink()
             raise FileNotFoundError(f'Failed to download file: {file.name}')
 
@@ -229,6 +233,7 @@ class NSE:
         :type folder: pathlib.Path or str
         :raise ValueError: if ``folder`` is not a folder/dir
         :raise FileNotFoundError: if download failed or file corrupted
+        :raise RuntimeError: if report unavailable or not yet updated.
         :return: Path to saved file
         :rtype: pathlib.Path'''
 
@@ -240,7 +245,7 @@ class NSE:
 
         file = self.__download(url, folder)
 
-        if not file.is_file() or file.stat().st_size < 50000:
+        if not file.is_file():
             file.unlink()
             raise FileNotFoundError(f'Failed to download file: {file.name}')
 
@@ -256,6 +261,7 @@ class NSE:
         :type folder: pathlib.Path or str
         :raise ValueError: if ``folder`` is not a folder/dir
         :raise FileNotFoundError: if download failed or file corrupted
+        :raise RuntimeError: if report unavailable or not yet updated.
         :return: Path to saved file
         :rtype: pathlib.Path'''
 
@@ -265,7 +271,7 @@ class NSE:
 
         file = self.__download(url, folder)
 
-        if not file.is_file() or file.stat().st_size < 5000:
+        if not file.is_file():
             file.unlink()
             raise FileNotFoundError(f'Failed to download file: {file.name}')
 
@@ -281,6 +287,7 @@ class NSE:
         :type folder: pathlib.Path or str
         :raise ValueError: if ``folder`` is not a dir/folder
         :raise FileNotFoundError: if download failed or file corrupted
+        :raise RuntimeError: if report unavailable or not yet updated.
         :return: Path to saved file
         :rtype: pathlib.Path'''
 
@@ -295,7 +302,7 @@ class NSE:
 
         file = self.__download(url, folder)
 
-        if not file.is_file() or file.stat().st_size < 5000:
+        if not file.is_file():
             file.unlink()
             raise FileNotFoundError(f'Failed to download file: {file.name}')
 
