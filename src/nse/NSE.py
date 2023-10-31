@@ -99,12 +99,10 @@ class NSE:
     def __enter__(self):
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def __exit__(self, *_):
         self.session.close()
 
-        if not exc_type is None:
-            exit(f'{exc_type}: {exc_value}\n{exc_traceback}')
-        return True
+        return False
 
     @staticmethod
     def __getPath(path: str | Path, isFolder: bool = False):
