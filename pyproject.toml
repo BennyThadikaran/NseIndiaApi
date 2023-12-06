@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nse"
-version = "0.2.6"
+version = "0.2.6-1"
 authors = [
   { name="Benny Thadikaran" },
 ]

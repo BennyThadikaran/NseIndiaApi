@@ -1,0 +1,83 @@
+{
+  "noBlockDeals": true,
+  "bulkBlockDeals": [
+    {
+      "name": "Session I"
+    },
+    {
+      "name": "Session II"
+    }
+  ],
+  "marketDeptOrderBook": {
+    "totalBuyQuantity": 0,
+    "totalSellQuantity": 992,
+    "bid": [
+      {
+        "price": 0,
+        "quantity": 0
+      },
+      {
+        "price": 0,
+        "quantity": 0
+      },
+      {
+        "price": 0,
+        "quantity": 0
+      },
+      {
+        "price": 0,
+        "quantity": 0
+      },
+      {
+        "price": 0,
+        "quantity": 0
+      }
+    ],
+    "ask": [
+      {
+        "price": 1627.8,
+        "quantity": 992
+      },
+      {
+        "price": 0,
+        "quantity": 0
+      },
+      {
+        "price": 0,
+        "quantity": 0
+      },
+      {
+        "price": 0,
+        "quantity": 0
+      },
+      {
+        "price": 0,
+        "quantity": 0
+      }
+    ],
+    "tradeInfo": {
+      "totalTradedVolume": 19306530,
+      "totalTradedValue": 314194.47,
+      "totalMarketCap": 123432415.46,
+      "ffmc": 122198091.3041803,
+      "impactCost": 0.01,
+      "cmDailyVolatility": "1.22",
+      "cmAnnualVolatility": "23.31"
+    },
+    "valueAtRisk": {
+      "securityVar": 7.61,
+      "indexVar": 0,
+      "varMargin": 9,
+      "extremeLossMargin": 3.5,
+      "adhocMargin": 0,
+      "applicableMargin": 12.5
+    }
+  },
+  "securityWiseDP": {
+    "quantityTraded": 19306530,
+    "deliveryQuantity": 11206777,
+    "deliveryToTradedQuantity": 58.05,
+    "seriesRemarks": null,
+    "secWiseDelPosDate": "06-DEC-2023 EOD"
+  }
+}

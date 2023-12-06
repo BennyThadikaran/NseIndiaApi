@@ -1,8 +1,9 @@
+from __future__ import annotations
 import pickle
 from pathlib import Path
 from requests import Session
 from requests.exceptions import ReadTimeout
-from typing import Literal, Any
+from typing import Literal, Any, Union, List, Dict
 from datetime import datetime
 from zipfile import ZipFile
 from mthrottle import Throttle
@@ -17,7 +18,6 @@ th = Throttle(throttleConfig, 10)
 
 
 class NSE:
-
     '''An Unofficial Python API for the NSE India stock exchange.
 
     Methods will raise
@@ -46,7 +46,7 @@ class NSE:
     base_url = 'https://www.nseindia.com/api'
     archive_url = 'https://archives.nseindia.com'
 
-    def __init__(self, download_folder: str | Path):
+    def __init__(self, download_folder: Union[str, Path]):
         '''Initialise NSE'''
 
         uAgent = 'Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/118.0'
@@ -56,7 +56,8 @@ class NSE:
             'Accept': '*/*',
             'Accept-Language': 'en-US,en;q=0.5',
             'Accept-Encoding': 'gzip, deflate, br',
-            'Referer': 'https://www.nseindia.com/get-quotes/equity?symbol=HDFCBANK'
+            'Referer':
+            'https://www.nseindia.com/get-quotes/equity?symbol=HDFCBANK'
         }
 
         self.dir = NSE.__getPath(download_folder, isFolder=True)
@@ -105,7 +106,7 @@ class NSE:
         return False
 
     @staticmethod
-    def __getPath(path: str | Path, isFolder: bool = False):
+    def __getPath(path: Union[str, Path], isFolder: bool = False):
         path = path if isinstance(path, Path) else Path(path)
 
         if isFolder:
@@ -133,9 +134,7 @@ class NSE:
 
         th.check()
 
-        with self.session.get(url,
-                              stream=True,
-                              timeout=15) as r:
+        with self.session.get(url, stream=True, timeout=15) as r:
 
             contentType = r.headers.get('content-type')
 
@@ -155,11 +154,7 @@ class NSE:
         th.check()
 
         try:
-            r = self.session.get(
-                url,
-                params=params,
-                timeout=timeout
-            )
+            r = self.session.get(url, params=params, timeout=timeout)
         except ReadTimeout as e:
             raise TimeoutError(repr(e))
 
@@ -177,7 +172,7 @@ class NSE:
 
         self.session.close()
 
-    def status(self) -> list[dict]:
+    def status(self) -> List[Dict]:
         '''Returns market status
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/status.json>`__
@@ -186,9 +181,12 @@ class NSE:
         :rtype: list[dict]
         '''
 
-        return self.__req(f'{self.base_url}/marketStatus').json()['marketState']
+        return self.__req(
+            f'{self.base_url}/marketStatus').json()['marketState']
 
-    def equityBhavcopy(self, date: datetime, folder: str | Path | None = None) -> Path:
+    def equityBhavcopy(self,
+                       date: datetime,
+                       folder: Union[str, Path, None] = None) -> Path:
         '''Download the daily Equity bhavcopy report for specified ``date``
         and return the saved filepath.
 
@@ -209,10 +207,7 @@ class NSE:
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
         url = '{}/content/historical/EQUITIES/{}/{}/cm{}bhav.csv.zip'.format(
-            self.archive_url,
-            date.year,
-            month,
-            date_str)
+            self.archive_url, date.year, month, date_str)
 
         file = self.__download(url, folder)
 
@@ -222,7 +217,9 @@ class NSE:
 
         return NSE.__unzip(file, file.parent)
 
-    def deliveryBhavcopy(self, date: datetime, folder: str | Path | None = None):
+    def deliveryBhavcopy(self,
+                         date: datetime,
+                         folder: Union[str, Path, None] = None):
         '''Download the daily Equity delivery report for specified ``date`` and return saved file path.
 
         :param date: Date of delivery bhavcopy to download
@@ -238,8 +235,7 @@ class NSE:
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
         url = '{}/products/content/sec_bhavdata_full_{}.csv'.format(
-            self.archive_url,
-            date.strftime('%d%m%Y'))
+            self.archive_url, date.strftime('%d%m%Y'))
 
         file = self.__download(url, folder)
 
@@ -249,7 +245,9 @@ class NSE:
 
         return file
 
-    def indicesBhavcopy(self, date: datetime, folder: str | Path | None = None):
+    def indicesBhavcopy(self,
+                        date: datetime,
+                        folder: Union[str, Path, None] = None):
         '''Download the daily Equity Indices report for specified ``date``
         and return the saved file path.
 
@@ -275,7 +273,9 @@ class NSE:
 
         return file
 
-    def fnoBhavcopy(self, date: datetime, folder: str | Path | None = None):
+    def fnoBhavcopy(self,
+                    date: datetime,
+                    folder: Union[str, Path, None] = None):
         '''Download the daily FnO bhavcopy report for specified ``date``
         and return the saved file path.
 
@@ -308,9 +308,9 @@ class NSE:
 
     def actions(self,
                 segment: Literal['equities', 'sme', 'debt', 'mf'] = 'equities',
-                symbol: str | None = None,
-                from_date: datetime | None = None,
-                to_date: datetime | None = None) -> list[dict]:
+                symbol: Union[str, None] = None,
+                from_date: Union[datetime, None] = None,
+                to_date: Union[datetime, None] = None) -> List[Dict]:
         '''Get all forthcoming corporate actions.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/actions.json>`__
@@ -355,15 +355,12 @@ class NSE:
         return self.__req(url, params=params).json()
 
     def announcements(self,
-                      index: Literal['equities',
-                                     'sme',
-                                     'debt',
-                                     'mf',
+                      index: Literal['equities', 'sme', 'debt', 'mf',
                                      'invitsreits'] = 'equities',
-                      symbol: str | None = None,
+                      symbol: Union[str, None] = None,
                       fno=False,
-                      from_date: datetime | None = None,
-                      to_date: datetime | None = None) -> list[dict]:
+                      from_date: Union[datetime, None] = None,
+                      to_date: Union[datetime, None] = None) -> List[Dict]:
         '''Get all corporate announcements for current date.
 
         If symbol is specified, only announcements for the symbol is returned.
@@ -388,9 +385,7 @@ class NSE:
 
         fmt = '%d-%m-%Y'
 
-        params: dict[str, Any] = {
-            'index': index
-        }
+        params: Dict[str, Any] = {'index': index}
 
         if symbol:
             params['symbol'] = symbol
@@ -414,10 +409,10 @@ class NSE:
 
     def boardMeetings(self,
                       index: Literal['equities', 'sme'] = 'equities',
-                      symbol: str | None = None,
+                      symbol: Union[str, None] = None,
                       fno: bool = False,
-                      from_date: datetime | None = None,
-                      to_date: datetime | None = None) -> list[dict]:
+                      from_date: Union[datetime, None] = None,
+                      to_date: Union[datetime, None] = None) -> List[Dict]:
         '''Get all forthcoming board meetings.
 
         If symbol is specified, only board meetings for the symbol is returned.
@@ -442,9 +437,7 @@ class NSE:
 
         fmt = '%d-%m-%Y'
 
-        params: dict[str, Any] = {
-            'index': index
-        }
+        params: Dict[str, Any] = {'index': index}
 
         if symbol:
             params['symbol'] = symbol
@@ -466,7 +459,7 @@ class NSE:
 
         return self.__req(url, params=params).json()
 
-    def equityMetaInfo(self, symbol) -> dict:
+    def equityMetaInfo(self, symbol) -> Dict:
         '''Meta info for equity symbols.
 
         Provides useful info like stock name, code, industry, ISIN code, current status like suspended, delisted etc.
@@ -487,10 +480,14 @@ class NSE:
     def quote(self,
               symbol,
               type: Literal['equity', 'fno'] = 'equity',
-              section: Literal['trade_info'] | None = None) -> dict:
+              section: Union[Literal['trade_info'], None] = None) -> Dict:
         """Price quotes and other data for equity or derivative symbols
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/quote.json>`__
+
+        For Market cap, delivery data and order book, use pass `section='trade_info'` as keyword argument. See sample response below:
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/quote-trade_info.json>`__
 
         :param symbol: Equity symbol code
         :type symbol: str
@@ -506,9 +503,7 @@ class NSE:
         else:
             url = f'{self.base_url}/quote-derivative'
 
-        params = {
-            'symbol': symbol.upper()
-        }
+        params = {'symbol': symbol.upper()}
 
         if section:
             if section != 'trade_info':
@@ -518,7 +513,7 @@ class NSE:
 
         return self.__req(url, params=params).json()
 
-    def equityQuote(self, symbol) -> dict[str, str | float]:
+    def equityQuote(self, symbol) -> Dict[str, Union[str, float]]:
         '''A convenience method that extracts date and OCHLV data from ``NSE.quote`` for given stock ``symbol``
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/equityQuote.json>`__
@@ -526,13 +521,14 @@ class NSE:
         :param symbol: Equity symbol code
         :type symbol: str
         :return: Date and OCHLV data
-        :rtype: dict[str, str | float]'''
+        :rtype: dict[str, str or float]'''
 
         q = self.quote(symbol, type='equity')
         v = self.quote(symbol, type='equity', section='trade_info')
 
         _open, minmax, close, ltp = map(
-            q['priceInfo'].get, ('open', 'intraDayHighLow', 'close', 'lastPrice'))
+            q['priceInfo'].get,
+            ('open', 'intraDayHighLow', 'close', 'lastPrice'))
 
         return {
             'date': q['metadata']['lastUpdateTime'],
@@ -543,7 +539,9 @@ class NSE:
             'volume': v['securityWiseDP']['quantityTraded'],
         }
 
-    def gainers(self, data: dict, count: int | None = None) -> list[dict]:
+    def gainers(self,
+                data: Dict,
+                count: Union[int, None] = None) -> List[Dict]:
         '''Top gainers by percent change above zero.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/gainers.json>`__
@@ -559,7 +557,7 @@ class NSE:
                       key=lambda dct: dct['pChange'],
                       reverse=True)[:count]
 
-    def losers(self, data: dict, count: int | None = None) -> list[dict]:
+    def losers(self, data: Dict, count: Union[int, None] = None) -> List[Dict]:
         '''Top losers by percent change below zero.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/losers.json>`__
@@ -605,9 +603,10 @@ class NSE:
         :type index: str
         :return: A dictionary. The ``data`` key is a list of all stocks represented by a dictionary with the symbol code and other metadata.'''
 
-        return self.__req(f'{self.base_url}/equity-stockIndices', params={
-            'index': index.upper()
-        }).json()
+        return self.__req(f'{self.base_url}/equity-stockIndices',
+                          params={
+                              'index': index.upper()
+                          }).json()
 
     def listEtf(self):
         '''List all etf stocks
@@ -636,7 +635,7 @@ class NSE:
 
         return self.__req(f'{self.base_url}/sovereign-gold-bonds').json()
 
-    def blockDeals(self) -> dict:
+    def blockDeals(self) -> Dict:
         '''Block deals
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/blockDeals.json>`__
@@ -646,7 +645,7 @@ class NSE:
 
         return self.__req(f'{self.base_url}/block-deal').json()
 
-    def fnoLots(self) -> dict[str, int]:
+    def fnoLots(self) -> Dict[str, int]:
         '''Get the lot size of FnO stocks.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fnoLots.json>`__
@@ -670,11 +669,10 @@ class NSE:
 
         return dct
 
-    def optionChain(self,
-                    symbol: Literal['banknifty',
-                                    'nifty',
-                                    'finnifty',
-                                    'niftyit'] | str) -> dict:
+    def optionChain(
+        self, symbol: Union[Literal['banknifty', 'nifty', 'finnifty',
+                                    'niftyit'], str]
+    ) -> Dict:
         """Unprocessed option chain from NSE for Index futures or FNO stocks
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/optionChain.json>`__
@@ -698,7 +696,7 @@ class NSE:
         return data
 
     @staticmethod
-    def maxpain(optionChain: dict, expiryDate: datetime) -> float:
+    def maxpain(optionChain: Dict, expiryDate: datetime) -> float:
         '''Get the max pain strike price
 
         :param optionChain: Output of NSE.optionChain
@@ -737,7 +735,7 @@ class NSE:
 
         return max(out.keys(), key=(lambda k: out[k]))
 
-    def getFuturesExpiry(self) -> list[str]:
+    def getFuturesExpiry(self) -> List[str]:
         '''
         Get current, next and far month expiry as a sorted list
         with order guaranteed.
@@ -751,19 +749,19 @@ class NSE:
         :rtype: list[str]
         '''
 
-        res: dict = self.__req(f'{self.base_url}/liveEquity-derivatives',
-                               params={'index': 'nse50_fut'}).json()
+        res: Dict = self.__req(f'{self.base_url}/liveEquity-derivatives',
+                               params={
+                                   'index': 'nse50_fut'
+                               }).json()
 
         data = tuple(i['expiryDate'] for i in res['data'])
 
         return sorted(data, key=lambda x: datetime.strptime(x, '%d-%b-%Y'))
 
-    def compileOptionChain(self,
-                           symbol: str | Literal['banknifty',
-                                                 'nifty',
-                                                 'finnifty',
-                                                 'niftyit'],
-                           expiryDate: datetime) -> dict[str, str | float | int]:
+    def compileOptionChain(
+            self, symbol: Union[str, Literal['banknifty', 'nifty', 'finnifty',
+                                             'niftyit']],
+            expiryDate: datetime) -> Dict[str, Union[str, float, int]]:
         '''Filter raw option chain by ``expiryDate`` and calculate various statistics required for analysis. This makes it easy to build an option chain for analysis using a simple loop.
 
         Statistics include:
@@ -814,7 +812,7 @@ class NSE:
 
             strike = str(idx['strikePrice'])
 
-            if not strike in chain:
+            if strike not in chain:
                 chain[strike] = {'pe': {}, 'ce': {}}
 
             poi = coi = 0
@@ -822,8 +820,12 @@ class NSE:
             if 'PE' in idx:
                 poi, last, chg, iv = map(idx['PE'].get, dataFields)
 
-                chain[strike]['pe'].update(
-                    {'last': last, 'oi': poi, 'chg': chg, 'iv': iv})
+                chain[strike]['pe'].update({
+                    'last': last,
+                    'oi': poi,
+                    'chg': chg,
+                    'iv': iv
+                })
 
                 totalPoi += poi
 
@@ -837,8 +839,12 @@ class NSE:
             if 'CE' in idx:
                 coi, last, chg, iv = map(idx['CE'].get, dataFields)
 
-                chain[strike]['ce'].update(
-                    {'last': last, 'oi': poi, 'chg': chg, 'iv': iv})
+                chain[strike]['ce'].update({
+                    'last': last,
+                    'oi': poi,
+                    'chg': chg,
+                    'iv': iv
+                })
 
                 totalCoi += coi
 
@@ -866,7 +872,7 @@ class NSE:
 
         return oc
 
-    def advanceDecline(self) -> list[dict[str, str]]:
+    def advanceDecline(self) -> List[Dict[str, str]]:
         '''Advance decline for all Market indices
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/advanceDecline.json>`__
@@ -878,7 +884,10 @@ class NSE:
 
         return self.__req(url).json()['data']
 
-    def holidays(self, type: Literal['trading', 'clearing'] = 'trading') -> dict[str, list[dict]]:
+    def holidays(
+        self,
+        type: Literal['trading',
+                      'clearing'] = 'trading') -> Dict[str, List[Dict]]:
         """NSE holiday list
 
         ``CM`` key in dictionary stands for Capital markets (Equity Market).
