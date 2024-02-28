@@ -8,7 +8,7 @@ Welcome to NSE's documentation!
 
 **NSE** is an Unofficial Python Api for NSE India stock exchange
 
-Python version: >= 3.10
+Python version: >= 3.8
 
 All network requests through NSE are rate limited or throttled to 3 requests per second. This allows making large number of requests without overloading the server or getting blocked.
 
