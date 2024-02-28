@@ -758,7 +758,9 @@ class NSE:
 
         return max(out.keys(), key=(lambda k: out[k]))
 
-    def getFuturesExpiry(self) -> List[str]:
+    def getFuturesExpiry(
+        self, index: Literal["nifty", "banknifty", "finnifty"] = "nifty"
+    ) -> List[str]:
         """
         Get current, next and far month expiry as a sorted list
         with order guaranteed.
@@ -768,13 +770,22 @@ class NSE:
 
         This serves as a lightweight lookup option.
 
+        :param index: One of `nifty`, `banknifty`, `finnifty`. Default `nifty`.
+        :type index: str
         :return: Sorted list of current, next and far month expiry
         :rtype: list[str]
         """
 
+        if index == "banknifty":
+            idx = "nifty_bank_fut"
+        elif index == "finnifty":
+            idx = "finnifty_fut"
+        else:
+            idx = "nse50_fut"
+
         res: Dict = self.__req(
             f"{self.base_url}/liveEquity-derivatives",
-            params={"index": "nse50_fut"},
+            params={"index": idx},
         ).json()
 
         data = tuple(i["expiryDate"] for i in res["data"])
