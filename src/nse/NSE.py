@@ -2,8 +2,8 @@ import pickle
 from pathlib import Path
 from requests import Session
 from requests.exceptions import ReadTimeout
-from typing import Literal, Any, Union, List, Dict
-from datetime import datetime
+from typing import Literal, Any, Optional, Union, List, Dict
+from datetime import datetime, timedelta
 from zipfile import ZipFile
 from mthrottle import Throttle
 
@@ -655,6 +655,69 @@ class NSE:
         """
 
         return self.__req(f"{self.base_url}/sovereign-gold-bonds").json()
+
+    def listCurrentIPO(self) -> List[Dict]:
+        """List current IPOs
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listCurrentIPO.json>`__
+
+        :return: List of Dict containing current IPOs
+        :rtype: List[Dict]
+        """
+
+        return self.__req(f"{self.base_url}/ipo-current-issue").json()
+
+    def listUpcomingIPO(self) -> List[Dict]:
+        """List upcoming IPOs
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listUpcomingIPO.json>`__
+
+        :return: List of Dict containing upcoming IPOs
+        :rtype: List[Dict]
+        """
+
+        return self.__req(
+            f"{self.base_url}/all-upcoming-issues?category=ipo"
+        ).json()
+
+    def listPastIPO(
+        self,
+        from_date: Optional[datetime] = None,
+        to_date: Optional[datetime] = None,
+    ) -> List[Dict]:
+        """List past IPOs
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listPastIPO.json>`__
+
+        :param from_date: Optional defaults to 90 days from to_date
+        :type from_date: datetime.datetime
+        :param to_date: Optional defaults to current date
+        :type to_date: datetime.datetime
+        :raise ValueError: if `to_date` is less than `from_date`
+        :return: List of Dict containing past IPOs
+        :rtype: List[Dict]
+        """
+
+        if to_date is None:
+            to_date = datetime.now()
+
+        if from_date is None:
+            from_date = to_date - timedelta(90)
+
+        if to_date < from_date:
+            raise ValueError(
+                "Argument `to_date` cannot be less than `from_date`"
+            )
+
+        params = dict(
+            from_date=from_date.strftime("%d-%m-%Y"),
+            to_date=to_date.strftime("%d-%m-%Y"),
+        )
+
+        return self.__req(
+            f"{self.base_url}/public-past-issues",
+            params=params,
+        ).json()
 
     def blockDeals(self) -> Dict:
         """Block deals
