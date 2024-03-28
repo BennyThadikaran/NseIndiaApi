@@ -309,9 +309,9 @@ class NSE:
     def actions(
         self,
         segment: Literal["equities", "sme", "debt", "mf"] = "equities",
-        symbol: Union[str, None] = None,
-        from_date: Union[datetime, None] = None,
-        to_date: Union[datetime, None] = None,
+        symbol: Optional[str] = None,
+        from_date: Optional[datetime] = None,
+        to_date: Optional[datetime] = None,
     ) -> List[Dict]:
         """Get all forthcoming corporate actions.
 
@@ -362,10 +362,10 @@ class NSE:
         index: Literal[
             "equities", "sme", "debt", "mf", "invitsreits"
         ] = "equities",
-        symbol: Union[str, None] = None,
+        symbol: Optional[str] = None,
         fno=False,
-        from_date: Union[datetime, None] = None,
-        to_date: Union[datetime, None] = None,
+        from_date: Optional[datetime] = None,
+        to_date: Optional[datetime] = None,
     ) -> List[Dict]:
         """Get all corporate announcements for current date.
 
@@ -417,10 +417,10 @@ class NSE:
     def boardMeetings(
         self,
         index: Literal["equities", "sme"] = "equities",
-        symbol: Union[str, None] = None,
+        symbol: Optional[str] = None,
         fno: bool = False,
-        from_date: Union[datetime, None] = None,
-        to_date: Union[datetime, None] = None,
+        from_date: Optional[datetime] = None,
+        to_date: Optional[datetime] = None,
     ) -> List[Dict]:
         """Get all forthcoming board meetings.
 
@@ -491,7 +491,7 @@ class NSE:
         self,
         symbol,
         type: Literal["equity", "fno"] = "equity",
-        section: Union[Literal["trade_info"], None] = None,
+        section: Optional[Literal["trade_info"]] = None,
     ) -> Dict:
         """Price quotes and other data for equity or derivative symbols
 
@@ -552,7 +552,7 @@ class NSE:
             "volume": v["securityWiseDP"]["quantityTraded"],
         }
 
-    def gainers(self, data: Dict, count: Union[int, None] = None) -> List[Dict]:
+    def gainers(self, data: Dict, count: Optional[int] = None) -> List[Dict]:
         """Top gainers by percent change above zero.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/gainers.json>`__
@@ -570,7 +570,7 @@ class NSE:
             reverse=True,
         )[:count]
 
-    def losers(self, data: Dict, count: Union[int, None] = None) -> List[Dict]:
+    def losers(self, data: Dict, count: Optional[int] = None) -> List[Dict]:
         """Top losers by percent change below zero.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/losers.json>`__
