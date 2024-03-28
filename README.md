@@ -4,7 +4,7 @@ An unofficial Python API for the NSE India stock exchange.
 
 Python version: >= 3.8
 
-If you ❤️ my work so far, please 🌟 this repo.
+If you ❤️  my work so far, please 🌟 this repo.
 
 ## 👽 Documentation
 
@@ -12,8 +12,7 @@ If you ❤️ my work so far, please 🌟 this repo.
 
 ## Updates
 
-- Prior to v0.2.6, NSE class would exit on unhandled errors. This undesirable behavior has changed. It is left to the user to catch and handle these errors.
-- Added a new method: NSE.getFuturesExpiry ([See Documentation for details](https://bennythadikaran.github.io/NseIndiaApi/usage.html#nse.NSE.getFuturesExpiry))
+**v0.2.8:** Add methods for listing upcoming, current and past IPOs. [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#list-ipos)
 
 ## 🔥 Usage
 
