@@ -80,6 +80,15 @@ List Stocks
 
 .. automethod:: nse.NSE.listSgb
 
+List IPOs
+---------
+
+.. automethod:: nse.NSE.listCurrentIPO
+
+.. automethod:: nse.NSE.listUpcomingIPO
+
+.. automethod:: nse.NSE.listPastIPO
+
 Download NSE reports
 --------------------
 

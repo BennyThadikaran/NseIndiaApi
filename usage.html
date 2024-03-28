@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Welcome to NSE’s documentation!" href="index.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>Usage - nse 0.2.7 documentation</title>
+        <title>Usage - nse 0.2.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">nse 0.2.7 documentation</div></a>
+      <a href="index.html"><div class="brand">nse 0.2.8 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">nse 0.2.7 documentation</span>
+  <span class="sidebar-brand-text">nse 0.2.8 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -510,6 +510,63 @@
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A dictionary. The <code class="docutils literal notranslate"><span class="pre">data</span></code> key is a list of all SGB’s represented by a dictionary with the symbol code and other metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="list-ipos">
+<h2>List IPOs<a class="headerlink" href="#list-ipos" title="Link to this heading">#</a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.listCurrentIPO">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listCurrentIPO</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.listCurrentIPO" title="Link to this definition">#</a></dt>
+<dd><p>List current IPOs</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listCurrentIPO.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Dict containing current IPOs</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.listUpcomingIPO">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listUpcomingIPO</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.listUpcomingIPO" title="Link to this definition">#</a></dt>
+<dd><p>List upcoming IPOs</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listUpcomingIPO.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Dict containing upcoming IPOs</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.listPastIPO">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listPastIPO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.listPastIPO" title="Link to this definition">#</a></dt>
+<dd><p>List past IPOs</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listPastIPO.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from_date</strong> (<em>datetime.datetime</em>) – Optional defaults to 90 days from to_date</p></li>
+<li><p><strong>to_date</strong> (<em>datetime.datetime</em>) – Optional defaults to current date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <cite>to_date</cite> is less than <cite>from_date</cite></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Dict containing past IPOs</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Dict]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -914,6 +971,12 @@ But you need to consider holidays.</p>
 <li><a class="reference internal" href="#nse.NSE.listSgb"><code class="docutils literal notranslate"><span class="pre">NSE.listSgb()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#list-ipos">List IPOs</a><ul>
+<li><a class="reference internal" href="#nse.NSE.listCurrentIPO"><code class="docutils literal notranslate"><span class="pre">NSE.listCurrentIPO()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.listUpcomingIPO"><code class="docutils literal notranslate"><span class="pre">NSE.listUpcomingIPO()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.listPastIPO"><code class="docutils literal notranslate"><span class="pre">NSE.listPastIPO()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#download-nse-reports">Download NSE reports</a><ul>
 <li><a class="reference internal" href="#nse.NSE.equityBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.equityBhavcopy()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.deliveryBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.deliveryBhavcopy()</span></code></a></li>
@@ -946,7 +1009,7 @@ But you need to consider holidays.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=58050c01"></script>
+</div><script src="_static/documentation_options.js?v=b01fafc3"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
