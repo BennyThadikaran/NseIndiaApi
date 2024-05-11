@@ -11,6 +11,7 @@ If you ❤️  my work so far, please 🌟 this repo.
 [https://bennythadikaran.github.io/NseIndiaApi](https://bennythadikaran.github.io/NseIndiaApi)
 
 ## Updates
+**v0.2.9** Added new method to get NSE circulars. [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#nse-circulars)
 
 **v0.2.8:** Add methods for listing upcoming, current and past IPOs. [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#list-ipos)
 
