@@ -719,6 +719,76 @@ class NSE:
             params=params,
         ).json()
 
+    def circulars(
+        self,
+        dept_code: Optional[str] = None,
+        from_date: Optional[datetime] = None,
+        to_date: Optional[datetime] = None,
+    ) -> dict:
+        """
+        Return exchange circulars and communications by Department
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/circulars.json>`__
+
+        :param dept_code: Optional Department code. See table below for options
+        :param from_date: Optional defaults to 7 days from to_date
+        :type from_date: datetime.datetime
+        :param to_date: Optional defaults to current date
+        :type to_date: datetime.datetime
+        :raise ValueError: if `to_date` is less than `from_date`
+
+        Below is the list of `dept_code` values and their description
+
+        - CMTR - Capital Market (Equities) Trade
+        - COM - Commodity Derivatives
+        - CC - Corporate Communications
+        - CRM - CRM & Marketing
+        - CD - Currency Derivatives
+        - DS - Debt Segment
+        - SME - Emerge
+        - SMEITP - Emerge-ITP
+        - FAAC - Finance & Accounts
+        - FAO - Futures & Options
+        - INSP - Inspection & Compliance
+        - LEGL - Legal, ISC & Arbitration
+        - CMLS - Listing
+        - MA - Market Access
+        - MSD - Member Service Department
+        - MEMB - Membership
+        - MF - Mutual Fund
+        - NWPR - New Products
+        - NCFM - NSE Academy Limited
+        - CMPT - NSE Clearing - Capital Market
+        - IPO - Primary Market Segment
+        - RDM - Retail Debt Market
+        - SLBS - Securities Lending & Borrowing Scheme
+        - SURV - Surveillance & Investigation
+        - TEL - Systems & Telecom
+        - UCIBD - UCI Business Development
+        - WDTR - Wholesale Debt Market
+        """
+
+        if to_date is None:
+            to_date = datetime.now()
+
+        if from_date is None:
+            from_date = to_date - timedelta(7)
+
+        if to_date < from_date:
+            raise ValueError(
+                "Argument `to_date` cannot be less than `from_date`"
+            )
+
+        params = dict(
+            from_date=from_date.strftime("%d-%m-%Y"),
+            to_date=to_date.strftime("%d-%m-%Y"),
+        )
+
+        if dept_code:
+            params["dept"] = dept_code.upper()
+
+        return self.__req(f"{self.base_url}/circulars", params=params).json()
+
     def blockDeals(self) -> Dict:
         """Block deals
 

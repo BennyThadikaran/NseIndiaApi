@@ -89,6 +89,11 @@ List IPOs
 
 .. automethod:: nse.NSE.listPastIPO
 
+NSE Circulars
+-------------
+
+.. automethod:: nse.NSE.circulars
+
 Download NSE reports
 --------------------
 
