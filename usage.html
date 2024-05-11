@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Welcome to NSE’s documentation!" href="index.html" />
 
     <!-- Generated with Sphinx 7.3.7 and Furo 2023.09.10 -->
-        <title>Usage - nse 0.2.8 documentation</title>
+        <title>Usage - nse 0.2.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">nse 0.2.8 documentation</div></a>
+      <a href="index.html"><div class="brand">nse 0.2.9 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">nse 0.2.8 documentation</span>
+  <span class="sidebar-brand-text">nse 0.2.9 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -572,6 +572,58 @@
 </dd></dl>
 
 </section>
+<section id="nse-circulars">
+<h2>NSE Circulars<a class="headerlink" href="#nse-circulars" title="Link to this heading">¶</a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.circulars">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">circulars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dept_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.circulars" title="Link to this definition">¶</a></dt>
+<dd><p>Return exchange circulars and communications by Department</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/circulars.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dept_code</strong> – Optional Department code. See table below for options</p></li>
+<li><p><strong>from_date</strong> (<em>datetime.datetime</em>) – Optional defaults to 7 days from to_date</p></li>
+<li><p><strong>to_date</strong> (<em>datetime.datetime</em>) – Optional defaults to current date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <cite>to_date</cite> is less than <cite>from_date</cite></p>
+</dd>
+</dl>
+<p>Below is the list of <cite>dept_code</cite> values and their description</p>
+<ul class="simple">
+<li><p>CMTR - Capital Market (Equities) Trade</p></li>
+<li><p>COM - Commodity Derivatives</p></li>
+<li><p>CC - Corporate Communications</p></li>
+<li><p>CRM - CRM &amp; Marketing</p></li>
+<li><p>CD - Currency Derivatives</p></li>
+<li><p>DS - Debt Segment</p></li>
+<li><p>SME - Emerge</p></li>
+<li><p>SMEITP - Emerge-ITP</p></li>
+<li><p>FAAC - Finance &amp; Accounts</p></li>
+<li><p>FAO - Futures &amp; Options</p></li>
+<li><p>INSP - Inspection &amp; Compliance</p></li>
+<li><p>LEGL - Legal, ISC &amp; Arbitration</p></li>
+<li><p>CMLS - Listing</p></li>
+<li><p>MA - Market Access</p></li>
+<li><p>MSD - Member Service Department</p></li>
+<li><p>MEMB - Membership</p></li>
+<li><p>MF - Mutual Fund</p></li>
+<li><p>NWPR - New Products</p></li>
+<li><p>NCFM - NSE Academy Limited</p></li>
+<li><p>CMPT - NSE Clearing - Capital Market</p></li>
+<li><p>IPO - Primary Market Segment</p></li>
+<li><p>RDM - Retail Debt Market</p></li>
+<li><p>SLBS - Securities Lending &amp; Borrowing Scheme</p></li>
+<li><p>SURV - Surveillance &amp; Investigation</p></li>
+<li><p>TEL - Systems &amp; Telecom</p></li>
+<li><p>UCIBD - UCI Business Development</p></li>
+<li><p>WDTR - Wholesale Debt Market</p></li>
+</ul>
+</dd></dl>
+
+</section>
 <section id="download-nse-reports">
 <h2>Download NSE reports<a class="headerlink" href="#download-nse-reports" title="Link to this heading">¶</a></h2>
 <p>Reports are saved to filesystem and a <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object is returned.</p>
@@ -977,6 +1029,10 @@ But you need to consider holidays.</p>
 <li><a class="reference internal" href="#nse.NSE.listPastIPO"><code class="docutils literal notranslate"><span class="pre">NSE.listPastIPO()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#nse-circulars">NSE Circulars</a><ul>
+<li><a class="reference internal" href="#nse.NSE.circulars"><code class="docutils literal notranslate"><span class="pre">NSE.circulars()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#download-nse-reports">Download NSE reports</a><ul>
 <li><a class="reference internal" href="#nse.NSE.equityBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.equityBhavcopy()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.deliveryBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.deliveryBhavcopy()</span></code></a></li>
@@ -1009,7 +1065,7 @@ But you need to consider holidays.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=b01fafc3"></script>
+</div><script src="_static/documentation_options.js?v=14672bda"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
