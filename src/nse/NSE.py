@@ -28,6 +28,7 @@ class NSE:
     :raise ValueError: if ``download_folder`` is not a folder/dir
     """
 
+    __version__ = "1.0.0"
     SEGMENT_EQUITY = "equities"
     SEGMENT_SME = "sme"
     SEGMENT_MF = "mf"
@@ -43,7 +44,7 @@ class NSE:
 
     __optionIndex = ("banknifty", "nifty", "finnifty", "niftyit")
     base_url = "https://www.nseindia.com/api"
-    archive_url = "https://archives.nseindia.com"
+    archive_url = "https://nsearchives.nseindia.com"
 
     def __init__(self, download_folder: Union[str, Path]):
         """Initialise NSE"""
@@ -199,13 +200,11 @@ class NSE:
         :rtype: pathlib.Path
         """
 
-        date_str = date.strftime("%d%b%Y").upper()
-        month = date_str[2:5]
-
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
-        url = "{}/content/historical/EQUITIES/{}/{}/cm{}bhav.csv.zip".format(
-            self.archive_url, date.year, month, date_str
+        url = "{}/content/cm/BhavCopy_NSE_CM_0_0_0_{}_F_0000.csv.zip".format(
+            self.archive_url,
+            date.strftime("%Y%m%d"),
         )
 
         file = self.__download(url, folder)

@@ -4,13 +4,22 @@ An unofficial Python API for the NSE India stock exchange.
 
 Python version: >= 3.8
 
-If you ❤️  my work so far, please 🌟 this repo.
+If you ❤️ my work so far, please 🌟 this repo.
+
+**IMPORTANT:** Starting 8th July 2024, NSE will replace the current equity
+Bhavcopy with new UDiFF format.
+
+Run `pip install -U nse` to update this package. Update your existing scripts
+to avoid breakage.
 
 ## 👽 Documentation
 
 [https://bennythadikaran.github.io/NseIndiaApi](https://bennythadikaran.github.io/NseIndiaApi)
 
 ## Updates
+
+**v1.0.0 Breaking Change** equityBhavcopy will download the new UDiFF bhavcopy format.
+
 **v0.2.9** Added new method to get NSE circulars. [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#nse-circulars)
 
 **v0.2.8:** Add methods for listing upcoming, current and past IPOs. [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#list-ipos)
