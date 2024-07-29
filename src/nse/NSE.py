@@ -28,7 +28,7 @@ class NSE:
     :raise ValueError: if ``download_folder`` is not a folder/dir
     """
 
-    __version__ = "1.0.0"
+    __version__ = "1.0.1"
     SEGMENT_EQUITY = "equities"
     SEGMENT_SME = "sme"
     SEGMENT_MF = "mf"
@@ -275,7 +275,7 @@ class NSE:
     def fnoBhavcopy(
         self, date: datetime, folder: Union[str, Path, None] = None
     ):
-        """Download the daily FnO bhavcopy report for specified ``date``
+        """Download the daily Udiff format FnO bhavcopy report for specified ``date``
         and return the saved file path.
 
         :param date: Date of FnO bhavcopy to download
@@ -288,14 +288,11 @@ class NSE:
         :return: Path to saved file
         :rtype: pathlib.Path"""
 
-        dt_str = date.strftime("%d%b%Y").upper()
-
-        month = dt_str[2:5]
-        year = dt_str[-4:]
+        dt_str = date.strftime("%Y%m%d")
 
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
-        url = f"{self.archive_url}/content/historical/DERIVATIVES/{year}/{month}/fo{dt_str}bhav.csv.zip"
+        url = f"{self.archive_url}/content/fo/BhavCopy_NSE_FO_0_0_0_{dt_str}_F_0000.csv.zip"
 
         file = self.__download(url, folder)
 

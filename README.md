@@ -18,6 +18,8 @@ to avoid breakage.
 
 ## Updates
 
+**v1.0.1** FNO bhavcopy will download the new UDiFF bhavcopy format.
+
 **v1.0.0 Breaking Change** equityBhavcopy will download the new UDiFF bhavcopy format.
 
 **v0.2.9** Added new method to get NSE circulars. [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#nse-circulars)
