@@ -302,6 +302,36 @@ class NSE:
 
         return NSE.__unzip(file, folder=file.parent)
 
+    def priceband_report(
+        self, date: datetime, folder: Union[str, Path, None] = None
+    ) -> Path:
+        """Download the daily priceband report for specified ``date``
+        and return the saved file path.
+
+        :param date: Report date to download
+        :type date: datetime.datetime
+        :param folder: Optional folder path to save file. If not specified, use ``download_folder`` specified during class initializataion.
+        :type folder: pathlib.Path or str
+        :raise ValueError: if ``folder`` is not a dir/folder
+        :raise FileNotFoundError: if download failed or file corrupted
+        :raise RuntimeError: if report unavailable or not yet updated.
+        :return: Path to saved file
+        :rtype: pathlib.Path"""
+
+        dt_str = date.strftime("%d%m%Y")
+
+        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+
+        url = f"{self.archive_url}/content/equities/sec_list_{dt_str}.csv"
+
+        file = self.__download(url, folder)
+
+        if not file.is_file():
+            file.unlink()
+            raise FileNotFoundError(f"Failed to download file: {file.name}")
+
+        return file
+
     def actions(
         self,
         segment: Literal["equities", "sme", "debt", "mf"] = "equities",
