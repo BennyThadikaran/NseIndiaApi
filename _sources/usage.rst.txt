@@ -111,6 +111,8 @@ Zip files are automatically extracted and saved to file.
 
 .. automethod:: nse.NSE.fnoBhavcopy
 
+.. automethod:: nse.NSE.priceband_report
+
 Corporate Announcements and Actions
 -----------------------------------
 
