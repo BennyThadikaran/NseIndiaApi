@@ -217,7 +217,7 @@ class NSE:
 
     def deliveryBhavcopy(
         self, date: datetime, folder: Union[str, Path, None] = None
-    ):
+    ) -> Path:
         """Download the daily Equity delivery report for specified ``date`` and return saved file path.
 
         :param date: Date of delivery bhavcopy to download
@@ -246,7 +246,7 @@ class NSE:
 
     def indicesBhavcopy(
         self, date: datetime, folder: Union[str, Path, None] = None
-    ):
+    ) -> Path:
         """Download the daily Equity Indices report for specified ``date``
         and return the saved file path.
 
@@ -274,7 +274,7 @@ class NSE:
 
     def fnoBhavcopy(
         self, date: datetime, folder: Union[str, Path, None] = None
-    ):
+    ) -> Path:
         """Download the daily Udiff format FnO bhavcopy report for specified ``date``
         and return the saved file path.
 
