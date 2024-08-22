@@ -6,17 +6,13 @@ Python version: >= 3.8
 
 If you ❤️ my work so far, please 🌟 this repo.
 
-**IMPORTANT:** Starting 8th July 2024, NSE will replace the current equity
-Bhavcopy with new UDiFF format.
-
-Run `pip install -U nse` to update this package. Update your existing scripts
-to avoid breakage.
-
 ## 👽 Documentation
 
 [https://bennythadikaran.github.io/NseIndiaApi](https://bennythadikaran.github.io/NseIndiaApi)
 
 ## Updates
+
+**v1.0.3** Delete the cookie file on exit (either nse.exit() or on exiting the `with` statement)
 
 **v1.0.2** Added new method to download daily Priceband report.
 
