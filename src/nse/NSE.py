@@ -1,11 +1,12 @@
 import pickle
+from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any, Dict, List, Literal, Optional, Union
+from zipfile import ZipFile
+
+from mthrottle import Throttle
 from requests import Session
 from requests.exceptions import ReadTimeout
-from typing import Literal, Any, Optional, Union, List, Dict
-from datetime import datetime, timedelta
-from zipfile import ZipFile
-from mthrottle import Throttle
 
 throttleConfig = {
     "default": {
