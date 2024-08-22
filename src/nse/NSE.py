@@ -102,6 +102,7 @@ class NSE:
 
     def __exit__(self, *_):
         self.session.close()
+        self.cookie_path.unlink(missing_ok=True)
 
         return False
 
@@ -172,6 +173,7 @@ class NSE:
         *Not required when using the ``with`` statement.*"""
 
         self.session.close()
+        self.cookie_path.unlink(missing_ok=True)
 
     def status(self) -> List[Dict]:
         """Returns market status
