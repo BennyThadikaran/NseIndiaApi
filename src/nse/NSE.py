@@ -335,6 +335,41 @@ class NSE:
 
         return file
 
+    def pr_bhavcopy(
+        self, date: datetime, folder: Union[str, Path, None] = None
+    ) -> Path:
+        """Download the daily PR Bhavcopy zip report for specified ``date``
+        and return the saved zipfile path.
+
+        The file returned is a zip file containing a collection of various reports.
+
+        It includes a `Readme.txt`, explaining the contents of each file and the file naming format.
+
+        :param date: Report date to download
+        :type date: datetime.datetime
+        :param folder: Optional folder path to save file. If not specified, use ``download_folder`` specified during class initializataion.
+        :type folder: pathlib.Path or str
+        :raise ValueError: if ``folder`` is not a dir/folder
+        :raise FileNotFoundError: if download failed or file corrupted
+        :raise RuntimeError: if report unavailable or not yet updated.
+        :return: Path to saved zip file
+        :rtype: pathlib.Path
+        """
+
+        dt_str = date.strftime("%d%m%y")
+
+        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+
+        url = f"{self.archive_url}/archives/equities/bhavcopy/pr/PR{dt_str}.zip"
+
+        file = self.__download(url, folder)
+
+        if not file.is_file():
+            file.unlink()
+            raise FileNotFoundError(f"Failed to download file: {file.name}")
+
+        return file
+
     def actions(
         self,
         segment: Literal["equities", "sme", "debt", "mf"] = "equities",
