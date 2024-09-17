@@ -22,18 +22,6 @@ All requests through NSE are rate limited or throttled to 3 requests per second.
 
 **v1.0.4** Added new method to download daily bhavcopy PR zip (contains a collection of various reports). [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#nse.NSE.pr_bhavcopy)
 
-**v1.0.3** Delete the cookie file on exit (either nse.exit() or on exiting the `with` statement)
-
-**v1.0.2** Added new method to download daily Priceband report.
-
-**v1.0.1** FNO bhavcopy will download the new UDiFF bhavcopy format.
-
-**v1.0.0 Breaking Change** equityBhavcopy will download the new UDiFF bhavcopy format.
-
-**v0.2.9** Added new method to get NSE circulars. [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#nse-circulars)
-
-**v0.2.8:** Add methods for listing upcoming, current and past IPOs. [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#list-ipos)
-
 ## 🔥 Usage
 
 **Install with Pip**
