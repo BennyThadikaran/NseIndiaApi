@@ -109,6 +109,32 @@ Zip files are automatically extracted and saved to file.
 
 .. automethod:: nse.NSE.indicesBhavcopy
 
+.. automethod:: nse.NSE.pr_bhavcopy
+
+   .. code-block:: python
+
+      from datetime import datetime
+      from zipfile import ZipFile
+
+      import pandas as pd
+      from nse import NSE
+
+      dt = datetime(2024, 9, 15)
+
+      with NSE("") as nse:
+        # Download the PR bhavcopy zip file
+        zipped_file = nse.pr_bhavcopy(dt)
+
+      # Extract all files into current folder
+      with ZipFile(zipped_file) as zip:
+        zip.namelist() # get the list of files
+        zip.extractall()
+
+      # OR Load a file named HL150924.csv from the zipfile into a Pandas DataFrame
+      with ZipFile(zipped_file) as file:
+        with zip.open(f"HL{dt:%d%m%Y}.csv") as f:
+            df = pd.read_csv(f, index_col="Symbol")
+
 .. automethod:: nse.NSE.fnoBhavcopy
 
 .. automethod:: nse.NSE.priceband_report
