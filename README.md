@@ -10,7 +10,17 @@ If you ❤️ my work so far, please 🌟 this repo.
 
 [https://bennythadikaran.github.io/NseIndiaApi](https://bennythadikaran.github.io/NseIndiaApi)
 
+## API limits
+
+All requests through NSE are rate limited or throttled to 3 requests per second. This allows making large number of requests without overloading the server or getting blocked.
+
+- If downloading a large number of reports from NSE, please do so after-market hours (Preferably late evening).
+- Add an extra 0.5 - 1 sec sleep between requests. The extra run time likely wont make a difference to your script.
+- Save the file and reuse them instead of re-downloading.
+
 ## Updates
+
+**v1.0.4** Added new method to download daily bhavcopy PR zip (contains a collection of various reports). [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#nse.NSE.pr_bhavcopy)
 
 **v1.0.3** Delete the cookie file on exit (either nse.exit() or on exiting the `with` statement)
 
