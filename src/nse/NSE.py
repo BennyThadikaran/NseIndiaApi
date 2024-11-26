@@ -30,7 +30,7 @@ class NSE:
     :raise ValueError: if ``download_folder`` is not a folder/dir
     """
 
-    __version__ = "1.0.5-1"
+    __version__ = "1.0.6"
     SEGMENT_EQUITY = "equities"
     SEGMENT_SME = "sme"
     SEGMENT_MF = "mf"
