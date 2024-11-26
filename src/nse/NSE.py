@@ -1,4 +1,5 @@
 import pickle
+import zlib
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Union
@@ -121,8 +122,17 @@ class NSE:
 
     @staticmethod
     def __unzip(file: Path, folder: Path):
-        with ZipFile(file) as zip:
-            filepath = zip.extract(member=zip.namelist()[0], path=folder)
+        if file.suffix == ".zip":
+            with ZipFile(file) as zip:
+                filepath = zip.extract(member=zip.namelist()[0], path=folder)
+        elif file.suffix == ".gz":
+            with open(file, "rb") as f_in:
+                with open(file.stem, "wb") as f_out:
+                    f_out.write(zlib.decompress(f_in.read(), wbits=31))
+
+            filepath = file.stem
+        else:
+            raise ValueError("Unknown file format")
 
         file.unlink()
         return Path(filepath)
@@ -369,6 +379,39 @@ class NSE:
             raise FileNotFoundError(f"Failed to download file: {file.name}")
 
         return file
+
+    def cm_mii_security_report(
+        self, date: datetime, folder: Union[str, Path, None] = None
+    ) -> Path:
+        """Download the daily CM MII security file report for specified ``date``
+        and return the saved and extracted file path.
+
+        The file returned is a csv file.
+
+        :param date: Report date to download
+        :type date: datetime.datetime
+        :param folder: Optional folder path to save file. If not specified, use ``download_folder`` specified during class initializataion.
+        :type folder: pathlib.Path or str
+        :raise ValueError: if ``folder`` is not a dir/folder
+        :raise FileNotFoundError: if download failed or file corrupted
+        :raise RuntimeError: if report unavailable or not yet updated.
+        :return: Path to saved zip file
+        :rtype: pathlib.Path
+        """
+
+        dt_str = date.strftime("%d%m%Y")
+
+        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+
+        url = f"{self.archive_url}/content/cm/NSE_CM_security_{dt_str}.csv.gz"
+
+        file = self.__download(url, folder)
+
+        if not file.is_file():
+            file.unlink()
+            raise FileNotFoundError(f"Failed to download file: {file.name}")
+
+        return self.__unzip(file, folder=file.parent)
 
     def actions(
         self,
