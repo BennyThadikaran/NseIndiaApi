@@ -1197,13 +1197,11 @@ class NSE:
         if (todate - fromdate).days > 365:
             raise ValueError("The date range cannot exceed one year.")
 
-        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
-
         url = "{}/historical/bulk-deals?from={}&to={}".format(
             self.base_url, fromdate.strftime("%d-%m-%Y"), todate.strftime("%d-%m-%Y")
         )
 
-        data = self.__req(url, params={"type": type}).json()
+        data = self.__req(url).json()
 
         if not 'data' in data or len(data['data']):
             raise RuntimeError("No bulk deals data available for the specified date range.")
