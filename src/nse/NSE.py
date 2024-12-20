@@ -1178,3 +1178,34 @@ class NSE:
         data = self.__req(url, params={"type": type}).json()
 
         return data
+    
+    def bulkdeals(
+        self, fromdate: datetime, todate: datetime
+    ) -> Dict:
+        """Download the bulk deals report for the specified date range and return the data.
+
+        :param fromdate: Start date of the bulk deals report to download
+        :type fromdate: datetime.datetime
+        :param todate: End date of the bulk deals report to download
+        :type todate: datetime.datetime
+        :raise ValueError: if the date range exceeds one year.
+        :raise RuntimeError: if no bulk deals data is available for the specified date range.
+        :return: Bulk deals data
+        :rtype: dict
+        """
+
+        if (todate - fromdate).days > 365:
+            raise ValueError("The date range cannot exceed one year.")
+
+        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+
+        url = "{}/historical/bulk-deals?from={}&to={}".format(
+            self.base_url, fromdate.strftime("%d-%m-%Y"), todate.strftime("%d-%m-%Y")
+        )
+
+        data = self.__req(url, params={"type": type}).json()
+
+        if not 'data' in data or len(data['data']):
+            raise RuntimeError("No bulk deals data available for the specified date range.")
+        
+        return data['data']
