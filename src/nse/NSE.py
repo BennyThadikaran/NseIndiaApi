@@ -987,11 +987,11 @@ class NSE:
                 diff = expiryStrike - y["strikePrice"]
 
                 # strike expiry above strike, loss for CE writers
-                if diff > 0:
+                if diff > 0 and "CE" in y:
                     pain += -diff * y["CE"]["openInterest"]
 
                 # strike expiry below strike, loss for PE writers
-                if diff < 0:
+                if diff < 0 and "PE" in y:
                     pain += diff * y["PE"]["openInterest"]
 
             out[expiryStrike] = pain
