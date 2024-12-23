@@ -50,6 +50,8 @@ General Methods
 
 .. automethod:: nse.NSE.blockDeals
 
+.. automethod:: nse.NSE.bulkdeals
+
 Stocks Quotes and Market info
 -----------------------------
 
