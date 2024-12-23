@@ -1178,11 +1178,11 @@ class NSE:
         data = self.__req(url, params={"type": type}).json()
 
         return data
-    
-    def bulkdeals(
-        self, fromdate: datetime, todate: datetime
-    ) -> Dict:
+
+    def bulkdeals(self, fromdate: datetime, todate: datetime) -> Dict:
         """Download the bulk deals report for the specified date range and return the data.
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals.json>`__
 
         :param fromdate: Start date of the bulk deals report to download
         :type fromdate: datetime.datetime
@@ -1198,12 +1198,16 @@ class NSE:
             raise ValueError("The date range cannot exceed one year.")
 
         url = "{}/historical/bulk-deals?from={}&to={}".format(
-            self.base_url, fromdate.strftime("%d-%m-%Y"), todate.strftime("%d-%m-%Y")
+            self.base_url,
+            fromdate.strftime("%d-%m-%Y"),
+            todate.strftime("%d-%m-%Y"),
         )
 
         data = self.__req(url).json()
 
-        if not 'data' in data or len(data['data']) < 1:
-            raise RuntimeError("No bulk deals data available for the specified date range.")
-        
-        return data['data']
+        if not "data" in data or len(data["data"]) < 1:
+            raise RuntimeError(
+                "No bulk deals data available for the specified date range."
+            )
+
+        return data["data"]
