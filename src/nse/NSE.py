@@ -695,7 +695,15 @@ class NSE:
         )[:count]
 
     def listFnoStocks(self):
-        """List all Futures and Options (FNO) stocks
+        """
+        .. warning::
+
+            This function will be depreciated and removed in a future version.
+            To get the same data, try `nse.listEquityStocksByIndex(index='SECURITIES IN F&O')`
+
+        See https://www.nseindia.com/market-data/live-equity-market for more details.
+
+        List all Futures and Options (FNO) stocks
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listFnoStocks.json>`__
 
@@ -733,7 +741,13 @@ class NSE:
         return self.__req(url).json()
 
     def listIndexStocks(self, index):
-        """List all stocks by index
+        """
+        .. warning::
+
+            This function will be depreciated and removed in a future version.
+            See `nse.listEquityStocksByIndex`
+
+        List all stocks by index
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listIndexStocks.json>`__
 
