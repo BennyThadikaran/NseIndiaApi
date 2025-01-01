@@ -706,6 +706,20 @@ class NSE:
 
         return self.__req(url, params={"index": "SECURITIES IN F&O"}).json()
 
+    def listEquityStocksByIndex(self, index="NIFTY 50"):
+        """
+        List Equity stocks by their Index name. Defaults to `NIFTY 50`
+
+        :ref:`See list of acceptable values for index argument. <listequity>`
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listEquityStocksByIndex.json>`__
+
+        :return: A dictionary. The ``data`` key is a list of all stocks represented by a dictionary with the symbol name and other metadata.
+        """
+        url = f"{self.base_url}/equity-stockIndices"
+
+        return self.__req(url, params=dict(index=index)).json()
+
     def listIndices(self):
         """List all indices
 
