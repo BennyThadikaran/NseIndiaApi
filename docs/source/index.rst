@@ -20,3 +20,4 @@ Contents
 .. toctree::
 
    usage
+   index_categories

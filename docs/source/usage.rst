@@ -72,6 +72,8 @@ List Stocks
 
 .. automethod:: nse.NSE.listFnoStocks
 
+.. automethod:: nse.NSE.listEquityStocksByIndex
+
 .. automethod:: nse.NSE.listIndices
 
 .. automethod:: nse.NSE.listIndexStocks
