@@ -1239,3 +1239,38 @@ class NSE:
             )
 
         return data["data"]
+
+
+    def download_document(self, url: str, folder: Union[str, Path, None] = None) -> Path:
+        """Download the document from the specified URL and return the saved file path.
+        If the downloaded file is a zip file, extracts its contents to the specified folder.
+
+        Args:
+            url (str): URL of the document to download e.g. 'https://archives.nseindia.com/annual_reports/AR_ULTRACEMCO_2010_2011_08082011052526.zip'
+            folder (Union[str, Path, None], optional): Folder path to save file. 
+                If not specified, uses download_folder from class initialization.
+
+        Raises:
+            ValueError: If folder is not a directory
+            FileNotFoundError: If download failed or file corrupted
+            RuntimeError: If file extraction fails
+
+        Returns:
+            Path: Path to saved file (or extracted file if zip)
+        """
+        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+        file = self.__download(url, folder)
+
+        if not file.is_file():
+            file.unlink()
+            raise FileNotFoundError(f"Failed to download file: {file.name}")
+
+        # Check if downloaded file is a zip file
+        if file.suffix.lower() == '.zip':
+            try:
+                return self.__unzip(file, folder)
+            except Exception as e:
+                file.unlink()
+                raise RuntimeError(f"Failed to extract zip file: {str(e)}")
+        
+        return file
