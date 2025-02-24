@@ -53,7 +53,7 @@ General Methods
 .. automethod:: nse.NSE.bulkdeals
 
 Stocks Quotes and Market info
------------------------------
+------------------------------
 
 .. automethod:: nse.NSE.equityMetaInfo
 
@@ -144,6 +144,8 @@ Zip files are automatically extracted and saved to file.
 .. automethod:: nse.NSE.priceband_report
 
 .. automethod:: nse.NSE.cm_mii_security_report
+
+.. automethod:: nse.NSE.download_document
 
 Corporate Announcements and Actions
 -----------------------------------
