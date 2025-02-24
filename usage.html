@@ -7,7 +7,7 @@
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2023.09.10 -->
         <title>Usage - nse 1.0.8 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
     
@@ -202,8 +202,8 @@
 </section>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nse</span> <span class="kn">import</span> <span class="n">NSE</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">nse</span><span class="w"> </span><span class="kn">import</span> <span class="n">NSE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># Working directory</span>
 <span class="n">DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
@@ -792,11 +792,11 @@ and return the saved zipfile path.</p>
 <dd class="field-even"><p>pathlib.Path</p>
 </dd>
 </dl>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zipfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZipFile</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">nse</span> <span class="kn">import</span> <span class="n">NSE</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nse</span><span class="w"> </span><span class="kn">import</span> <span class="n">NSE</span>
 
 <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 
@@ -898,6 +898,27 @@ and return the saved and extracted file path.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.download_document">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">download_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#nse.NSE.download_document" title="Link to this definition">¶</a></dt>
+<dd><p>Download the document from the specified URL and return the saved file path.
+If the downloaded file is a zip file, extracts its contents to the specified folder.</p>
+<dl>
+<dt>Args:</dt><dd><p>url (str): URL of the document to download e.g. ‘<a class="reference external" href="https://archives.nseindia.com/annual_reports/AR_ULTRACEMCO_2010_2011_08082011052526.zip">https://archives.nseindia.com/annual_reports/AR_ULTRACEMCO_2010_2011_08082011052526.zip</a>’
+folder (Union[str, Path, None], optional): Folder path to save file.</p>
+<blockquote>
+<div><p>If not specified, uses download_folder from class initialization.</p>
+</div></blockquote>
+</dd>
+<dt>Raises:</dt><dd><p>ValueError: If folder is not a directory
+FileNotFoundError: If download failed or file corrupted
+RuntimeError: If file extraction fails</p>
+</dd>
+<dt>Returns:</dt><dd><p>Path: Path to saved file (or extracted file if zip)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1213,6 +1234,7 @@ But you need to consider holidays.</p>
 <li><a class="reference internal" href="#nse.NSE.fnoBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.fnoBhavcopy()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.priceband_report"><code class="docutils literal notranslate"><span class="pre">NSE.priceband_report()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.cm_mii_security_report"><code class="docutils literal notranslate"><span class="pre">NSE.cm_mii_security_report()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.download_document"><code class="docutils literal notranslate"><span class="pre">NSE.download_document()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#corporate-announcements-and-actions">Corporate Announcements and Actions</a><ul>
