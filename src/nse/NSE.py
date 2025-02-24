@@ -696,23 +696,12 @@ class NSE:
 
     def listFnoStocks(self):
         """
-        .. warning::
+        .. deprecated:: 1.0.9
+            Removed in version 1.0.9,
 
-            This function will be depreciated and removed in a future version.
-            To get the same data, try `nse.listEquityStocksByIndex(index='SECURITIES IN F&O')`
-
-        See https://www.nseindia.com/market-data/live-equity-market for more details.
-
-        List all Futures and Options (FNO) stocks
-
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listFnoStocks.json>`__
-
-        :return: A dictionary. The ``data`` key is a list of all FnO stocks represented by a dictionary with the symbol name and other metadata.
+        Use `nse.listEquityStocksByIndex(index='SECURITIES IN F&O')`
         """
-
-        url = f"{self.base_url}/equity-stockIndices"
-
-        return self.__req(url, params={"index": "SECURITIES IN F&O"}).json()
+        pass
 
     def listEquityStocksByIndex(self, index="NIFTY 50"):
         """
@@ -742,24 +731,12 @@ class NSE:
 
     def listIndexStocks(self, index):
         """
-        .. warning::
+        .. deprecated:: 1.0.9
+            Removed in version 1.0.9.
 
-            This function will be depreciated and removed in a future version.
-            See `nse.listEquityStocksByIndex`
-
-        List all stocks by index
-
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listIndexStocks.json>`__
-
-        :param index: Market Index Name
-        :type index: str
-        :return: A dictionary. The ``data`` key is a list of all stocks represented by a dictionary with the symbol code and other metadata.
+        Use `nse.listEquityStocksByIndex`
         """
-
-        return self.__req(
-            f"{self.base_url}/equity-stockIndices",
-            params={"index": index.upper()},
-        ).json()
+        pass
 
     def listEtf(self):
         """List all etf stocks
@@ -1174,18 +1151,13 @@ class NSE:
         return oc
 
     def advanceDecline(self) -> List[Dict[str, str]]:
-        """Advance decline for all Market indices
+        """
+        .. deprecated:: 1.0.9
+            Removed in v1.0.9 as url no longer active.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/advanceDecline.json>`__
-
-        :return: Advance decline values for all market indices
-        :rtype: list[ dict[str, str] ]"""
-
-        url = (
-            "https://www1.nseindia.com/common/json/indicesAdvanceDeclines.json"
-        )
-
-        return self.__req(url).json()["data"]
+        Use nse.listEquityStocksByIndex
+        """
+        pass
 
     def holidays(
         self, type: Literal["trading", "clearing"] = "trading"
