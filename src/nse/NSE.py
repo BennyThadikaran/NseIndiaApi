@@ -27,6 +27,8 @@ class NSE:
 
     :param download_folder: A folder/dir to save downloaded files and cookie files
     :type download_folder: pathlib.Path or str
+    :param timeout: Default 15. Network timeout in seconds
+    :type timeout: int
     :raise ValueError: if ``download_folder`` is not a folder/dir
     """
 
@@ -48,7 +50,7 @@ class NSE:
     base_url = "https://www.nseindia.com/api"
     archive_url = "https://nsearchives.nseindia.com"
 
-    def __init__(self, download_folder: Union[str, Path]):
+    def __init__(self, download_folder: Union[str, Path], timeout: int = 15):
         """Initialise NSE"""
 
         uAgent = "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/118.0"
@@ -62,6 +64,7 @@ class NSE:
         }
 
         self.dir = NSE.__getPath(download_folder, isFolder=True)
+        self.timeout = timeout
 
         self.cookie_path = self.dir / "nse_cookies.pkl"
 
@@ -70,7 +73,7 @@ class NSE:
         self.session.cookies.update(self.__getCookies())
 
     def __setCookies(self):
-        r = self.__req("https://www.nseindia.com/option-chain", timeout=10)
+        r = self.__req("https://www.nseindia.com/option-chain")
 
         cookies = r.cookies
 
@@ -145,7 +148,7 @@ class NSE:
 
         th.check()
 
-        with self.session.get(url, stream=True, timeout=15) as r:
+        with self.session.get(url, stream=True, timeout=self.timeout) as r:
 
             contentType = r.headers.get("content-type")
 
@@ -160,13 +163,13 @@ class NSE:
 
         return fname
 
-    def __req(self, url, params=None, timeout=10):
+    def __req(self, url, params=None):
         """Make a http request"""
 
         th.check()
 
         try:
-            r = self.session.get(url, params=params, timeout=timeout)
+            r = self.session.get(url, params=params, timeout=self.timeout)
         except ReadTimeout as e:
             raise TimeoutError(repr(e))
 
