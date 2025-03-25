@@ -1,1 +1,1 @@
-from nse import NSE
+from .nse import NSE
