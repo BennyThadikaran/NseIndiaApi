@@ -182,7 +182,8 @@ class NSE:
 
     @staticmethod
     def __split_date_range(from_date: date, to_date: date, max_chunk_size: int=365) -> List[Tuple[date, date]]:
-        """Splits a date range into non-overlapping chunks with each chunk having size at max 1 calendar year
+        """Splits a date range into non-overlapping chunks with each chunk having size at specified by 
+        the max_chunk_size parameter
         
         :param from_date: The starting date of the range
         :type from_date: datetime.date
@@ -198,12 +199,18 @@ class NSE:
         chunks = []
         current_start = from_date
         
-        while current_start < to_date:
-            current_end = min(current_start + timedelta(days=max_chunk_size), to_date)
+        while current_start <= to_date:
+            # Calculate the end of the current chunk.
+            # We use max_size - 1 because the range is inclusive.
+            current_end = current_start + timedelta(days=max_chunk_size - 1)
+            # Don't go past the final date.
+            if current_end > to_date:
+                current_end = to_date
             chunks.append((current_start, current_end))
-            current_start = current_end  # Move to the next chunk start
-
-        return chunks      
+            # Start next chunk the day after the current end.
+            current_start = current_end + timedelta(days=1)
+        
+        return chunks     
 
     def exit(self):
         """Close the ``requests`` session.
@@ -1341,6 +1348,7 @@ class NSE:
         date_chunks: List[Tuple[date, date]] = NSE.__split_date_range(from_date, to_date, 100)
         data = []
         for chunk in date_chunks:
+            print(chunk)
             data += reversed(self.__req(
                 url=f"{self.base_url}/historical/cm/equity",
                 params={
