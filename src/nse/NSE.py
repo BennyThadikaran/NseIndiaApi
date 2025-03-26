@@ -1,7 +1,6 @@
 import pickle
 import zlib
 from datetime import datetime, timedelta, date
-from dateutil.relativedelta import relativedelta
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Union, Tuple
 from zipfile import ZipFile
@@ -1288,8 +1287,8 @@ class NSE:
     def fetch_equity_historical_data(
         self,
         symbol: str,
-        from_date: date = None,
-        to_date: date = None,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
         series: List[str] = ["EQ"],
     ) -> List[Dict]:
         """
@@ -1330,25 +1329,22 @@ class NSE:
                 url=f"{self.base_url}/historical/cm/equity",
                 params={"symbol": symbol}
             ).json()
-            return reversed(data["data"])
+            return data["data"][::-1]
         if from_date is not None:
             if not isinstance(from_date, date):
                 raise TypeError("Starting date must be an object of type datetime.date")
-            if to_date is None:
-                to_date = date.today()
         else:
-            from_date = date.today() - relativedelta(months=1)
-            if to_date is not None:
-                if not isinstance(to_date, date):
-                    raise TypeError("Ending date must be an object of type datetime.date")
-            else:
-                to_date = date.today()
+            from_date = date.today() - timedelta(days=30)
+        if to_date is not None:
+            if not isinstance(to_date, date):
+                raise TypeError("Ending date must be an object of type datetime.date")
+        else:
+            to_date = date.today()
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
         date_chunks: List[Tuple[date, date]] = NSE.__split_date_range(from_date, to_date, 100)
         data = []
         for chunk in date_chunks:
-            print(chunk)
             data += reversed(self.__req(
                 url=f"{self.base_url}/historical/cm/equity",
                 params={
