@@ -1331,25 +1331,34 @@ class NSE:
             - GS
         """
         # Simple case
-        if from_date is None and to_date is None and series == ["EQ"]:
+        if not from_date and not to_date and series == ["EQ"]:
             data = self.__req(
                 url=f"{self.base_url}/historical/cm/equity",
                 params={"symbol": symbol}
             ).json()
             return data["data"][::-1]
-        if from_date is not None:
-            if not isinstance(from_date, date):
-                raise TypeError("Starting date must be an object of type datetime.date")
-        else:
-            from_date = date.today() - timedelta(days=30)
-        if to_date is not None:
-            if not isinstance(to_date, date):
-                raise TypeError("Ending date must be an object of type datetime.date")
-        else:
+
+        if from_date and not isinstance(from_date, date):
+            raise TypeError(
+                "Starting date must be an object of type datetime.date"
+            )
+
+        if to_date and not isinstance(to_date, date):
+            raise TypeError(
+                "Ending date must be an object of type datetime.date"
+            )
+
+        if not to_date:
             to_date = date.today()
+
+        if not from_date:
+            from_date = to_date - timedelta(30)
+
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
-        date_chunks: List[Tuple[date, date]] = NSE.__split_date_range(from_date, to_date, 100)
+
+        date_chunks = NSE.__split_date_range(from_date, to_date, 100)
+
         data = []
         for chunk in date_chunks:
             data += reversed(self.__req(
