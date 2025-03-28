@@ -700,7 +700,7 @@ class NSE:
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/gainers.json>`__
 
-        :param data: - Output of one of ``NSE.listIndexStocks``, ``NSE.listSME``, ``NSE.listFnoStocks``
+        :param data: - Output of one of ``NSE.listSME``, ``NSE.listEquityStocksByIndex``
         :type data: dict
         :param count: Optional. Limit number of result returned
         :type count: int
@@ -718,7 +718,7 @@ class NSE:
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/losers.json>`__
 
-        :param data: - Output of one of ``NSE.listIndexStocks``, ``NSE.listSME``, ``NSE.listFnoStocks``
+        :param data: - Output of one of ``NSE.listSME``, ``NSE.listEquityStocksByIndex``
         :type data: dict
         :param count: Optional. Limit number of result returned
         :type count: int
