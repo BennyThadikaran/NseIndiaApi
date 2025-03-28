@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Acceptable values for nse.listEquityStocksByIndex" href="index_categories.html" /><link rel="prev" title="Welcome to NSE’s documentation!" href="index.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2023.09.10 -->
-        <title>Usage - nse 1.0.10 documentation</title>
+        <title>Usage - nse 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">nse 1.0.10 documentation</div></a>
+      <a href="index.html"><div class="brand">nse 1.1.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">nse 1.0.10 documentation</span>
+  <span class="sidebar-brand-text">nse 1.1.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -311,7 +311,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.bulkdeals">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">bulkdeals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fromdate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">todate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#nse.NSE.bulkdeals" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">bulkdeals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fromdate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">todate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.bulkdeals" title="Link to this definition">¶</a></dt>
 <dd><p>Download the bulk deals report for the specified date range and return the data.</p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals.json">Sample response</a></p>
 <dl class="field-list simple">
@@ -413,7 +413,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>dict</em>) – <ul>
-<li><p>Output of one of <code class="docutils literal notranslate"><span class="pre">NSE.listIndexStocks</span></code>, <code class="docutils literal notranslate"><span class="pre">NSE.listSME</span></code>, <code class="docutils literal notranslate"><span class="pre">NSE.listFnoStocks</span></code></p></li>
+<li><p>Output of one of <code class="docutils literal notranslate"><span class="pre">NSE.listSME</span></code>, <code class="docutils literal notranslate"><span class="pre">NSE.listEquityStocksByIndex</span></code></p></li>
 </ul>
 </p></li>
 <li><p><strong>count</strong> (<em>int</em>) – Optional. Limit number of result returned</p></li>
@@ -437,7 +437,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>dict</em>) – <ul>
-<li><p>Output of one of <code class="docutils literal notranslate"><span class="pre">NSE.listIndexStocks</span></code>, <code class="docutils literal notranslate"><span class="pre">NSE.listSME</span></code>, <code class="docutils literal notranslate"><span class="pre">NSE.listFnoStocks</span></code></p></li>
+<li><p>Output of one of <code class="docutils literal notranslate"><span class="pre">NSE.listSME</span></code>, <code class="docutils literal notranslate"><span class="pre">NSE.listEquityStocksByIndex</span></code></p></li>
 </ul>
 </p></li>
 <li><p><strong>count</strong> (<em>int</em>) – Optional. Limit number of result returned</p></li>
@@ -461,6 +461,54 @@
 <p>Use nse.listEquityStocksByIndex</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.fetch_equity_historical_data">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">fetch_equity_historical_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['EQ']</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.fetch_equity_historical_data" title="Link to this definition">¶</a></dt>
+<dd><p>Downloads the historical daily price and volume data for a specified symbol within a given date range,
+from <code class="docutils literal notranslate"><span class="pre">from_date</span></code> to <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p>
+<p>The data is returned as a JSON object, where the primary data is stored as a list of rows (indexed starting at 0).</p>
+<p>Each row is represented as a dict, with column names as keys and their corresponding values.</p>
+<p>The date is stored under the key <code class="docutils literal notranslate"><span class="pre">mTIMESTAMP</span></code>.</p>
+<p>If the provided symbol is incorrect or invalid, an empty JSON will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – The exchange-traded symbol for which the data needs to be downloaded e.g. <code class="docutils literal notranslate"><span class="pre">HDFCBANK</span></code>, <code class="docutils literal notranslate"><span class="pre">SGBAPR28I</span></code> or <code class="docutils literal notranslate"><span class="pre">GOLDBEES</span></code></p></li>
+<li><p><strong>from_date</strong> (<em>datetime.date</em>) – The starting date from which we fetch the data. If None, the default date is 30 days from <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p></li>
+<li><p><strong>to_date</strong> (<em>datetime.date</em>) – The ending date upto which we fetch the data. If None, today’s date is taken by default.</p></li>
+<li><p><strong>series</strong> – The series for which we need to fetch the data. A list of the series containing elements from the below list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">from_date</span></code> is greater than <code class="docutils literal notranslate"><span class="pre">to_date</span></code></p></li>
+<li><p><strong>TypeError</strong> – if <code class="docutils literal notranslate"><span class="pre">from_date</span></code> or <code class="docutils literal notranslate"><span class="pre">to_date</span></code> is not of type datetime.date</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Data as a list of rows, each row as dictionary with key as column name mapped to the value</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Dict]</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>The list of valid series</dt><dd><ul class="simple">
+<li><p>AE</p></li>
+<li><p>AF</p></li>
+<li><p>BE</p></li>
+<li><p>BL</p></li>
+<li><p>EQ</p></li>
+<li><p>IL</p></li>
+<li><p>RL</p></li>
+<li><p>W3</p></li>
+<li><p>GB</p></li>
+<li><p>GS</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="list-stocks">
 <h2>List Stocks<a class="headerlink" href="#list-stocks" title="Link to this heading">¶</a></h2>
@@ -475,7 +523,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.listEquityStocksByIndex">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listEquityStocksByIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NIFTY</span> <span class="pre">50'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listEquityStocksByIndex" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listEquityStocksByIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NIFTY</span> <span class="pre">50'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.listEquityStocksByIndex" title="Link to this definition">¶</a></dt>
 <dd><p>List Equity stocks by their Index name. Defaults to <cite>NIFTY 50</cite></p>
 <p><a class="reference internal" href="index_categories.html#listequity"><span class="std std-ref">See list of acceptable values for index argument.</span></a></p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listEquityStocksByIndex.json">Sample response</a></p>
@@ -488,7 +536,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.listIndices">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listIndices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listIndices" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listIndices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.listIndices" title="Link to this definition">¶</a></dt>
 <dd><p>List all indices</p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listIndices.json">Sample response</a></p>
 <dl class="field-list simple">
@@ -509,7 +557,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.listEtf">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listEtf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listEtf" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listEtf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.listEtf" title="Link to this definition">¶</a></dt>
 <dd><p>List all etf stocks</p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listEtf.json">Sample response</a></p>
 <dl class="field-list simple">
@@ -521,7 +569,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.listSme">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listSme</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listSme" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listSme</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.listSme" title="Link to this definition">¶</a></dt>
 <dd><p>List all sme stocks</p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listSme.json">Sample response</a></p>
 <dl class="field-list simple">
@@ -533,7 +581,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.listSgb">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listSgb</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.listSgb" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">listSgb</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.listSgb" title="Link to this definition">¶</a></dt>
 <dd><p>List all sovereign gold bonds</p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listSgb.json">Sample response</a></p>
 <dl class="field-list simple">
@@ -605,13 +653,14 @@
 <h2>NSE Circulars<a class="headerlink" href="#nse-circulars" title="Link to this heading">¶</a></h2>
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.circulars">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">circulars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dept_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.circulars" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">circulars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dept_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#nse.NSE.circulars" title="Link to this definition">¶</a></dt>
 <dd><p>Return exchange circulars and communications by Department</p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/circulars.json">Sample response</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dept_code</strong> – Optional Department code. See table below for options</p></li>
+<li><p><strong>subject</strong> – Optional keyword string used to filter circulars based on their subject.</p></li>
+<li><p><strong>dept_code</strong> (<em>str</em>) – Optional Department code. See table below for options</p></li>
 <li><p><strong>from_date</strong> (<em>datetime.datetime</em>) – Optional defaults to 7 days from to_date</p></li>
 <li><p><strong>to_date</strong> (<em>datetime.datetime</em>) – Optional defaults to current date</p></li>
 </ul>
@@ -905,6 +954,20 @@ If the downloaded file is a zip file, extracts its contents to the specified fol
 <dd class="field-even"><p>pathlib.Path</p>
 </dd>
 </dl>
+<p>This method is useful for downloading attachments from announcements, actions etc. See code example below</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">nse</span><span class="w"> </span><span class="kn">import</span> <span class="n">NSE</span>
+
+<span class="k">with</span> <span class="n">NSE</span><span class="p">(</span><span class="n">download_folder</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">nse</span><span class="p">:</span>
+    <span class="n">announcements</span> <span class="o">=</span> <span class="n">nse</span><span class="o">.</span><span class="n">announcements</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">dct</span> <span class="ow">in</span> <span class="n">announcements</span><span class="p">:</span>
+        <span class="c1"># Only download the first pdf attachment</span>
+        <span class="k">if</span> <span class="s2">&quot;attchmntFile&quot;</span> <span class="ow">in</span> <span class="n">dct</span> <span class="ow">and</span> <span class="s2">&quot;.pdf&quot;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">[</span><span class="s2">&quot;attchmntFile&quot;</span><span class="p">]:</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="n">nse</span><span class="o">.</span><span class="n">download_document</span><span class="p">(</span><span class="n">dct</span><span class="p">[</span><span class="s2">&quot;attchmntFile&quot;</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>  <span class="c1"># saved file path</span>
+            <span class="k">break</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -1188,6 +1251,7 @@ But you need to consider holidays.</p>
 <li><a class="reference internal" href="#nse.NSE.gainers"><code class="docutils literal notranslate"><span class="pre">NSE.gainers()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.losers"><code class="docutils literal notranslate"><span class="pre">NSE.losers()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.advanceDecline"><code class="docutils literal notranslate"><span class="pre">NSE.advanceDecline()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.fetch_equity_historical_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_equity_historical_data()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#list-stocks">List Stocks</a><ul>
@@ -1246,7 +1310,7 @@ But you need to consider holidays.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=377e76b0"></script>
+</div><script src="_static/documentation_options.js?v=fc837d61"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
