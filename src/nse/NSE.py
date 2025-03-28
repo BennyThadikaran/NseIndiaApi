@@ -1,10 +1,10 @@
+import json
 import pickle
 import zlib
-from datetime import datetime, timedelta, date
+from datetime import date, datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Union, Tuple
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 from zipfile import ZipFile
-import json
 
 from mthrottle import Throttle
 from requests import Session
@@ -180,10 +180,12 @@ class NSE:
         return r
 
     @staticmethod
-    def __split_date_range(from_date: date, to_date: date, max_chunk_size: int=365) -> List[Tuple[date, date]]:
-        """Splits a date range into non-overlapping chunks with each chunk having size at specified by 
+    def __split_date_range(
+        from_date: date, to_date: date, max_chunk_size: int = 365
+    ) -> List[Tuple[date, date]]:
+        """Splits a date range into non-overlapping chunks with each chunk having size at specified by
         the max_chunk_size parameter
-        
+
         :param from_date: The starting date of the range
         :type from_date: datetime.date
         :param to_date: The ending date of the range
@@ -194,22 +196,25 @@ class NSE:
         :return: A sorted list of tuples. Each element of the list is a range (`start_date`, `end_date`)
         :rtype: List[Tuple[datetime.date, datetime.date]]
         """
-        
+
         chunks = []
         current_start = from_date
-        
+
         while current_start <= to_date:
             # Calculate the end of the current chunk.
             # We use max_size - 1 because the range is inclusive.
             current_end = current_start + timedelta(days=max_chunk_size - 1)
+
             # Don't go past the final date.
             if current_end > to_date:
                 current_end = to_date
+
             chunks.append((current_start, current_end))
+
             # Start next chunk the day after the current end.
             current_start = current_end + timedelta(days=1)
-        
-        return chunks     
+
+        return chunks
 
     def exit(self):
         """Close the ``requests`` session.
@@ -1290,7 +1295,7 @@ class NSE:
                 raise RuntimeError(f"Failed to extract zip file: {str(e)}")
 
         return file
-    
+
     def fetch_equity_historical_data(
         self,
         symbol: str,
@@ -1299,25 +1304,31 @@ class NSE:
         series: List[str] = ["EQ"],
     ) -> List[Dict]:
         """
-        Downloads the historical daily price-volume data for a given symbol from the `from_date` to `to_date`
-        The downloaded data is a JSON where the main tabular data is a list with 0-indexing containing the rows
-        and the elements are a map of the column to value at that row number. The date has the key "mTIMESTAMP"
-        The user must ensure the correctness of the symbol, otherwise an empty JSON is dumped
-        
-        :param symbol: The exchange-traded symbol for which the data needs to be downloaded e.g. `HDFCBANK`, `SGBAPR28I` or `GOLDBEES`
+        Downloads the historical daily price and volume data for a specified symbol within a given date range,
+        from ``from_date`` to ``to_date``.
+
+        The data is returned as a JSON object, where the primary data is stored as a list of rows (indexed starting at 0).
+
+        Each row is represented as a dict, with column names as keys and their corresponding values.
+
+        The date is stored under the key ``mTIMESTAMP``.
+
+        If the provided symbol is incorrect or invalid, an empty JSON will be returned.
+
+        :param symbol: The exchange-traded symbol for which the data needs to be downloaded e.g. ``HDFCBANK``, ``SGBAPR28I`` or ``GOLDBEES``
         :type symbol: str
-        :param from_date: The starting date from which we fetch the data. If None, the date one month ago is taken by default.
+        :param from_date: The starting date from which we fetch the data. If None, the default date is 30 days from ``to_date``.
         :type from_date: datetime.date
-        :param to_date: The ending date upto which we fetch the data. If None, today's date is taken by default. 
+        :param to_date: The ending date upto which we fetch the data. If None, today's date is taken by default.
         :type to_date: datetime.date
         :param series: The series for which we need to fetch the data. A list of the series containing elements from the below list
-        
+
         :raise ValueError: if ``from_date`` is greater than ``to_date``
         :raise TypeError: if ``from_date`` or ``to_date`` is not of type datetime.date
-        
+
         :return: Data as a list of rows, each row as dictionary with key as column name mapped to the value
         :rtype: List[Dict]
-        
+
         The list of valid series
             - AE
             - AF
@@ -1334,8 +1345,9 @@ class NSE:
         if not from_date and not to_date and series == ["EQ"]:
             data = self.__req(
                 url=f"{self.base_url}/historical/cm/equity",
-                params={"symbol": symbol}
+                params={"symbol": symbol},
             ).json()
+
             return data["data"][::-1]
 
         if from_date and not isinstance(from_date, date):
@@ -1360,14 +1372,18 @@ class NSE:
         date_chunks = NSE.__split_date_range(from_date, to_date, 100)
 
         data = []
+
         for chunk in date_chunks:
-            data += reversed(self.__req(
-                url=f"{self.base_url}/historical/cm/equity",
-                params={
-                    "symbol": symbol,
-                    "series": json.dumps(series),
-                    "from": chunk[0].strftime("%d-%m-%Y"),
-                    "to": chunk[1].strftime("%d-%m-%Y")
-                }
-            ).json()["data"])
+            data += reversed(
+                self.__req(
+                    url=f"{self.base_url}/historical/cm/equity",
+                    params={
+                        "symbol": symbol,
+                        "series": json.dumps(series),
+                        "from": chunk[0].strftime("%d-%m-%Y"),
+                        "to": chunk[1].strftime("%d-%m-%Y"),
+                    },
+                ).json()["data"]
+            )
+
         return data
