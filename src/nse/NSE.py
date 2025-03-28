@@ -869,6 +869,7 @@ class NSE:
 
     def circulars(
         self,
+        subject: Optional[str] = None,
         dept_code: Optional[str] = None,
         from_date: Optional[datetime] = None,
         to_date: Optional[datetime] = None,
@@ -878,7 +879,10 @@ class NSE:
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/circulars.json>`__
 
+        :param subject: Optional keyword string used to filter circulars based on their subject.
+        :type dept_code: str
         :param dept_code: Optional Department code. See table below for options
+        :type dept_code: str
         :param from_date: Optional defaults to 7 days from to_date
         :type from_date: datetime.datetime
         :param to_date: Optional defaults to current date
@@ -931,6 +935,9 @@ class NSE:
             from_date=from_date.strftime("%d-%m-%Y"),
             to_date=to_date.strftime("%d-%m-%Y"),
         )
+
+        if subject:
+            params["sub"] = subject
 
         if dept_code:
             params["dept"] = dept_code.upper()
