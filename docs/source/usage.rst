@@ -67,6 +67,8 @@ Stocks Quotes and Market info
 
 .. automethod:: nse.NSE.advanceDecline
 
+.. automethod:: nse.NSE.fetch_equity_historical_data
+
 List Stocks
 -----------
 
@@ -146,6 +148,22 @@ Zip files are automatically extracted and saved to file.
 .. automethod:: nse.NSE.cm_mii_security_report
 
 .. automethod:: nse.NSE.download_document
+
+   This method is useful for downloading attachments from announcements, actions etc. See code example below
+
+   .. code-block:: python
+
+      from nse import NSE
+
+      with NSE(download_folder="") as nse:
+          announcements = nse.announcements()
+
+          for dct in announcements:
+              # Only download the first pdf attachment
+              if "attchmntFile" in dct and ".pdf" in dct["attchmntFile"]:
+                  filepath = nse.download_document(dct["attchmntFile"])
+                  print(filepath)  # saved file path
+                  break
 
 Corporate Announcements and Actions
 -----------------------------------
