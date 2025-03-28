@@ -739,7 +739,7 @@ class NSE:
         """
         pass
 
-    def listEquityStocksByIndex(self, index="NIFTY 50"):
+    def listEquityStocksByIndex(self, index="NIFTY 50") -> dict:
         """
         List Equity stocks by their Index name. Defaults to `NIFTY 50`
 
@@ -753,7 +753,7 @@ class NSE:
 
         return self.__req(url, params=dict(index=index)).json()
 
-    def listIndices(self):
+    def listIndices(self) -> dict:
         """List all indices
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listIndices.json>`__
@@ -774,7 +774,7 @@ class NSE:
         """
         pass
 
-    def listEtf(self):
+    def listEtf(self) -> dict:
         """List all etf stocks
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listEtf.json>`__
@@ -784,7 +784,7 @@ class NSE:
 
         return self.__req(f"{self.base_url}/etf").json()
 
-    def listSme(self):
+    def listSme(self) -> dict:
         """List all sme stocks
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listSme.json>`__
@@ -794,7 +794,7 @@ class NSE:
 
         return self.__req(f"{self.base_url}/live-analysis-emerge").json()
 
-    def listSgb(self):
+    def listSgb(self) -> dict:
         """List all sovereign gold bonds
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listSgb.json>`__
@@ -1215,7 +1215,7 @@ class NSE:
 
         return data
 
-    def bulkdeals(self, fromdate: datetime, todate: datetime) -> Dict:
+    def bulkdeals(self, fromdate: datetime, todate: datetime) -> List[Dict]:
         """Download the bulk deals report for the specified date range and return the data.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals.json>`__
