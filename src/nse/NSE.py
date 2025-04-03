@@ -2,13 +2,33 @@ import json
 import pickle
 import zlib
 from datetime import date, datetime, timedelta
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 from zipfile import ZipFile
 
+import warnings
+warnings.simplefilter("always")
+# ANSI color codes
+COLORS = {
+    "yellow": "\033[93m",
+    "red": "\033[91m",
+    "blue": "\033[94m",
+    "reset": "\033[0m",
+}
+def colorize(text: str, color: str) -> str:
+    """Wrap text in ANSI color codes."""
+    return f"{COLORS[color]}{text}{COLORS['reset']}"
+def custom_format_warning(message, category, filename, lineno, line=None):
+    # Colorize parts of the warning
+    category_str = colorize(f"{category.__name__}:", "yellow")
+    message_str = colorize(str(message), "red")
+    location = colorize(f"{filename}:{lineno}", "blue")
+    return f"{location} {category_str} {message_str}\n"
+# Override the default formatter
+warnings.formatwarning = custom_format_warning
+
 from mthrottle import Throttle
-from requests import Session
-from requests.exceptions import ReadTimeout
 
 throttleConfig = {
     "default": {
@@ -28,9 +48,15 @@ class NSE:
 
     :param download_folder: A folder/dir to save downloaded files and cookie files
     :type download_folder: pathlib.Path or str
+    :param server: A parameter to specify whether the script is being run on a server (like AWS, Azure, Google Cloud etc)
+    True if running on a server, False if run locally. Connection to NSE might fail if script if run from a server with server=False
+    :type server: bool
     :param timeout: Default 15. Network timeout in seconds
     :type timeout: int
     :raise ValueError: if ``download_folder`` is not a folder/dir
+    :raises ImportWarning: Raised when either the ``requests`` or ``httpx[http2]`` modules are not installed. 
+    At least one of these is required if you want to run locally or on server respectively. 
+    :raise ImportError: If none of httpx[http2] or requests are found
     """
 
     __version__ = "1.1.0"
@@ -51,7 +77,7 @@ class NSE:
     base_url = "https://www.nseindia.com/api"
     archive_url = "https://nsearchives.nseindia.com"
 
-    def __init__(self, download_folder: Union[str, Path], timeout: int = 15):
+    def __init__(self, download_folder: Union[str, Path], server: bool = False, timeout: int = 15):
         """Initialise NSE"""
 
         uAgent = "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/118.0"
@@ -65,48 +91,137 @@ class NSE:
         }
 
         self.dir = NSE.__getPath(download_folder, isFolder=True)
+        self.server = server
         self.timeout = timeout
 
         self.cookie_path = self.dir / "nse_cookies.pkl"
 
-        self.session = Session()
-        self.session.headers.update(headers)
-        self.session.cookies.update(self.__getCookies())
+        if server: 
+            try:
+                from httpx import Client, Cookies
+                from httpx import ReadTimeout
+                self.ReadTimeout = ReadTimeout
+                self.Cookies = Cookies
+            except:
+                warnings.warn(
+                    message=(
+                        "The httpx module with HTTP/2 support is recommended to be installed to run NSE on server\n"
+                        "You can install it with pip install httpx[http2]\n"
+                        "httpx not found, defaulting to local implementation"
+                    ),
+                    category=ImportWarning
+                )
+                self.server = False
+                try:
+                    from requests import Session
+                    from requests.exceptions import ReadTimeout
+                    self.ReadTimeout = ReadTimeout
+                except:
+                    raise ImportError("requests module not found")
+        else:
+            try:
+                from requests import Session
+                from requests.exceptions import ReadTimeout
+                self.ReadTimeout = ReadTimeout
+            except:
+                warnings.warn(
+                    message=(
+                        "The requests module is recommended to be installed to run NSE locally\n"
+                        "You can install it with pip install requests\n"
+                        "requests not found, defaulting to server implementation"
+                    ),
+                    category=ImportWarning
+                )
+                self.server = True
+                try:
+                    from httpx import Client, Cookies
+                    from httpx import ReadTimeout
+                    self.ReadTimeout = ReadTimeout
+                    self.Cookies = Cookies
+                except:
+                    raise ImportError("httpx module not found")
+        if self.server:
+            self.__session = Client(http2=True)
+        else:
+            self.__session = Session()
+        self.__session.headers.update(headers)
+        self.__session.cookies.update(self.__getCookies())
 
     def __setCookies(self):
         r = self.__req("https://www.nseindia.com/option-chain")
 
         cookies = r.cookies
 
-        self.cookie_path.write_bytes(pickle.dumps(cookies))
+        if self.server:  # cookies is an https.Cookies object which isn't directly picklable
+            self.cookie_path.write_bytes(pickle.dumps(dict(cookies)))
+        else:  # cookies is a RequestsCookiesJar object which is directly picklable
+            self.cookie_path.write_bytes(pickle.dumps(cookies))
 
         return cookies
 
     def __getCookies(self):
 
         if self.cookie_path.exists():
-            cookies = pickle.loads(self.cookie_path.read_bytes())
+            if self.server:
+                cookies = self.Cookies(pickle.loads(self.cookie_path.read_bytes()))
+            else:
+                cookies = pickle.loads(self.cookie_path.read_bytes())
 
-            if self.__hasCookiesExpired(cookies):
+            if NSE.__hasCookiesExpired(cookies):
                 cookies = self.__setCookies()
 
             return cookies
 
         return self.__setCookies()
-
+    
     @staticmethod
-    def __hasCookiesExpired(cookies):
+    def __check_for_cookie_jar_expiry(cookies) -> bool:
+        """When cookies is an instance of ``requests.cookies.RequestsCookieJar``, the cookie class used by the ``requests`` library
+        the class is just a wrapper over the underlying ``http.cookiejar.CookieJar`` but it cannot be accessed directly
+        with a field reference. Instead, it exposes the cookie object as a dictionary-like iterable with various dictionary
+        interface methods. Hence, one has to iterate over the object directly. The iterable objects are instances of
+        ``http.cookiejar.Cookie`` which have their own method to directly check for expiry. 
+        
+        Similar, when cookies is an instance of ``httpx.Cookie``, the cookie class used by the ``httpx`` library
+        the class is just a wrapper over the underlying ``http.cookiejar.CookieJar`` which can be accessed
+        using the .jar field (e.g. ``cookies: httpx.Cookies`` has attribute ``cookies.jar: http.cookiejar.CookieJar``)
+        
+        The documentation for ``CookieJar`` can be found at 
+        `Python CookieJar Docs <https://docs.python.org/3/library/http.cookiejar.html#http.cookiejar.CookieJar>`_
+        
+        The documentation for the ``Cookie`` objects can be found at
+        `Python Cookie Docs <https://docs.python.org/3/library/http.cookiejar.html#cookie-objects>`_
+        
+        :param cookies: The cookies object
+        :type cookies: http.cookiejar.Cookie
+        :rtype: bool
+        :return: Whether any of the cookies, which has an expiration time has expired or not
+        """
         for cookie in cookies:
             if cookie.is_expired():
                 return True
-
         return False
+
+    @staticmethod
+    def __hasCookiesExpired(cookies) -> bool:
+        try:
+            from requests.cookies import RequestsCookieJar
+            if isinstance(cookies, RequestsCookieJar):
+                return NSE.__check_for_cookie_jar_expiry(cookies)
+            else:
+                raise ImportError
+        except ImportError:
+            from httpx import Cookies
+            if isinstance(cookies, Cookies):
+                return NSE.__check_for_cookie_jar_expiry(cookies.jar)
+            else:
+                raise ValueError("Object type of cookies could not be identified.")
 
     def __enter__(self):
         return self
 
     def __exit__(self, *_):
-        self.session.close()
+        self.__session.close()
         self.cookie_path.unlink(missing_ok=True)
 
         return False
@@ -149,18 +264,32 @@ class NSE:
 
         th.check()
 
-        with self.session.get(url, stream=True, timeout=self.timeout) as r:
+        if self.server:
+            with self.__session.stream("GET", url=url, timeout=self.timeout) as r:
+                
+                contentType = r.headers.get("content-type")
 
-            contentType = r.headers.get("content-type")
+                if contentType and "text/html" in contentType:
+                    raise RuntimeError(
+                        "NSE file is unavailable or not yet updated."
+                    )
 
-            if contentType and "text/html" in contentType:
-                raise RuntimeError(
-                    "NSE file is unavailable or not yet updated."
-                )
+                with fname.open(mode="wb") as f:
+                    for chunk in r.iter_bytes(chunk_size=1000000):
+                        f.write(chunk)
+        else:
+            with self.__session.get(url, stream=True, timeout=self.timeout) as r:
 
-            with fname.open(mode="wb") as f:
-                for chunk in r.iter_content(chunk_size=1000000):
-                    f.write(chunk)
+                contentType = r.headers.get("content-type")
+
+                if contentType and "text/html" in contentType:
+                    raise RuntimeError(
+                        "NSE file is unavailable or not yet updated."
+                    )
+
+                with fname.open(mode="wb") as f:
+                    for chunk in r.iter_content(chunk_size=1000000):
+                        f.write(chunk)
 
         return fname
 
@@ -170,11 +299,11 @@ class NSE:
         th.check()
 
         try:
-            r = self.session.get(url, params=params, timeout=self.timeout)
-        except ReadTimeout as e:
+            r = self.__session.get(url, params=params, timeout=self.timeout)
+        except self.ReadTimeout as e:
             raise TimeoutError(repr(e))
 
-        if not r.ok:
+        if not 200 <= r.status_code < 300:
             raise ConnectionError(f"{url} {r.status_code}: {r.reason}")
 
         return r
@@ -223,7 +352,7 @@ class NSE:
 
         *Not required when using the ``with`` statement.*"""
 
-        self.session.close()
+        self.__session.close()
         self.cookie_path.unlink(missing_ok=True)
 
     def status(self) -> List[Dict]:
