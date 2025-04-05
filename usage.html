@@ -226,7 +226,7 @@
 <h3>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="nse.NSE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nse.</span></span><span class="sig-name descname"><span class="pre">NSE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nse.</span></span><span class="sig-name descname"><span class="pre">NSE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE" title="Link to this definition">¶</a></dt>
 <dd><p>An Unofficial Python API for the NSE India stock exchange.</p>
 <dl class="simple">
 <dt>Methods will raise</dt><dd><ul class="simple">
@@ -239,13 +239,18 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>download_folder</strong> (<em>pathlib.Path</em><em> or </em><em>str</em>) – A folder/dir to save downloaded files and cookie files</p></li>
-<li><p><strong>timeout</strong> (<em>int</em>) – Default 15. Network timeout in seconds</p></li>
+<li><p><strong>server</strong> – A parameter to specify whether the script is being run on a server (like AWS, Azure, Google Cloud etc)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> is not a folder/dir</p>
-</dd>
 </dl>
+<p>True if running on a server, False if run locally. Connection to NSE might fail if script if run from a server with server=False
+:type server: bool
+:param timeout: Default 15. Network timeout in seconds
+:type timeout: int
+:raise ValueError: if <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> is not a folder/dir
+:raises ImportWarning: Raised when either the <code class="docutils literal notranslate"><span class="pre">requests</span></code> or <code class="docutils literal notranslate"><span class="pre">httpx[http2]</span></code> modules are not installed. 
+At least one of these is required if you want to run locally or on server respectively. 
+:raise ImportError: If none of httpx[http2] or requests are found</p>
 </dd></dl>
 
 </section>
