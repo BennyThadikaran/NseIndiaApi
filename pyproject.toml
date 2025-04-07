@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nse"
-version = "1.1.0"
+version = "1.2.0"
 authors = [
   { name="Benny Thadikaran" },
 ]
@@ -24,7 +24,11 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
 ]
 keywords = ["nse", "nse-stock-data", "stock-market-api", "stock-news-api"]
-dependencies = ["requests>=2.31.0", "mthrottle>=0.0.1"]
+dependencies = ["mthrottle>=0.0.1"]
+
+[project.optional-dependencies]
+local = ["requests>=2.31.0"]
+server = ["httpx[http2]==0.28.1"]
 
 [project.urls]
 "Homepage" = "https://github.com/BennyThadikaran/NseIndiaApi"
