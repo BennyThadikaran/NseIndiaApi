@@ -6,26 +6,22 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 from zipfile import ZipFile
 
-import warnings
-warnings.simplefilter("always")
-# ANSI color codes
-COLORS = {
-    "yellow": "\033[93m",
-    "red": "\033[91m",
-    "blue": "\033[94m",
-    "reset": "\033[0m",
-}
-def colorize(text: str, color: str) -> str:
-    """Wrap text in ANSI color codes."""
-    return f"{COLORS[color]}{text}{COLORS['reset']}"
-def custom_format_warning(message, category, filename, lineno, line=None):
-    # Colorize parts of the warning
-    category_str = colorize(f"{category.__name__}:", "yellow")
-    message_str = colorize(str(message), "red")
-    location = colorize(f"{filename}:{lineno}", "blue")
-    return f"{location} {category_str} {message_str}\n"
-# Override the default formatter
-warnings.formatwarning = custom_format_warning
+HAS_HTTPX = HAS_REQUESTS = False
+
+try:
+    from httpx import Client, Cookies, ReadTimeout
+
+    HAS_HTTPX = True
+except ModuleNotFoundError:
+    pass
+
+try:
+    from requests import Session
+    from requests.exceptions import ReadTimeout
+
+    HAS_REQUESTS = True
+except ModuleNotFoundError:
+    pass
 
 from mthrottle import Throttle
 
@@ -95,54 +91,24 @@ class NSE:
 
         self.cookie_path = self.dir / "nse_cookies.pkl"
 
-        if server: 
-            try:
-                from httpx import Client, Cookies
-                from httpx import ReadTimeout
-                self.ReadTimeout = ReadTimeout
-                self.Cookies = Cookies
-            except:
-                warnings.warn(
-                    message=(
-                        "The httpx module with HTTP/2 support is recommended to be installed to run NSE on server\n"
-                        "You can install it with pip install httpx[http2]\n"
-                        "httpx not found, defaulting to local implementation"
-                    ),
-                    category=ImportWarning
+        if server:
+            if not HAS_HTTPX:
+                raise ImportError(
+                    "The httpx module with HTTP/2 support is required to run NSE on server. Run `pip install httpx[http2]"
                 )
-                self.server = False
-                try:
-                    from requests import Session
-                    from requests.exceptions import ReadTimeout
-                    self.ReadTimeout = ReadTimeout
-                except:
-                    raise ImportError("requests module not found")
-        else:
-            try:
-                from requests import Session
-                from requests.exceptions import ReadTimeout
-                self.ReadTimeout = ReadTimeout
-            except:
-                warnings.warn(
-                    message=(
-                        "The requests module is recommended to be installed to run NSE locally\n"
-                        "You can install it with pip install requests\n"
-                        "requests not found, defaulting to server implementation"
-                    ),
-                    category=ImportWarning
-                )
-                self.server = True
-                try:
-                    from httpx import Client, Cookies
-                    from httpx import ReadTimeout
-                    self.ReadTimeout = ReadTimeout
-                    self.Cookies = Cookies
-                except:
-                    raise ImportError("httpx module not found")
-        if self.server:
+
             self.__session = Client(http2=True)
+            self.ReadTimeout = ReadTimeout
+            self.Cookies = Cookies
         else:
+            if not HAS_REQUESTS:
+                raise ImportError(
+                    "Missing requests module. Run `pip install requests`. If running NSE on server, set `server=True`"
+                )
+
             self.__session = Session()
+            self.ReadTimeout = ReadTimeout
+
         self.__session.headers.update(headers)
         self.__session.cookies.update(self.__getCookies())
 
