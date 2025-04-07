@@ -20,17 +20,28 @@ All requests through NSE are rate limited or throttled to 3 requests per second.
 
 ## Updates
 
-**v1.0.4** Added new method to download daily bhavcopy PR zip (contains a collection of various reports). [See Docs](https://bennythadikaran.github.io/NseIndiaApi/usage.html#nse.NSE.pr_bhavcopy)
+**v1.2.0** NSE package now works in server environments like AWS. [See PR #10](https://github.com/BennyThadikaran/NseIndiaApi/pull/10) for details.
 
 ## 🔥 Usage
 
-**Install with Pip**
+**To install on local machine or PC**
 
 ```bash
-pip install -U nse
+pip install nse[local]
 ```
 
-The class accepts a single argument `download_folder`, a `str` filepath, or a `pathlib object`. The folder stores cookie and any downloaded files.
+**To install in a server environment like AWS (Works on local too)**
+
+```bash
+pip install nse[server]
+```
+
+The class accepts two arguments (As of 1.2.0)
+
+- `download_folder` - a `str` filepath, or a `pathlib object`. The folder stores cookie and any downloaded files.
+- `server` - If False (default), use the requests module to make requests. Else uses the httpx module with http2 support for running on server.
+
+Note: `server=True` works both locally and on servers. `httpx[http2]` module is required to be installed for this to work.
 
 **Simple example**
 
@@ -41,7 +52,7 @@ from pathlib import Path
 # Working directory
 DIR = Path(__file__).parent
 
-nse = NSE(download_folder=DIR)
+nse = NSE(download_folder=DIR, server=False)
 
 status = nse.status()
 
@@ -53,7 +64,7 @@ nse.exit() # close requests session
 **Using with statement**
 
 ```python
-with NSE(download_folder=DIR) as nse:
+with NSE(download_folder=DIR, server=False) as nse:
     status = nse.status()
 
     advDec = nse.advanceDecline()
