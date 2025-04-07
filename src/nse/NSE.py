@@ -43,15 +43,13 @@ class NSE:
 
     :param download_folder: A folder/dir to save downloaded files and cookie files
     :type download_folder: pathlib.Path or str
-    :param server: A parameter to specify whether the script is being run on a server (like AWS, Azure, Google Cloud etc)
-    True if running on a server, False if run locally. Connection to NSE might fail if script if run from a server with server=False
+    :param server: A parameter to specify whether the script is being run on a server (like AWS, Azure, Google Cloud etc).
+        True if running on a server, False if run locally.
     :type server: bool
     :param timeout: Default 15. Network timeout in seconds
     :type timeout: int
     :raise ValueError: if ``download_folder`` is not a folder/dir
-    :raises ImportWarning: Raised when either the ``requests`` or ``httpx[http2]`` modules are not installed. 
-    At least one of these is required if you want to run locally or on server respectively. 
-    :raise ImportError: If none of httpx[http2] or requests are found
+    :raises ImportError: If ``server`` set to True and ``httpx[http2] is not installed or ``server`` set to False and ``requests`` is not installed.
     """
 
     __version__ = "1.1.0"
@@ -72,7 +70,12 @@ class NSE:
     base_url = "https://www.nseindia.com/api"
     archive_url = "https://nsearchives.nseindia.com"
 
-    def __init__(self, download_folder: Union[str, Path], server: bool = False, timeout: int = 15):
+    def __init__(
+        self,
+        download_folder: Union[str, Path],
+        server: bool = False,
+        timeout: int = 15,
+    ):
         """Initialise NSE"""
 
         uAgent = "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/118.0"
@@ -117,7 +120,8 @@ class NSE:
 
         cookies = r.cookies
 
-        if self.server:  # cookies is an https.Cookies object which isn't directly picklable
+        if self.server:
+            # cookies is an https.Cookies object which isn't directly picklable
             self.cookie_path.write_bytes(pickle.dumps(dict(cookies)))
         else:  # cookies is a RequestsCookiesJar object which is directly picklable
             self.cookie_path.write_bytes(pickle.dumps(cookies))
@@ -128,7 +132,9 @@ class NSE:
 
         if self.cookie_path.exists():
             if self.server:
-                cookies = self.Cookies(pickle.loads(self.cookie_path.read_bytes()))
+                cookies = self.Cookies(
+                    pickle.loads(self.cookie_path.read_bytes())
+                )
             else:
                 cookies = pickle.loads(self.cookie_path.read_bytes())
 
@@ -194,8 +200,10 @@ class NSE:
         th.check()
 
         if self.server:
-            with self.__session.stream("GET", url=url, timeout=self.timeout) as r:
-                
+            with self.__session.stream(
+                "GET", url=url, timeout=self.timeout
+            ) as r:
+
                 contentType = r.headers.get("content-type")
 
                 if contentType and "text/html" in contentType:
@@ -207,7 +215,9 @@ class NSE:
                     for chunk in r.iter_bytes(chunk_size=1000000):
                         f.write(chunk)
         else:
-            with self.__session.get(url, stream=True, timeout=self.timeout) as r:
+            with self.__session.get(
+                url, stream=True, timeout=self.timeout
+            ) as r:
 
                 contentType = r.headers.get("content-type")
 
