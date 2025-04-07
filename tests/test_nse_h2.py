@@ -4,25 +4,34 @@ from pathlib import Path
 
 from context import NSE
 
-DIR = Path(__file__).parent
-nse = NSE(DIR)
 
+class TestNseApiH2(unittest.TestCase):
+    """Test nse class with http2 using httpx library"""
 
-class TestNseApi(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        DIR = Path(__file__).parent
+        cls.nse = NSE(DIR, server=True)
+        print("\nRunning tests using httpx library.\n")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.nse.exit()
+
     def test_status(self):
-        response = nse.status()
+        response = self.nse.status()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
 
     def test_holidays(self):
-        response = nse.holidays()
+        response = self.nse.holidays()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("CM" in response)
 
     def test_blockdeals(self):
-        response = nse.blockDeals()
+        response = self.nse.blockDeals()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("timestamp" in response)
@@ -30,27 +39,29 @@ class TestNseApi(unittest.TestCase):
     def test_bulkdeals(self):
         today = datetime.now()
 
-        response = nse.bulkdeals(fromdate=today - timedelta(3), todate=today)
+        response = self.nse.bulkdeals(
+            fromdate=today - timedelta(3), todate=today
+        )
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
         self.assertTrue("TIMESTAMP" in response[0])
 
     def test_equityMetaInfo(self):
-        response = nse.equityMetaInfo("reliance")
+        response = self.nse.equityMetaInfo("reliance")
 
         self.assertIsInstance(response, dict)
         self.assertTrue("symbol" in response)
 
     def test_quote(self):
-        response = nse.quote(symbol="reliance", type="equity")
+        response = self.nse.quote(symbol="reliance", type="equity")
 
         self.assertIsInstance(response, dict)
         self.assertTrue("priceInfo" in response)
 
     def test_gainers(self):
         test_data = dict(data=[dict(pChange=i) for i in range(10)])
-        response = nse.gainers(test_data)
+        response = self.nse.gainers(test_data)
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
@@ -58,7 +69,7 @@ class TestNseApi(unittest.TestCase):
         self.assertEqual(response[-1]["pChange"], 1)
         self.assertEqual(len(response), 9)
 
-        response = nse.gainers(test_data, count=3)
+        response = self.nse.gainers(test_data, count=3)
 
         self.assertEqual(len(response), 3)
         self.assertEqual(response[0]["pChange"], 9)
@@ -66,7 +77,7 @@ class TestNseApi(unittest.TestCase):
 
     def test_losers(self):
         test_data = dict(data=[dict(pChange=i) for i in range(-1, -10, -1)])
-        response = nse.losers(test_data)
+        response = self.nse.losers(test_data)
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
@@ -74,112 +85,112 @@ class TestNseApi(unittest.TestCase):
         self.assertEqual(response[-1]["pChange"], -1)
         self.assertEqual(len(response), 9)
 
-        response = nse.losers(test_data, count=3)
+        response = self.nse.losers(test_data, count=3)
 
         self.assertEqual(len(response), 3)
         self.assertEqual(response[0]["pChange"], -9)
         self.assertEqual(response[-1]["pChange"], -7)
 
     def test_listEquityStocksByIndex(self):
-        response = nse.listEquityStocksByIndex(index="NIFTY 50")
+        response = self.nse.listEquityStocksByIndex(index="NIFTY 50")
 
         self.assertIsInstance(response, dict)
         self.assertTrue("advance" in response)
         self.assertTrue("pChange" in response["data"][0])
 
     def test_listIndices(self):
-        response = nse.listIndices()
+        response = self.nse.listIndices()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("data" in response)
         self.assertIsInstance(response["data"], list)
 
     def test_listSme(self):
-        response = nse.listSme()
+        response = self.nse.listSme()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("data" in response)
         self.assertTrue("pChange" in response["data"][0])
 
     def test_listEtf(self):
-        response = nse.listEtf()
+        response = self.nse.listEtf()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("data" in response)
         self.assertTrue("symbol" in response["data"][0])
 
     def test_listSgb(self):
-        response = nse.listSgb()
+        response = self.nse.listSgb()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("data" in response)
         self.assertTrue("symbol" in response["data"][0])
 
     def test_listCurrentIPO(self):
-        response = nse.listCurrentIPO()
+        response = self.nse.listCurrentIPO()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
         self.assertTrue("symbol" in response[0])
 
     def test_listUpcomingIPO(self):
-        response = nse.listUpcomingIPO()
+        response = self.nse.listUpcomingIPO()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
         self.assertTrue("symbol" in response[0])
 
     def test_listPastIPO(self):
-        response = nse.listPastIPO()
+        response = self.nse.listPastIPO()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
         self.assertTrue("symbol" in response[0])
 
     def test_circulars(self):
-        response = nse.circulars()
+        response = self.nse.circulars()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("data" in response)
         self.assertIsInstance(response["data"], list)
 
-        response = nse.circulars(subject="holidays")
+        response = self.nse.circulars(subject="holidays")
         self.assertIsInstance(response, dict)
 
     def test_actions(self):
-        response = nse.actions()
+        response = self.nse.actions()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
         self.assertTrue("symbol" in response[0])
 
     def test_announcements(self):
-        response = nse.announcements()
+        response = self.nse.announcements()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
         self.assertTrue("symbol" in response[0])
 
     def test_boardMeetings(self):
-        response = nse.boardMeetings()
+        response = self.nse.boardMeetings()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
         self.assertTrue("bm_symbol" in response[0])
 
     def test_getFuturesExpiry(self):
-        response = nse.getFuturesExpiry()
+        response = self.nse.getFuturesExpiry()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], str)
 
     def test_fnoLots(self):
-        response = nse.fnoLots()
+        response = self.nse.fnoLots()
 
         self.assertIsInstance(response, dict)
 
     def test_optionChain(self):
-        response = nse.optionChain(symbol="nifty")
+        response = self.nse.optionChain(symbol="nifty")
 
         self.assertIsInstance(response, dict)
         self.assertTrue("records" in response)
