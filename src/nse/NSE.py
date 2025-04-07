@@ -138,49 +138,13 @@ class NSE:
             return cookies
 
         return self.__setCookies()
-    
+
     @staticmethod
-    def __check_for_cookie_jar_expiry(cookies) -> bool:
-        """When cookies is an instance of ``requests.cookies.RequestsCookieJar``, the cookie class used by the ``requests`` library
-        the class is just a wrapper over the underlying ``http.cookiejar.CookieJar`` but it cannot be accessed directly
-        with a field reference. Instead, it exposes the cookie object as a dictionary-like iterable with various dictionary
-        interface methods. Hence, one has to iterate over the object directly. The iterable objects are instances of
-        ``http.cookiejar.Cookie`` which have their own method to directly check for expiry. 
-        
-        Similar, when cookies is an instance of ``httpx.Cookie``, the cookie class used by the ``httpx`` library
-        the class is just a wrapper over the underlying ``http.cookiejar.CookieJar`` which can be accessed
-        using the .jar field (e.g. ``cookies: httpx.Cookies`` has attribute ``cookies.jar: http.cookiejar.CookieJar``)
-        
-        The documentation for ``CookieJar`` can be found at 
-        `Python CookieJar Docs <https://docs.python.org/3/library/http.cookiejar.html#http.cookiejar.CookieJar>`_
-        
-        The documentation for the ``Cookie`` objects can be found at
-        `Python Cookie Docs <https://docs.python.org/3/library/http.cookiejar.html#cookie-objects>`_
-        
-        :param cookies: The cookies object
-        :type cookies: http.cookiejar.Cookie
-        :rtype: bool
-        :return: Whether any of the cookies, which has an expiration time has expired or not
-        """
+    def __hasCookiesExpired(cookies) -> bool:
         for cookie in cookies:
             if cookie.is_expired():
                 return True
         return False
-
-    @staticmethod
-    def __hasCookiesExpired(cookies) -> bool:
-        try:
-            from requests.cookies import RequestsCookieJar
-            if isinstance(cookies, RequestsCookieJar):
-                return NSE.__check_for_cookie_jar_expiry(cookies)
-            else:
-                raise ImportError
-        except ImportError:
-            from httpx import Cookies
-            if isinstance(cookies, Cookies):
-                return NSE.__check_for_cookie_jar_expiry(cookies.jar)
-            else:
-                raise ValueError("Object type of cookies could not be identified.")
 
     def __enter__(self):
         return self
