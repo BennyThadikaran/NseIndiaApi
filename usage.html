@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Acceptable values for nse.listEquityStocksByIndex" href="index_categories.html" /><link rel="prev" title="Welcome to NSE’s documentation!" href="index.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2023.09.10 -->
-        <title>Usage - nse 1.1.0 documentation</title>
+        <title>Usage - nse 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">nse 1.1.0 documentation</div></a>
+      <a href="index.html"><div class="brand">nse 1.2.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">nse 1.1.0 documentation</span>
+  <span class="sidebar-brand-text">nse 1.2.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -195,8 +195,22 @@
 <h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h1>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
-<p>To use <code class="docutils literal notranslate"><span class="pre">nse</span></code>, first install it using pip:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>nse
+<p><strong>To install on local machine or PC:</strong></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>nse<span class="o">[</span>local<span class="o">]</span>
+</pre></div>
+</div>
+<p>This will additionally install the requests library.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># server parameter set to False</span>
+<span class="n">nse</span> <span class="o">=</span> <span class="n">NSE</span><span class="p">(</span><span class="n">download_folder</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>To install on server like AWS or other cloud services.</strong></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>nse<span class="o">[</span>server<span class="o">]</span>
+</pre></div>
+</div>
+<p>This will additionally install httpx library with http2 support.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make sure to set server parameter to True.</span>
+<span class="n">nse</span> <span class="o">=</span> <span class="n">NSE</span><span class="p">(</span><span class="n">download_folder</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -239,18 +253,18 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>download_folder</strong> (<em>pathlib.Path</em><em> or </em><em>str</em>) – A folder/dir to save downloaded files and cookie files</p></li>
-<li><p><strong>server</strong> – A parameter to specify whether the script is being run on a server (like AWS, Azure, Google Cloud etc)</p></li>
+<li><p><strong>server</strong> (<em>bool</em>) – A parameter to specify whether the script is being run on a server (like AWS, Azure, Google Cloud etc).
+True if running on a server, False if run locally.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – Default 15. Network timeout in seconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> is not a folder/dir</p></li>
+<li><p><strong>ImportError</strong> – If <code class="docutils literal notranslate"><span class="pre">server</span></code> set to True and <code class="docutils literal notranslate"><span class="pre">httpx[http2]</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">installed</span> <span class="pre">or</span> <span class="pre">``server</span></code> set to False and <code class="docutils literal notranslate"><span class="pre">requests</span></code> is not installed.</p></li>
 </ul>
 </dd>
 </dl>
-<p>True if running on a server, False if run locally. Connection to NSE might fail if script if run from a server with server=False
-:type server: bool
-:param timeout: Default 15. Network timeout in seconds
-:type timeout: int
-:raise ValueError: if <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> is not a folder/dir
-:raises ImportWarning: Raised when either the <code class="docutils literal notranslate"><span class="pre">requests</span></code> or <code class="docutils literal notranslate"><span class="pre">httpx[http2]</span></code> modules are not installed. 
-At least one of these is required if you want to run locally or on server respectively. 
-:raise ImportError: If none of httpx[http2] or requests are found</p>
 </dd></dl>
 
 </section>
@@ -1315,7 +1329,7 @@ But you need to consider holidays.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=fc837d61"></script>
+</div><script src="_static/documentation_options.js?v=6efca38a"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
