@@ -132,9 +132,10 @@ class NSE:
 
         if self.cookie_path.exists():
             if self.server:
+                # Expose the cookie jar object using .jar method.
                 cookies = self.Cookies(
                     pickle.loads(self.cookie_path.read_bytes())
-                )
+                ).jar
             else:
                 cookies = pickle.loads(self.cookie_path.read_bytes())
 
