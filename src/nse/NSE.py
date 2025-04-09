@@ -92,14 +92,13 @@ class NSE:
         self.server = server
         self.timeout = timeout
 
-        self.cookie_path = self.dir / "nse_cookies.pkl"
-
         if server:
             if not HAS_HTTPX:
                 raise ImportError(
                     "The httpx module with HTTP/2 support is required to run NSE on server. Run `pip install httpx[http2]"
                 )
 
+            self.cookie_path = self.dir / "nse_cookies_httpx.pkl"
             self.__session = Client(http2=True)
             self.ReadTimeout = ReadTimeout
             self.Cookies = Cookies
@@ -109,6 +108,7 @@ class NSE:
                     "Missing requests module. Run `pip install requests`. If running NSE on server, set `server=True`"
                 )
 
+            self.cookie_path = self.dir / "nse_cookies_requests.pkl"
             self.__session = Session()
             self.ReadTimeout = ReadTimeout
 
