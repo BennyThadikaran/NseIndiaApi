@@ -1438,7 +1438,7 @@ class NSE:
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
 
-        date_chunks = NSE.__split_date_range(from_date, to_date)
+        date_chunks = NSE.__split_date_range(from_date, to_date, 100)
 
         data = []
 
