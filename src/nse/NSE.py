@@ -1470,6 +1470,8 @@ class NSE:
         Each row is represented as a dict, with column names as keys and their corresponding values.
 
         The date is stored under the key ``EOD_TIMESTAMP``.
+        
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/vixhistory.json>`__
 
         :param from_date: The starting date from which we fetch the data. If None, the default date is 30 days from ``to_date``.
         :type from_date: datetime.date
