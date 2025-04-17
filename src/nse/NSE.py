@@ -1456,3 +1456,64 @@ class NSE:
             )
 
         return data
+    
+    def fetch_historical_vix_data(
+        self,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
+    ) -> List[Dict]:
+        """
+        Downloads the historical India VIX within a given date range from ``from_date`` to ``to_date``.
+
+        The data is returned as a JSON object, where the primary data is stored as a list of rows (indexed starting at 0).
+
+        Each row is represented as a dict, with column names as keys and their corresponding values.
+
+        The date is stored under the key ``EOD_TIMESTAMP``.
+        
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/vixhistory.json>`__
+
+        :param from_date: The starting date from which we fetch the data. If None, the default date is 30 days from ``to_date``.
+        :type from_date: datetime.date
+        :param to_date: The ending date upto which we fetch the data. If None, today's date is taken by default.
+        :type to_date: datetime.date
+
+        :raise ValueError: if ``from_date`` is greater than ``to_date``
+        :raise TypeError: if ``from_date`` or ``to_date`` is not of type datetime.date
+
+        :return: Data as a list of rows, each row as dictionary with key as column name mapped to the value
+        :rtype: List[Dict]
+        """
+        if from_date and not isinstance(from_date, date):
+            raise TypeError(
+                "Starting date must be an object of type datetime.date"
+            )
+
+        if to_date and not isinstance(to_date, date):
+            raise TypeError(
+                "Ending date must be an object of type datetime.date"
+            )
+
+        if not to_date:
+            to_date = date.today()
+
+        if not from_date:
+            from_date = to_date - timedelta(30)
+
+        if to_date < from_date:
+            raise ValueError("The from date must occur before the to date")
+
+        date_chunks = NSE.__split_date_range(from_date, to_date)
+
+        data = []
+
+        for chunk in date_chunks:
+            data += self.__req(
+                    url=f"{self.base_url}/historical/vixhistory",
+                    params={
+                        "from": chunk[0].strftime("%d-%m-%Y"),
+                        "to": chunk[1].strftime("%d-%m-%Y"),
+                    },
+                ).json()["data"]
+
+        return data
