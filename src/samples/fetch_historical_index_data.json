@@ -1,0 +1,24 @@
+{
+  "price": [
+    {
+      "_id": "67ec2876a3643af2b17a6483",
+      "EOD_INDEX_NAME": "NIFTY 50",
+      "EOD_OPEN_INDEX_VAL": 23341.1,
+      "EOD_HIGH_INDEX_VAL": 23565.15,
+      "EOD_CLOSE_INDEX_VAL": 23165.7,
+      "EOD_LOW_INDEX_VAL": 23136.4,
+      "EOD_TIMESTAMP": "01-APR-2025",
+      "TIMESTAMP": "2025-03-31T18:30:00.000Z"
+    }
+  ],
+  "turnover": [
+    {
+      "_id": "67ebef0b41bdbca15515ec81",
+      "HIT_INDEX_NAME_UPPER": "NIFTY 50",
+      "HIT_TRADED_QTY": 375118343,
+      "HIT_TURN_OVER": 30680.7,
+      "HIT_TIMESTAMP": "01-04-2025",
+      "TIMESTAMP": "2025-03-31T18:30:00.000Z"
+    }
+  ]
+}

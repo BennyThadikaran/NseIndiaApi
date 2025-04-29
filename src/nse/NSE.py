@@ -1384,6 +1384,8 @@ class NSE:
 
         If the provided symbol is incorrect or invalid, an empty JSON will be returned.
 
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_equity_historical_data.json>`__
+
         :param symbol: The exchange-traded symbol for which the data needs to be downloaded e.g. ``HDFCBANK``, ``SGBAPR28I`` or ``GOLDBEES``
         :type symbol: str
         :param from_date: The starting date from which we fetch the data. If None, the default date is 30 days from ``to_date``.
@@ -1530,7 +1532,7 @@ class NSE:
         option_type: Optional[Literal["CE", "PE"]] = None,
         strike_price: Optional[float] = None,
     ) -> List[dict]:
-        '''
+        """
         Downloads the historical futures and options data within a given date range from ``from_date`` to ``to_date``.
 
         Reference url: https://www.nseindia.com/report-detail/fo_eq_security
@@ -1561,7 +1563,7 @@ class NSE:
 
         :return: Data as a list of rows, each row as dictionary with key as column name mapped to the value
         :rtype: List[Dict]
-        '''
+        """
         if from_date and not isinstance(from_date, date):
             raise TypeError(
                 "Starting date must be an object of type datetime.date"
@@ -1627,7 +1629,7 @@ class NSE:
         from_date: Optional[date] = None,
         to_date: Optional[date] = None,
     ) -> Dict[str, List[dict]]:
-        '''
+        """
         Downloads the historical index data within a given date range from ``from_date`` to ``to_date``.
 
         Reference url: https://www.nseindia.com/reports-indices-historical-index-data
@@ -1658,7 +1660,7 @@ class NSE:
 
         :return: A dictionary with ``price`` and ``turnover`` as keys and the data as a list of rows, each row is dictionary.
         :rtype: Dict[str, List]
-        '''
+        """
 
         if from_date and not isinstance(from_date, date):
             raise TypeError(
@@ -1684,7 +1686,7 @@ class NSE:
         data = dict(price=[], turnover=[])
 
         for chunk in date_chunks:
-            dct =  self.__req(
+            dct = self.__req(
                 url=f"{self.base_url}/historical/indicesHistory",
                 params={
                     "indexType": index.upper(),
@@ -1693,7 +1695,7 @@ class NSE:
                 },
             ).json()["data"]
 
-            data['price'] += dct['indexCloseOnlineRecords']
-            data['turnover'] += dct['indexTurnoverRecords']
+            data["price"] += dct["indexCloseOnlineRecords"]
+            data["turnover"] += dct["indexTurnoverRecords"]
 
         return data
