@@ -817,7 +817,7 @@ class NSE:
         """
         List Equity stocks by their Index name. Defaults to `NIFTY 50`
 
-        :ref:`See list of acceptable values for index argument. <listequity>`
+        :ref:`See list of acceptable values for index argument. <listEquityStocksByIndex>`
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listEquityStocksByIndex.json>`__
 
@@ -1470,8 +1470,8 @@ class NSE:
         Each row is represented as a dict, with column names as keys and their corresponding values.
 
         The date is stored under the key ``EOD_TIMESTAMP``.
-        
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/vixhistory.json>`__
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_historical_vix_data.json>`__
 
         :param from_date: The starting date from which we fetch the data. If None, the default date is 30 days from ``to_date``.
         :type from_date: datetime.date
@@ -1509,11 +1509,191 @@ class NSE:
 
         for chunk in date_chunks:
             data += self.__req(
-                    url=f"{self.base_url}/historical/vixhistory",
-                    params={
-                        "from": chunk[0].strftime("%d-%m-%Y"),
-                        "to": chunk[1].strftime("%d-%m-%Y"),
-                    },
-                ).json()["data"]
+                url=f"{self.base_url}/historical/vixhistory",
+                params={
+                    "from": chunk[0].strftime("%d-%m-%Y"),
+                    "to": chunk[1].strftime("%d-%m-%Y"),
+                },
+            ).json()["data"]
+
+        return data
+
+    def fetch_historical_fno_data(
+        self,
+        symbol: str,
+        instrument: Literal[
+            "FUTIDX", "FUTSTK", "OPTIDX", "OPTSTK", "FUTIVX"
+        ] = "FUTIDX",
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
+        expiry: Optional[date] = None,
+        option_type: Optional[Literal["CE", "PE"]] = None,
+        strike_price: Optional[float] = None,
+    ) -> List[dict]:
+        '''
+        Downloads the historical futures and options data within a given date range from ``from_date`` to ``to_date``.
+
+        Reference url: https://www.nseindia.com/report-detail/fo_eq_security
+
+        The data is returned as a list of rows (indexed starting at 0).
+
+        Each row is represented as a dict, with column names as keys and their corresponding values.
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_historical_fno_data.json>`__
+
+        :param symbol: Symbol name.
+        :type symbol: str
+        :param instrument: Default ``FUTIDX``. Instrument name can be one of ``FUTIDX``, ``FUTSTK``, ``OPTIDX``, ``OPTSTK``, ``FUTIVX``.
+        :type index: str
+        :param from_date: Optional. The starting date from which we fetch the data. If None, the default date is 30 days from ``to_date``.
+        :type from_date: datetime.date
+        :param to_date: Optional. The ending date upto which we fetch the data. If None, today's date is taken by default.
+        :type to_date: datetime.date
+        :param expiry: Optional. Expiry date of the instrument to filter results.
+        :type expiry: datetime.date
+        :param option_type: Optional. Filter results by option type. Must be one of ``CE`` or ``PE``
+        :type option_type: str
+        :param strike_price: Optional. Filter results by option type. Must be one of ``CE`` or ``PE``
+        :type strike_price: Optional[float]
+
+        :raise ValueError: if ``from_date`` is greater than ``to_date`` or if ``instrument`` is an Option and ``option_type`` is not specified.
+        :raise TypeError: if ``from_date`` or ``to_date`` or ``expiry`` is not of type datetime.date.
+
+        :return: Data as a list of rows, each row as dictionary with key as column name mapped to the value
+        :rtype: List[Dict]
+        '''
+        if from_date and not isinstance(from_date, date):
+            raise TypeError(
+                "Starting date must be an object of type datetime.date"
+            )
+
+        if to_date and not isinstance(to_date, date):
+            raise TypeError(
+                "Ending date must be an object of type datetime.date"
+            )
+
+        if not to_date:
+            to_date = date.today()
+
+        if not from_date:
+            from_date = to_date - timedelta(30)
+
+        if to_date < from_date:
+            raise ValueError("The from date must occur before the to date")
+
+        params: Dict[str, Any] = {
+            "instrumentType": instrument.upper(),
+            "symbol": symbol.upper(),
+        }
+
+        if expiry:
+            if not isinstance(expiry, date):
+                raise TypeError(
+                    "`expiry` must be an object of type datetime.date"
+                )
+
+            params["expiryDate"] = expiry.strftime("%d-%b-%Y")
+            params["year"] = expiry.year
+
+        if instrument in ("OPTIDX", "OPTSTK"):
+            if not option_type:
+                raise ValueError(
+                    "`option_type` param is required for Stock or Index options."
+                )
+            else:
+                params["optionType"] = option_type
+
+            if strike_price:
+                params["strikePrice"] = strike_price
+
+        date_chunks = NSE.__split_date_range(from_date, to_date)
+
+        data = []
+
+        for chunk in date_chunks:
+            params["from"] = chunk[0].strftime("%d-%m-%Y")
+            params["to"] = chunk[1].strftime("%d-%m-%Y")
+
+            data += self.__req(
+                url=f"{self.base_url}/historical/foCPV",
+                params=params,
+            ).json()["data"]
+
+        return data
+
+    def fetch_historical_index_data(
+        self,
+        index: str,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
+    ) -> Dict[str, List[dict]]:
+        '''
+        Downloads the historical index data within a given date range from ``from_date`` to ``to_date``.
+
+        Reference url: https://www.nseindia.com/reports-indices-historical-index-data
+
+        The data is returned as a dict object with ``price`` and ``turnover`` as keys.
+        The values are stored as a list of rows (indexed starting at 0).
+
+        Each row is represented as a dict, with column names as keys and their corresponding values.
+
+        :ref:`See list of acceptable values for index parameter. <fetch_historical_index_data>`
+
+        .. warning::
+
+            While the NSE API returns the entire date range, date values in ``price``
+            and ``turnover`` may not be in sync due to ``turnover`` containing additional dates.
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_historical_index_data.json>`__
+
+        :param index: The name of the Index.
+        :type index: str
+        :param from_date: The starting date from which we fetch the data. If None, the default date is 30 days from ``to_date``.
+        :type from_date: datetime.date
+        :param to_date: The ending date upto which we fetch the data. If None, today's date is taken by default.
+        :type to_date: datetime.date
+
+        :raise ValueError: if ``from_date`` is greater than ``to_date``
+        :raise TypeError: if ``from_date`` or ``to_date`` is not of type datetime.date
+
+        :return: A dictionary with ``price`` and ``turnover`` as keys and the data as a list of rows, each row is dictionary.
+        :rtype: Dict[str, List]
+        '''
+
+        if from_date and not isinstance(from_date, date):
+            raise TypeError(
+                "Starting date must be an object of type datetime.date"
+            )
+
+        if to_date and not isinstance(to_date, date):
+            raise TypeError(
+                "Ending date must be an object of type datetime.date"
+            )
+
+        if not to_date:
+            to_date = date.today()
+
+        if not from_date:
+            from_date = to_date - timedelta(30)
+
+        if to_date < from_date:
+            raise ValueError("The from date must occur before the to date")
+
+        date_chunks = NSE.__split_date_range(from_date, to_date)
+
+        data = dict(price=[], turnover=[])
+
+        for chunk in date_chunks:
+            dct =  self.__req(
+                url=f"{self.base_url}/historical/indicesHistory",
+                params={
+                    "indexType": index.upper(),
+                    "from": chunk[0].strftime("%d-%m-%Y"),
+                    "to": chunk[1].strftime("%d-%m-%Y"),
+                },
+            ).json()["data"]
+
+            data['price'] += dct['indexCloseOnlineRecords']
+            data['turnover'] += dct['indexTurnoverRecords']
 
         return data
