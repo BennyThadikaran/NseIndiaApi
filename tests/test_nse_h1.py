@@ -195,6 +195,26 @@ class TestNseApiH1(unittest.TestCase):
         self.assertIsInstance(response, dict)
         self.assertTrue("records" in response)
 
+    def test_fetch_historical_vix_data(self):
+        response = self.nse.fetch_historical_vix_data()
+
+        self.assertIsInstance(response, list)
+        self.assertTrue("TIMESTAMP" in response[0])
+
+    def test_fetch_historical_fno_data(self):
+        response = self.nse.fetch_historical_fno_data(
+            instrument="FUTIDX", symbol="NIFTY"
+        )
+
+        self.assertIsInstance(response, list)
+        self.assertTrue("TIMESTAMP" in response[0])
+
+    def test_fetch_historical_index_data(self):
+        response = self.nse.fetch_historical_index_data(index="NIFTY 50")
+
+        self.assertIsInstance(response, dict)
+        self.assertTrue("TIMESTAMP" in response["price"][0])
+
 
 if __name__ == "__main__":
     unittest.main()
