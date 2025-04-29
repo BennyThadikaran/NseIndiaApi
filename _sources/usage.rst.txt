@@ -89,6 +89,12 @@ Stocks Quotes and Market info
 
 .. automethod:: nse.NSE.fetch_equity_historical_data
 
+.. automethod:: nse.NSE.fetch_historical_vix_data
+
+.. automethod:: nse.NSE.fetch_historical_fno_data
+
+.. automethod:: nse.NSE.fetch_historical_index_data
+
 List Stocks
 -----------
 
