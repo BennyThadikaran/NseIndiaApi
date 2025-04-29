@@ -8,12 +8,12 @@ jobs:
     permissions:
       contents: write
     steps:
-    - id: deployment
-      uses: sphinx-notes/pages@v3
-      with:
-        publish: false
-        documentation_path: ./docs/source
-    - uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ${{ steps.deployment.outputs.artifact }}
+      - id: deployment
+        uses: sphinx-notes/pages@v3
+        with:
+          publish: false
+          documentation_path: ./docs/source
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ steps.deployment.outputs.artifact }}
