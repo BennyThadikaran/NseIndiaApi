@@ -48,4 +48,5 @@ Contents
 .. toctree::
 
    usage
-   index_categories
+   listEquityStocksByIndex
+   fetch_historical_index_data

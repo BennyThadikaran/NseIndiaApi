@@ -2,7 +2,7 @@
 Acceptable values for nse.listEquityStocksByIndex
 =================================================
 
-.. _listequity: 
+.. _listEquityStocksByIndex: 
 
 These are values that can be passed to `index` argument.
 
