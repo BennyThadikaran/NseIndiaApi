@@ -1699,3 +1699,17 @@ class NSE:
             data["turnover"] += dct["indexTurnoverRecords"]
 
         return data
+    
+    def fetch_fno_underlying(self) -> Dict[str, List[Dict[str, str]]]:
+        """
+        Fetches the indices and stocks for which FnO contracts are available to trade
+        
+        Reference URL: https://www.nseindia.com/market-data/securities-available-for-trading
+        
+        :return: A dictionary with keys '`IndexList`' and '`UnderlyingList`'. The values are the list of indices and stocks along
+        with their names and tickers respectively in alphabetical order for stocks. 
+        :rtype: Dict[str, List[Dict[str, str]]]
+        """
+        url = f"{self.base_url}/underlying-information"
+        data = self.__req(url).json()["data"]
+        return data
