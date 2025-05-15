@@ -215,6 +215,12 @@ class TestNseApiH2(unittest.TestCase):
         self.assertIsInstance(response, dict)
         self.assertTrue("TIMESTAMP" in response["price"][0])
 
+    def test_fetch_fno_underlying(self):
+        response = self.nse.fetch_fno_underlying()
+
+        self.assertIsInstance(response, dict)
+        self.assertTrue("IndexList" in response)
+
 
 if __name__ == "__main__":
     unittest.main()
