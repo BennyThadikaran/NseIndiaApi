@@ -1707,7 +1707,7 @@ class NSE:
         Reference URL: https://www.nseindia.com/market-data/securities-available-for-trading
         
         :return: A dictionary with keys '`IndexList`' and '`UnderlyingList`'. The values are the list of indices and stocks along
-        with their names and tickers respectively in alphabetical order for stocks. 
+         with their names and tickers respectively in alphabetical order for stocks.
         :rtype: Dict[str, List[Dict[str, str]]]
         """
         url = f"{self.base_url}/underlying-information"
