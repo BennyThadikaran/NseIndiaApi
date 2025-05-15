@@ -95,6 +95,8 @@ Stocks Quotes and Market info
 
 .. automethod:: nse.NSE.fetch_historical_index_data
 
+.. automethod:: nsefetch_fno_underlying
+
 List Stocks
 -----------
 
