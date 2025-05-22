@@ -52,7 +52,7 @@ class NSE:
     :raises ImportError: If ``server`` set to True and ``httpx[http2] is not installed or ``server`` set to False and ``requests`` is not installed.
     """
 
-    __version__ = "1.2.3"
+    __version__ = "1.2.4"
     SEGMENT_EQUITY = "equities"
     SEGMENT_SME = "sme"
     SEGMENT_MF = "mf"
@@ -1715,11 +1715,11 @@ class NSE:
         return data
 
     def fetch_index_names(self) -> Dict[str, List[Tuple[str, str]]]:
-        '''
+        """
         Returns a dict with a list of tuples. Each tuple contains the short index name and full name of the index.
 
         The full name can be passed as `index` parameter to :meth:`.fetch_historical_index_data`
-        '''
+        """
         return self.__req(f"{self.base_url}/index-names").json()
 
     def fetch_daily_reports_file_metadata(
