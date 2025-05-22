@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Acceptable values for nse.listEquityStocksByIndex" href="listEquityStocksByIndex.html" /><link rel="prev" title="Welcome to NSE’s documentation!" href="index.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2023.09.10 -->
-        <title>Usage - nse 1.2.3 documentation</title>
+        <title>Usage - nse 1.2.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">nse 1.2.3 documentation</div></a>
+      <a href="index.html"><div class="brand">nse 1.2.4 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">nse 1.2.3 documentation</span>
+  <span class="sidebar-brand-text">nse 1.2.4 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -479,6 +479,13 @@ True if running on a server, False if run locally.</p></li>
 <p><span class="versionmodified deprecated">Deprecated since version 1.0.9: </span>Removed in v1.0.9 as url no longer active.</p>
 </div>
 <p>Use nse.listEquityStocksByIndex</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.fetch_index_names">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">fetch_index_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.fetch_index_names" title="Link to this definition">¶</a></dt>
+<dd><p>Returns a dict with a list of tuples. Each tuple contains the short index name and full name of the index.</p>
+<p>The full name can be passed as <cite>index</cite> parameter to <a class="reference internal" href="#nse.NSE.fetch_historical_index_data" title="nse.NSE.fetch_historical_index_data"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fetch_historical_index_data()</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -847,6 +854,26 @@ with their names and tickers respectively in alphabetical order for stocks.</p>
 <p>Reports are saved to filesystem and a <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object is returned.</p>
 <p>By default, all methods save the file to the <code class="docutils literal notranslate"><span class="pre">download_folder</span></code> specified during initialization. Optionally all methods accept a <code class="docutils literal notranslate"><span class="pre">folder</span></code> argument if wish to save to another folder.</p>
 <p>Zip files are automatically extracted and saved to file.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.fetch_daily_reports_file_metadata">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">fetch_daily_reports_file_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'CM'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'INDEX'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'SLBS'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'SME'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'FO'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'COM'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'CD'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'NBF'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'WDM'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'CBM'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'TRI-PARTY'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'CM'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#nse.NSE.fetch_daily_reports_file_metadata" title="Link to this definition">¶</a></dt>
+<dd><p>Returns file metadata for daily reports.</p>
+<p>The returned dictionary contains info about current day and previous
+day reports.</p>
+<p>Useful for checking if a report is ready and updated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>segment</strong> (<em>Literal</em><em>[</em><em>&quot;CM&quot;</em><em>, </em><em>&quot;INDEX&quot;</em><em>, </em><em>&quot;SLBS&quot;</em><em>, </em><em>&quot;SME&quot;</em><em>, </em><em>&quot;FO&quot;</em><em>, </em><em>&quot;COM&quot;</em><em>, </em><em>&quot;CD&quot;</em><em>, </em><em>&quot;NBF&quot;</em><em>, </em><em>&quot;WDM&quot;</em><em>, </em><em>&quot;CBM&quot;</em><em>, </em><em>&quot;TRI-PARTY&quot;</em><em>]</em>) – The market segment to retrieve metadata. Defaults to <code class="docutils literal notranslate"><span class="pre">CM</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing metadata about the daily report files for the specified segment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.equityBhavcopy">
 <span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">equityBhavcopy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#nse.NSE.equityBhavcopy" title="Link to this definition">¶</a></dt>
@@ -1391,6 +1418,7 @@ But you need to consider holidays.</p>
 <li><a class="reference internal" href="#nse.NSE.gainers"><code class="docutils literal notranslate"><span class="pre">NSE.gainers()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.losers"><code class="docutils literal notranslate"><span class="pre">NSE.losers()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.advanceDecline"><code class="docutils literal notranslate"><span class="pre">NSE.advanceDecline()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.fetch_index_names"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_index_names()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.fetch_equity_historical_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_equity_historical_data()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.fetch_historical_vix_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_historical_vix_data()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.fetch_historical_fno_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_historical_fno_data()</span></code></a></li>
@@ -1419,6 +1447,7 @@ But you need to consider holidays.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#download-nse-reports">Download NSE reports</a><ul>
+<li><a class="reference internal" href="#nse.NSE.fetch_daily_reports_file_metadata"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_daily_reports_file_metadata()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.equityBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.equityBhavcopy()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.deliveryBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.deliveryBhavcopy()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.indicesBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.indicesBhavcopy()</span></code></a></li>
@@ -1454,7 +1483,7 @@ But you need to consider holidays.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=590429e0"></script>
+</div><script src="_static/documentation_options.js?v=928db92d"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
