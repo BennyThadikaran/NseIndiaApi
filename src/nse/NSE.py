@@ -1713,3 +1713,45 @@ class NSE:
         url = f"{self.base_url}/underlying-information"
         data = self.__req(url).json()["data"]
         return data
+
+    def fetch_index_names(self) -> Dict[str, List[Tuple[str, str]]]:
+        '''
+        Returns a dict with a list of tuples. Each tuple contains the short index name and full name of the index.
+
+        The full name can be passed as `index` parameter to :meth:`.fetch_historical_index_data`
+        '''
+        return self.__req(f"{self.base_url}/index-names").json()
+
+    def fetch_daily_reports_file_metadata(
+        self,
+        segment: Literal[
+            "CM",
+            "INDEX",
+            "SLBS",
+            "SME",
+            "FO",
+            "COM",
+            "CD",
+            "NBF",
+            "WDM",
+            "CBM",
+            "TRI-PARTY",
+        ] = "CM",
+    ) -> Dict:
+        """
+        Returns file metadata for daily reports.
+
+        The returned dictionary contains info about current day and previous
+        day reports.
+
+        Useful for checking if a report is ready and updated.
+
+        :param segment: The market segment to retrieve metadata. Defaults to ``CM``.
+        :type segment: Literal["CM", "INDEX", "SLBS", "SME", "FO", "COM", "CD", "NBF", "WDM", "CBM", "TRI-PARTY"]
+
+        :return: A dictionary containing metadata about the daily report files for the specified segment.
+        :rtype: Dict
+        """
+        return self.__req(
+            f"{self.base_url}/daily-reports", params=dict(key=segment)
+        ).json()
