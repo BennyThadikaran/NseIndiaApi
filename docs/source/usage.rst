@@ -87,6 +87,8 @@ Stocks Quotes and Market info
 
 .. automethod:: nse.NSE.advanceDecline
 
+.. automethod:: nse.NSE.fetch_index_names
+
 .. automethod:: nse.NSE.fetch_equity_historical_data
 
 .. automethod:: nse.NSE.fetch_historical_vix_data
@@ -136,6 +138,8 @@ Reports are saved to filesystem and a ``pathlib.Path`` object is returned.
 By default, all methods save the file to the ``download_folder`` specified during initialization. Optionally all methods accept a ``folder`` argument if wish to save to another folder.
 
 Zip files are automatically extracted and saved to file.
+
+.. automethod:: nse.NSE.fetch_daily_reports_file_metadata
 
 .. automethod:: nse.NSE.equityBhavcopy
 
