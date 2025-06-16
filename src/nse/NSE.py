@@ -129,13 +129,10 @@ class NSE:
         return cookies
 
     def __getCookies(self):
-
         if self.cookie_path.exists():
             if self.server:
                 # Expose the cookie jar object using .jar method.
-                cookies = self.Cookies(
-                    pickle.loads(self.cookie_path.read_bytes())
-                ).jar
+                cookies = self.Cookies(pickle.loads(self.cookie_path.read_bytes())).jar
             else:
                 cookies = pickle.loads(self.cookie_path.read_bytes())
 
@@ -201,31 +198,21 @@ class NSE:
         th.check()
 
         if self.server:
-            with self.__session.stream(
-                "GET", url=url, timeout=self.timeout
-            ) as r:
-
+            with self.__session.stream("GET", url=url, timeout=self.timeout) as r:
                 contentType = r.headers.get("content-type")
 
                 if contentType and "text/html" in contentType:
-                    raise RuntimeError(
-                        "NSE file is unavailable or not yet updated."
-                    )
+                    raise RuntimeError("NSE file is unavailable or not yet updated.")
 
                 with fname.open(mode="wb") as f:
                     for chunk in r.iter_bytes(chunk_size=1000000):
                         f.write(chunk)
         else:
-            with self.__session.get(
-                url, stream=True, timeout=self.timeout
-            ) as r:
-
+            with self.__session.get(url, stream=True, timeout=self.timeout) as r:
                 contentType = r.headers.get("content-type")
 
                 if contentType and "text/html" in contentType:
-                    raise RuntimeError(
-                        "NSE file is unavailable or not yet updated."
-                    )
+                    raise RuntimeError("NSE file is unavailable or not yet updated.")
 
                 with fname.open(mode="wb") as f:
                     for chunk in r.iter_content(chunk_size=1000000):
@@ -576,9 +563,7 @@ class NSE:
 
     def announcements(
         self,
-        index: Literal[
-            "equities", "sme", "debt", "mf", "invitsreits"
-        ] = "equities",
+        index: Literal["equities", "sme", "debt", "mf", "invitsreits"] = "equities",
         symbol: Optional[str] = None,
         fno=False,
         from_date: Optional[datetime] = None,
@@ -898,9 +883,7 @@ class NSE:
         :rtype: List[Dict]
         """
 
-        return self.__req(
-            f"{self.base_url}/all-upcoming-issues?category=ipo"
-        ).json()
+        return self.__req(f"{self.base_url}/all-upcoming-issues?category=ipo").json()
 
     def listPastIPO(
         self,
@@ -927,9 +910,7 @@ class NSE:
             from_date = to_date - timedelta(90)
 
         if to_date < from_date:
-            raise ValueError(
-                "Argument `to_date` cannot be less than `from_date`"
-            )
+            raise ValueError("Argument `to_date` cannot be less than `from_date`")
 
         params = dict(
             from_date=from_date.strftime("%d-%m-%Y"),
@@ -1001,9 +982,7 @@ class NSE:
             from_date = to_date - timedelta(7)
 
         if to_date < from_date:
-            raise ValueError(
-                "Argument `to_date` cannot be less than `from_date`"
-            )
+            raise ValueError("Argument `to_date` cannot be less than `from_date`")
 
         params = dict(
             from_date=from_date.strftime("%d-%m-%Y"),
@@ -1054,9 +1033,7 @@ class NSE:
 
     def optionChain(
         self,
-        symbol: Union[
-            Literal["banknifty", "nifty", "finnifty", "niftyit"], str
-        ],
+        symbol: Union[Literal["banknifty", "nifty", "finnifty", "niftyit"], str],
     ) -> Dict:
         """Unprocessed option chain from NSE for Index futures or FNO stocks
 
@@ -1156,9 +1133,7 @@ class NSE:
 
     def compileOptionChain(
         self,
-        symbol: Union[
-            str, Literal["banknifty", "nifty", "finnifty", "niftyit"]
-        ],
+        symbol: Union[str, Literal["banknifty", "nifty", "finnifty", "niftyit"]],
         expiryDate: datetime,
     ) -> Dict[str, Union[str, float, int]]:
         """Filter raw option chain by ``expiryDate`` and calculate various statistics required for analysis. This makes it easy to build an option chain for analysis using a simple loop.
@@ -1422,14 +1397,10 @@ class NSE:
             return data["data"][::-1]
 
         if from_date and not isinstance(from_date, date):
-            raise TypeError(
-                "Starting date must be an object of type datetime.date"
-            )
+            raise TypeError("Starting date must be an object of type datetime.date")
 
         if to_date and not isinstance(to_date, date):
-            raise TypeError(
-                "Ending date must be an object of type datetime.date"
-            )
+            raise TypeError("Ending date must be an object of type datetime.date")
 
         if not to_date:
             to_date = date.today()
@@ -1487,14 +1458,10 @@ class NSE:
         :rtype: List[Dict]
         """
         if from_date and not isinstance(from_date, date):
-            raise TypeError(
-                "Starting date must be an object of type datetime.date"
-            )
+            raise TypeError("Starting date must be an object of type datetime.date")
 
         if to_date and not isinstance(to_date, date):
-            raise TypeError(
-                "Ending date must be an object of type datetime.date"
-            )
+            raise TypeError("Ending date must be an object of type datetime.date")
 
         if not to_date:
             to_date = date.today()
@@ -1565,14 +1532,10 @@ class NSE:
         :rtype: List[Dict]
         """
         if from_date and not isinstance(from_date, date):
-            raise TypeError(
-                "Starting date must be an object of type datetime.date"
-            )
+            raise TypeError("Starting date must be an object of type datetime.date")
 
         if to_date and not isinstance(to_date, date):
-            raise TypeError(
-                "Ending date must be an object of type datetime.date"
-            )
+            raise TypeError("Ending date must be an object of type datetime.date")
 
         if not to_date:
             to_date = date.today()
@@ -1590,9 +1553,7 @@ class NSE:
 
         if expiry:
             if not isinstance(expiry, date):
-                raise TypeError(
-                    "`expiry` must be an object of type datetime.date"
-                )
+                raise TypeError("`expiry` must be an object of type datetime.date")
 
             params["expiryDate"] = expiry.strftime("%d-%b-%Y")
             params["year"] = expiry.year
@@ -1663,14 +1624,10 @@ class NSE:
         """
 
         if from_date and not isinstance(from_date, date):
-            raise TypeError(
-                "Starting date must be an object of type datetime.date"
-            )
+            raise TypeError("Starting date must be an object of type datetime.date")
 
         if to_date and not isinstance(to_date, date):
-            raise TypeError(
-                "Ending date must be an object of type datetime.date"
-            )
+            raise TypeError("Ending date must be an object of type datetime.date")
 
         if not to_date:
             to_date = date.today()
