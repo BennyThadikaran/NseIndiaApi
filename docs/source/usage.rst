@@ -206,6 +206,8 @@ Corporate Announcements and Actions
 
 .. automethod:: nse.NSE.boardMeetings
 
+.. automethod:: nse.NSE.annual_reports
+
 Futures and Options (FnO)
 -------------------------
 
