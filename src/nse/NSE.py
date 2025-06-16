@@ -671,6 +671,36 @@ class NSE:
 
         return self.__req(url, params=params).json()
 
+    def annual_reports(
+        self, symbol: str, segment: Literal["equities", "sme"] = "equities"
+    ) -> Dict[str, List[Dict[str, str]]]:
+        """
+        Returns the dictionary containing the list of annual reports of the symbol for every year.
+
+        Each dictionary within the list contains the link to the annual report in PDF format.
+
+        .. code-block:: python
+
+            with NSE("") as nse:
+                annual_reports = nse.annual_reports(symbol="HDFCBANK")
+
+                file = nse.download_document(annual_reports["data"][0]["fileName"])
+
+                print(file) # filepath of downloaded annual report
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/annual_reports.json>`__
+
+        :param symbol: Stock symbol for which annual reports are to be fetched.
+        :type symbol: str
+        :param segment: One of ``equities`` or ``sme``. Default is ``equities``.
+        :type segment: Literal["equities", "sme"]
+        :return: A dictionary where keys are years and values are lists of dictionaries with PDF links to annual reports.
+        :rtype: dict[str, list[dict[str, str]]]
+        """
+        return self.__req(
+            f"{self.base_url}/annual-reports", params=dict(index=segment, symbol=symbol)
+        ).json()
+
     def equityMetaInfo(self, symbol) -> Dict:
         """Meta info for equity symbols.
 
