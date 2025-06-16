@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Acceptable values for nse.listEquityStocksByIndex" href="listEquityStocksByIndex.html" /><link rel="prev" title="Welcome to NSE’s documentation!" href="index.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2023.09.10 -->
-        <title>Usage - nse 1.2.4 documentation</title>
+        <title>Usage - nse 1.2.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">nse 1.2.4 documentation</div></a>
+      <a href="index.html"><div class="brand">nse 1.2.5 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">nse 1.2.4 documentation</span>
+  <span class="sidebar-brand-text">nse 1.2.5 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -1226,6 +1226,36 @@ If the downloaded file is a zip file, extracts its contents to the specified fol
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.annual_reports">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">annual_reports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'equities'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'sme'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'equities'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.annual_reports" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the dictionary containing the list of annual reports of the symbol for every year.</p>
+<p>Each dictionary within the list contains the link to the annual report in PDF format.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">NSE</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">nse</span><span class="p">:</span>
+    <span class="n">annual_reports</span> <span class="o">=</span> <span class="n">nse</span><span class="o">.</span><span class="n">annual_reports</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;HDFCBANK&quot;</span><span class="p">)</span>
+
+    <span class="n">file</span> <span class="o">=</span> <span class="n">nse</span><span class="o">.</span><span class="n">download_document</span><span class="p">(</span><span class="n">annual_reports</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;fileName&quot;</span><span class="p">])</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="c1"># filepath of downloaded annual report</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/annual_reports.json">Sample response</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – Stock symbol for which annual reports are to be fetched.</p></li>
+<li><p><strong>segment</strong> (<em>Literal</em><em>[</em><em>&quot;equities&quot;</em><em>, </em><em>&quot;sme&quot;</em><em>]</em>) – One of <code class="docutils literal notranslate"><span class="pre">equities</span></code> or <code class="docutils literal notranslate"><span class="pre">sme</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">equities</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where keys are years and values are lists of dictionaries with PDF links to annual reports.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, list[dict[str, str]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="futures-and-options-fno">
 <h2>Futures and Options (FnO)<a class="headerlink" href="#futures-and-options-fno" title="Link to this heading">¶</a></h2>
@@ -1462,6 +1492,7 @@ But you need to consider holidays.</p>
 <li><a class="reference internal" href="#nse.NSE.actions"><code class="docutils literal notranslate"><span class="pre">NSE.actions()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.announcements"><code class="docutils literal notranslate"><span class="pre">NSE.announcements()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.boardMeetings"><code class="docutils literal notranslate"><span class="pre">NSE.boardMeetings()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.annual_reports"><code class="docutils literal notranslate"><span class="pre">NSE.annual_reports()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#futures-and-options-fno">Futures and Options (FnO)</a><ul>
@@ -1483,7 +1514,7 @@ But you need to consider holidays.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=928db92d"></script>
+</div><script src="_static/documentation_options.js?v=36f53d34"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
