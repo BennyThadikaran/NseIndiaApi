@@ -1329,7 +1329,7 @@ class NSE:
 
         data = self.__req(url).json()
 
-        if not "data" in data or len(data["data"]) < 1:
+        if "data" not in data or len(data["data"]) < 1:
             raise RuntimeError(
                 "No bulk deals data available for the specified date range."
             )
