@@ -231,7 +231,9 @@ class NSE:
             raise TimeoutError(repr(e))
 
         if not 200 <= r.status_code < 300:
-            raise ConnectionError(f"{url} {r.status_code}: {r.reason}")
+            reason = r.reason if hasattr(r, "reason") else r.reason_phrase
+
+            raise ConnectionError(f"{url} {r.status_code}: {reason}")
 
         return r
 
