@@ -1,41 +1,44 @@
 [build-system]
-requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+requires = [ "hatchling" ]
 
 [project]
 name = "nse"
 version = "1.2.5"
-authors = [
-  { name="Benny Thadikaran" },
-]
 description = "Unofficial Python Api for NSE India stock exchange"
 readme = "README.md"
+keywords = [ "nse", "nse-stock-data", "stock-market-api", "stock-news-api" ]
+authors = [
+  { name = "Benny Thadikaran" },
+]
 requires-python = ">=3.8"
 classifiers = [
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3 :: Only",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Financial and Insurance Industry",
-    "Natural Language :: English",
-    "Topic :: Office/Business :: Financial :: Investment",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Software Development :: Libraries",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Financial and Insurance Industry",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Office/Business :: Financial :: Investment",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-keywords = ["nse", "nse-stock-data", "stock-market-api", "stock-news-api"]
-dependencies = ["mthrottle>=0.0.1"]
+dependencies = [ "mthrottle>=0.0.1" ]
 
-[project.optional-dependencies]
-local = ["requests>=2.31.0"]
-server = ["httpx[http2]==0.28.1"]
-
-[project.urls]
-"Homepage" = "https://github.com/BennyThadikaran/NseIndiaApi"
-"Bug Tracker" = "https://github.com/BennyThadikaran/NseIndiaApi/issues"
+optional-dependencies.local = [ "requests>=2.31" ]
+optional-dependencies.server = [ "httpx[http2]==0.28.1" ]
+urls."Bug Tracker" = "https://github.com/BennyThadikaran/NseIndiaApi/issues"
+urls."Homepage" = "https://github.com/BennyThadikaran/NseIndiaApi"
 
 [tool.hatch.build.targets.sdist]
-exclude = ["docs", "tests", ".github", "src/samples"]
+exclude = [ "docs", "tests", ".github", "src/samples" ]
 
 [tool.hatch.build.targets.wheel]
-exclude = ["docs", "tests", ".github", "src/samples"]
+exclude = [ "docs", "tests", ".github", "src/samples" ]
