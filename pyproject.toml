@@ -32,6 +32,7 @@ classifiers = [
 ]
 dependencies = [ "mthrottle>=0.0.1" ]
 
+optional-dependencies.dev = [ "furo==2023.9.10", "sphinx==7.4.7" ]
 optional-dependencies.local = [ "requests>=2.31" ]
 optional-dependencies.server = [ "httpx[http2]==0.28.1" ]
 urls."Bug Tracker" = "https://github.com/BennyThadikaran/NseIndiaApi/issues"
