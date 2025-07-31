@@ -302,6 +302,35 @@ class NSE:
 
         return self.__req(f"{self.base_url}/marketStatus").json()["marketState"]
 
+    def lookup(self, query: str) -> dict:
+        """
+        Lookup a stock symbol by passing the company name or look up company name by passing the stock symbol.
+
+        Returns a dictionary with the `symbols` key containing a list of dictionary results.
+        The first item is usually an exact match assuming the exact company name or full symbol name was searched.
+
+        If the symbols list is empty, no symbols matched the query.
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/lookup.json>`__
+
+        .. code-block:: python
+
+            with NSE("") as nse:
+                result = nse.lookup(query="hdfcbank")
+
+                print(result['symbols'][0]['symbol_info']) # company name - HDFC Bank Limited
+                print(result['symbols'][0]['symbol']) # stock symbol - HDFCBANK
+
+        :param query:
+        :type query: str
+        :return: A dictionary of results from the query search.
+        :rtype: dict
+        """
+        return self.__req(
+            f"{self.base_url}/search/autocomplete",
+            params=dict(q=query),
+        ).json()
+
     def equityBhavcopy(
         self, date: datetime, folder: Union[str, Path, None] = None
     ) -> Path:
