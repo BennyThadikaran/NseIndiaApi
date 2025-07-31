@@ -1,0 +1,42 @@
+{
+  "symbols": [
+    {
+      "symbol": "HDFCBANK",
+      "symbol_info": "HDFC Bank Limited",
+      "symbol_suggest": [
+        { "input": "HDFCBANK", "weight": 20 },
+        { "input": "HDFC Bank Limited", "weight": 15 }
+      ],
+      "result_type": "symbol",
+      "result_sub_type": "equity",
+      "activeSeries": ["EQ", "T0"],
+      "listing_date": "1995-11-08",
+      "url": "/get-quotes/equity?symbol=HDFCBANK"
+    }
+  ],
+  "mfsymbols": [],
+  "search_content": [
+    {
+      "title": "Clearing Banks",
+      "content": "Prashant Patel\nExecutive Vice President\nTel: 022 3976 0550\nMobile: 9821634545\nEmail <b>id:prashant.patel@hdfcbank.com</b>\n\nMr.",
+      "url": "/nse-clearing/clearing-banks",
+      "result_type": "content",
+      "result_sub_type": "content"
+    },
+    {
+      "title": "NSE Clearing - Financials",
+      "content": "Securities Limited at\nwww.jmfl.com, Kotak Mahindra Capital Company Limited at http://www.investmentbank.kotak.com, Morgan Stanley India\nCompany Private Limited at http://www.morganstanley.com/about-us/global-offices/india/, HDFC Bank Limited at\n<b>www.hdfcbank.com,</b>",
+      "url": "/nse-clearing/financial-information-disclosures",
+      "result_type": "content",
+      "result_sub_type": "content"
+    },
+    {
+      "title": "List of Underlyings and Information",
+      "content": "LIMITEDGRANULES69GRASIM INDUSTRIES LIMITED\nGRASIM70GUJARAT GAS LIMITEDGUJGASLTD71GUJARAT NARMADA VALLEY FERTILIZERS AND CHEMICALS LIMITEDGNFC72HAVELLS INDIA\nLIMITEDHAVELLS73HCL TECHNOLOGIES LIMITEDHCLTECH74HDFC ASSET MANAGEMENT COMPANY LIMITEDHDFCAMC75HDFC BANK <b>LIMITEDHDFCBANK</b>",
+      "url": "/products-services/equity-derivatives-list-underlyings-information",
+      "result_type": "content",
+      "result_sub_type": "content"
+    }
+  ],
+  "sitemap": []
+}
