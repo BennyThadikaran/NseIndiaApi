@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Usage" href="usage.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2023.09.10 -->
-        <title>nse 1.2.6 documentation</title>
+        <title>nse 1.2.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">nse 1.2.6 documentation</div></a>
+      <a href="#"><div class="brand">nse 1.2.7 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
   
   
-  <span class="sidebar-brand-text">nse 1.2.6 documentation</span>
+  <span class="sidebar-brand-text">nse 1.2.7 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -156,6 +156,7 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="listEquityStocksByIndex.html">Acceptable values for nse.listEquityStocksByIndex</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fetch_historical_index_data.html">Acceptable values for nse.fetch_historical_index_data</a></li>
 </ul>
@@ -226,81 +227,80 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#example">Example</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#api">API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="usage.html#nse.NSE"><code class="docutils literal notranslate"><span class="pre">NSE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#example">Example</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#nse.NSE"><code class="docutils literal notranslate"><span class="pre">NSE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#general-methods">General Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.exit"><code class="docutils literal notranslate"><span class="pre">NSE.exit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.status"><code class="docutils literal notranslate"><span class="pre">NSE.status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.lookup"><code class="docutils literal notranslate"><span class="pre">NSE.lookup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.holidays"><code class="docutils literal notranslate"><span class="pre">NSE.holidays()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.blockDeals"><code class="docutils literal notranslate"><span class="pre">NSE.blockDeals()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.bulkdeals"><code class="docutils literal notranslate"><span class="pre">NSE.bulkdeals()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#general-methods">General Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.exit"><code class="docutils literal notranslate"><span class="pre">NSE.exit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.status"><code class="docutils literal notranslate"><span class="pre">NSE.status()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.holidays"><code class="docutils literal notranslate"><span class="pre">NSE.holidays()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.blockDeals"><code class="docutils literal notranslate"><span class="pre">NSE.blockDeals()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.bulkdeals"><code class="docutils literal notranslate"><span class="pre">NSE.bulkdeals()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#stocks-quotes-and-market-info">Stocks Quotes and Market info</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.equityMetaInfo"><code class="docutils literal notranslate"><span class="pre">NSE.equityMetaInfo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.quote"><code class="docutils literal notranslate"><span class="pre">NSE.quote()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.equityQuote"><code class="docutils literal notranslate"><span class="pre">NSE.equityQuote()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.gainers"><code class="docutils literal notranslate"><span class="pre">NSE.gainers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.losers"><code class="docutils literal notranslate"><span class="pre">NSE.losers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.advanceDecline"><code class="docutils literal notranslate"><span class="pre">NSE.advanceDecline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.fetch_index_names"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_index_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.fetch_equity_historical_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_equity_historical_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.fetch_historical_vix_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_historical_vix_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.fetch_historical_fno_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_historical_fno_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.fetch_historical_index_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_historical_index_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.fetch_fno_underlying"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_fno_underlying()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#stocks-quotes-and-market-info">Stocks Quotes and Market info</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.equityMetaInfo"><code class="docutils literal notranslate"><span class="pre">NSE.equityMetaInfo()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.quote"><code class="docutils literal notranslate"><span class="pre">NSE.quote()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.equityQuote"><code class="docutils literal notranslate"><span class="pre">NSE.equityQuote()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.gainers"><code class="docutils literal notranslate"><span class="pre">NSE.gainers()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.losers"><code class="docutils literal notranslate"><span class="pre">NSE.losers()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.advanceDecline"><code class="docutils literal notranslate"><span class="pre">NSE.advanceDecline()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.fetch_index_names"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_index_names()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.fetch_equity_historical_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_equity_historical_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.fetch_historical_vix_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_historical_vix_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.fetch_historical_fno_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_historical_fno_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.fetch_historical_index_data"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_historical_index_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.fetch_fno_underlying"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_fno_underlying()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#list-stocks">List Stocks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.listFnoStocks"><code class="docutils literal notranslate"><span class="pre">NSE.listFnoStocks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.listEquityStocksByIndex"><code class="docutils literal notranslate"><span class="pre">NSE.listEquityStocksByIndex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.listIndices"><code class="docutils literal notranslate"><span class="pre">NSE.listIndices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.listIndexStocks"><code class="docutils literal notranslate"><span class="pre">NSE.listIndexStocks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.listEtf"><code class="docutils literal notranslate"><span class="pre">NSE.listEtf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.listSme"><code class="docutils literal notranslate"><span class="pre">NSE.listSme()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.listSgb"><code class="docutils literal notranslate"><span class="pre">NSE.listSgb()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#list-stocks">List Stocks</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.listFnoStocks"><code class="docutils literal notranslate"><span class="pre">NSE.listFnoStocks()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.listEquityStocksByIndex"><code class="docutils literal notranslate"><span class="pre">NSE.listEquityStocksByIndex()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.listIndices"><code class="docutils literal notranslate"><span class="pre">NSE.listIndices()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.listIndexStocks"><code class="docutils literal notranslate"><span class="pre">NSE.listIndexStocks()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.listEtf"><code class="docutils literal notranslate"><span class="pre">NSE.listEtf()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.listSme"><code class="docutils literal notranslate"><span class="pre">NSE.listSme()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.listSgb"><code class="docutils literal notranslate"><span class="pre">NSE.listSgb()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#list-ipos">List IPOs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.listCurrentIPO"><code class="docutils literal notranslate"><span class="pre">NSE.listCurrentIPO()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.listUpcomingIPO"><code class="docutils literal notranslate"><span class="pre">NSE.listUpcomingIPO()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.listPastIPO"><code class="docutils literal notranslate"><span class="pre">NSE.listPastIPO()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#list-ipos">List IPOs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.listCurrentIPO"><code class="docutils literal notranslate"><span class="pre">NSE.listCurrentIPO()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.listUpcomingIPO"><code class="docutils literal notranslate"><span class="pre">NSE.listUpcomingIPO()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.listPastIPO"><code class="docutils literal notranslate"><span class="pre">NSE.listPastIPO()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#nse-circulars">NSE Circulars</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.circulars"><code class="docutils literal notranslate"><span class="pre">NSE.circulars()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#nse-circulars">NSE Circulars</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.circulars"><code class="docutils literal notranslate"><span class="pre">NSE.circulars()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#download-nse-reports">Download NSE reports</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.fetch_daily_reports_file_metadata"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_daily_reports_file_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.equityBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.equityBhavcopy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.deliveryBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.deliveryBhavcopy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.indicesBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.indicesBhavcopy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.pr_bhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.pr_bhavcopy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.fnoBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.fnoBhavcopy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.priceband_report"><code class="docutils literal notranslate"><span class="pre">NSE.priceband_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.cm_mii_security_report"><code class="docutils literal notranslate"><span class="pre">NSE.cm_mii_security_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.download_document"><code class="docutils literal notranslate"><span class="pre">NSE.download_document()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#download-nse-reports">Download NSE reports</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.fetch_daily_reports_file_metadata"><code class="docutils literal notranslate"><span class="pre">NSE.fetch_daily_reports_file_metadata()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.equityBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.equityBhavcopy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.deliveryBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.deliveryBhavcopy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.indicesBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.indicesBhavcopy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.pr_bhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.pr_bhavcopy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.fnoBhavcopy"><code class="docutils literal notranslate"><span class="pre">NSE.fnoBhavcopy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.priceband_report"><code class="docutils literal notranslate"><span class="pre">NSE.priceband_report()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.cm_mii_security_report"><code class="docutils literal notranslate"><span class="pre">NSE.cm_mii_security_report()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.download_document"><code class="docutils literal notranslate"><span class="pre">NSE.download_document()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#corporate-announcements-and-actions">Corporate Announcements and Actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.actions"><code class="docutils literal notranslate"><span class="pre">NSE.actions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.announcements"><code class="docutils literal notranslate"><span class="pre">NSE.announcements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.boardMeetings"><code class="docutils literal notranslate"><span class="pre">NSE.boardMeetings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.annual_reports"><code class="docutils literal notranslate"><span class="pre">NSE.annual_reports()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#corporate-announcements-and-actions">Corporate Announcements and Actions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.actions"><code class="docutils literal notranslate"><span class="pre">NSE.actions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.announcements"><code class="docutils literal notranslate"><span class="pre">NSE.announcements()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.boardMeetings"><code class="docutils literal notranslate"><span class="pre">NSE.boardMeetings()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.annual_reports"><code class="docutils literal notranslate"><span class="pre">NSE.annual_reports()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#futures-and-options-fno">Futures and Options (FnO)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.getFuturesExpiry"><code class="docutils literal notranslate"><span class="pre">NSE.getFuturesExpiry()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.fnoLots"><code class="docutils literal notranslate"><span class="pre">NSE.fnoLots()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.optionChain"><code class="docutils literal notranslate"><span class="pre">NSE.optionChain()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.compileOptionChain"><code class="docutils literal notranslate"><span class="pre">NSE.compileOptionChain()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#nse.NSE.maxpain"><code class="docutils literal notranslate"><span class="pre">NSE.maxpain()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#futures-and-options-fno">Futures and Options (FnO)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.getFuturesExpiry"><code class="docutils literal notranslate"><span class="pre">NSE.getFuturesExpiry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.fnoLots"><code class="docutils literal notranslate"><span class="pre">NSE.fnoLots()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.optionChain"><code class="docutils literal notranslate"><span class="pre">NSE.optionChain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.compileOptionChain"><code class="docutils literal notranslate"><span class="pre">NSE.compileOptionChain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#nse.NSE.maxpain"><code class="docutils literal notranslate"><span class="pre">NSE.maxpain()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -379,7 +379,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=010db75e"></script>
+</div><script src="_static/documentation_options.js?v=a5753347"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
