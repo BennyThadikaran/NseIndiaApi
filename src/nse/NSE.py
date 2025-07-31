@@ -173,10 +173,17 @@ class NSE:
         return path
 
     @staticmethod
-    def __unzip(file: Path, folder: Path):
+    def __unzip(file: Path, folder: Path, extract_files: Optional[List[str]] = None):
         if file.suffix == ".zip":
             with ZipFile(file) as zip:
-                filepath = zip.extract(member=zip.namelist()[0], path=folder)
+                if extract_files:
+                    zip.extractall(path=folder, members=extract_files)
+
+                    # return the last filepath
+                    filepath = folder / extract_files[-1]
+                else:
+                    filepath = zip.extract(member=zip.namelist()[0], path=folder)
+
         elif file.suffix == ".gz":
             with open(file, "rb") as f_in:
                 with open(file.stem, "wb") as f_out:
@@ -1337,7 +1344,10 @@ class NSE:
         return data["data"]
 
     def download_document(
-        self, url: str, folder: Union[str, Path, None] = None
+        self,
+        url: str,
+        folder: Union[str, Path, None] = None,
+        extract_files: Optional[List[str]] = None,
     ) -> Path:
         """
         Download the document from the specified URL and return the saved file path.
@@ -1347,12 +1357,14 @@ class NSE:
         :type url: str
         :param folder: Folder path to save file. If not specified, uses download_folder from class initialization.
         :type folder: pathlib.Path or str or None
+        :param extract_files: A list of filenames to be extracted. If None, the first file in zipfile will be extracted.
+        :type extract_files: List[str] or None
 
         :raise ValueError: If folder is not a directory
         :raise FileNotFoundError: If download failed or file corrupted
         :raise RuntimeError: If file extraction fails
 
-        :return: Path to saved file (or extracted file if zip)
+        :return: Path to saved file (or extracted file if zip). If extract_files is specified, the last filepath in the list is returned.
         :rtype: pathlib.Path
         """
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
@@ -1365,7 +1377,7 @@ class NSE:
         # Check if downloaded file is a zip file
         if file.suffix.lower() == ".zip":
             try:
-                return self.__unzip(file, folder)
+                return self.__unzip(file, folder, extract_files)
             except Exception as e:
                 file.unlink()
                 raise RuntimeError(f"Failed to extract zip file: {str(e)}")
