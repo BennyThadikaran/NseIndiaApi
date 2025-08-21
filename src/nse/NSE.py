@@ -65,7 +65,7 @@ class NSE:
     FNO_NIFTY = "nifty"
     FNO_FINNIFTY = "finnifty"
     FNO_IT = "niftyit"
-    UDIFF_SWITCH_DATE = datetime(2024, 7, 8)
+    UDIFF_SWITCH_DATE = datetime(2024, 7, 8).date()
 
     __optionIndex = ("banknifty", "nifty", "finnifty", "niftyit")
     base_url = "https://www.nseindia.com/api"
@@ -355,7 +355,7 @@ class NSE:
 
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
-        if date < self.UDIFF_SWITCH_DATE:
+        if date.date() < self.UDIFF_SWITCH_DATE:
             date_str = date.strftime("%d%b%Y").upper()
             month = date_str[2:5]
 
