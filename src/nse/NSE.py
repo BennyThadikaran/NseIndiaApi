@@ -65,6 +65,7 @@ class NSE:
     FNO_NIFTY = "nifty"
     FNO_FINNIFTY = "finnifty"
     FNO_IT = "niftyit"
+    UDIFF_SWITCH_DATE = datetime(2024, 7, 8)
 
     __optionIndex = ("banknifty", "nifty", "finnifty", "niftyit")
     base_url = "https://www.nseindia.com/api"
@@ -337,6 +338,10 @@ class NSE:
         """Download the daily Equity bhavcopy report for specified ``date``
         and return the saved filepath.
 
+        If the date is prior to 8th July 2024, the old bhavcopy file will be downloaded i.e. cm02JAN2023bhav.csv
+
+        else the latest UDIFF bhavcopy format is used .i.e BhavCopy_NSE_CM_0_0_0_20250102_F_0000.csv
+
         :param date: Date of bhavcopy to download
         :type date: datetime.datetime
         :param folder: Optional folder/dir path to save file. If not specified, use ``download_folder`` specified during class initializataion.
@@ -350,10 +355,19 @@ class NSE:
 
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
-        url = "{}/content/cm/BhavCopy_NSE_CM_0_0_0_{}_F_0000.csv.zip".format(
-            self.archive_url,
-            date.strftime("%Y%m%d"),
-        )
+        if date < self.UDIFF_SWITCH_DATE:
+            date_str = date.strftime("%d%b%Y").upper()
+            month = date_str[2:5]
+
+            url = "{}/content/historical/EQUITIES/{}/{}/cm{}bhav.csv.zip".format(
+                self.archive_url, date.year, month, date_str
+            )
+
+        else:
+            url = "{}/content/cm/BhavCopy_NSE_CM_0_0_0_{}_F_0000.csv.zip".format(
+                self.archive_url,
+                date.strftime("%Y%m%d"),
+            )
 
         file = self.__download(url, folder)
 
