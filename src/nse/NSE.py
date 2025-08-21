@@ -338,9 +338,9 @@ class NSE:
         """Download the daily Equity bhavcopy report for specified ``date``
         and return the saved filepath.
 
-        If the date is prior to 8th July 2024, the old bhavcopy file will be downloaded i.e. cm02JAN2023bhav.csv
+        If the date is before 8th July 2024, the old bhavcopy will be downloaded i.e. `cm02JAN2023bhav.csv`
 
-        else the latest UDIFF bhavcopy format is used .i.e BhavCopy_NSE_CM_0_0_0_20250102_F_0000.csv
+        If all other cases, the latest UDIFF bhavcopy format is used .i.e `BhavCopy_NSE_CM_0_0_0_20250102_F_0000.csv`
 
         :param date: Date of bhavcopy to download
         :type date: datetime.datetime
