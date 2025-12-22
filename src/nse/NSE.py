@@ -1116,6 +1116,7 @@ class NSE:
     def optionChain(
         self,
         symbol: Union[Literal["banknifty", "nifty", "finnifty", "niftyit"], str],
+        expiry_date: Optional[datetime] = None,
     ) -> Dict:
         """Unprocessed option chain from NSE for Index futures or FNO stocks
 
@@ -1123,17 +1124,49 @@ class NSE:
 
         :param symbol: FnO stock or index futures code. For Index futures, must be one of ``banknifty``, ``nifty``, ``finnifty``, ``niftyit``
         :type symbol: str
+        :param expiry_date: Expiry date of the instrument
+        :type expiry_date: datetime or None
         :return: Option chain for all expiries
         :rtype: dict"""
-
-        if symbol in self.__optionIndex:
-            url = f"{self.base_url}/option-chain-indices"
-        else:
-            url = f"{self.base_url}/option-chain-equities"
 
         params = {
             "symbol": symbol.upper(),
         }
+
+        if not expiry_date:
+            opt_info = None
+            opt_info_folder = self.dir / "opt-info"
+            opt_info_file = opt_info_folder / f"{symbol}.json"
+
+            if not opt_info_folder.exists():
+                opt_info_folder.mkdir(parents=True, exist_ok=True)
+
+            if opt_info_file.exists():
+                opt_info = json.loads(opt_info_file.read_bytes())
+
+                expiry_date = datetime.fromisoformat(opt_info["expiry"])
+
+                if date.today() > expiry_date.date():
+                    opt_info_file.unlink()
+                    opt_info = None
+
+            if not opt_info:
+                opt_info = self.__req(
+                    f"{self.base_url}/option-chain-contract-info", params=params
+                ).json()
+
+                expiry_date = datetime.strptime(opt_info["expiryDates"][0], "%d-%b-%Y")
+
+                opt_info["expiry"] = expiry_date.isoformat()
+
+                opt_info_file.write_text(json.dumps(opt_info))
+
+        url = f"{self.base_url}/option-chain-v3"
+
+        params["type"] = "Indices" if symbol in self.__optionIndex else "Equity"
+
+        if expiry_date:
+            params["expiry"] = expiry_date.strftime("%d-%b-%Y")
 
         data = self.__req(url, params=params).json()
 
