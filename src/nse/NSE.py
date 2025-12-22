@@ -1184,20 +1184,16 @@ class NSE:
         :rtype: float"""
 
         out = {}
+        data = optionChain["records"]["data"]
+        expiry = expiryDate.strftime("%d-%b-%Y")
 
-        expiryDateStr = expiryDate.strftime("%d-%b-%Y")
+        rows = tuple(row for row in data if row["expiryDates"] == expiry)
 
-        for x in optionChain["records"]["data"]:
-            if x["expiryDate"] != expiryDateStr:
-                continue
-
+        for x in rows:
             expiryStrike = x["strikePrice"]
             pain = 0
 
-            for y in optionChain["records"]["data"]:
-                if y["expiryDate"] != expiryDateStr:
-                    continue
-
+            for y in rows:
                 diff = expiryStrike - y["strikePrice"]
 
                 # strike expiry above strike, loss for CE writers
