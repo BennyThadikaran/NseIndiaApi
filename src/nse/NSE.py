@@ -1327,7 +1327,6 @@ class NSE:
         maxCoi = maxPoi = totalCoi = totalPoi = maxCoiStrike = maxPoiStrike = 0
 
         dataFields = ("openInterest", "lastPrice", "chg", "impliedVolatility")
-        ocFields = ("last", "oi", "chg", "iv")
 
         for idx in data["records"]["data"]:
             if idx["expiryDates"] != expiryDateStr:
@@ -1336,16 +1335,14 @@ class NSE:
             strike = str(idx["strikePrice"])
 
             if strike not in chain:
-                chain[strike] = {"pe": {}, "ce": {}}
+                chain[strike] = dict(pe={}, ce={})
 
             poi = coi = 0
 
             if "PE" in idx:
                 poi, last, chg, iv = map(idx["PE"].get, dataFields)
 
-                chain[strike]["pe"].update(
-                    {"last": last, "oi": poi, "chg": chg, "iv": iv}
-                )
+                chain[strike]["pe"].update(dict(last=last, oi=poi, chg=chg, iv=iv))
 
                 totalPoi += poi
 
@@ -1353,15 +1350,12 @@ class NSE:
                     maxPoi = poi
                     maxPoiStrike = int(strike)
             else:
-                for f in ocFields:
-                    chain[strike]["pe"][f] = 0
+                chain[strike]["pe"] = dict(last=0, oi=0, chg=0, iv=0)
 
             if "CE" in idx:
                 coi, last, chg, iv = map(idx["CE"].get, dataFields)
 
-                chain[strike]["ce"].update(
-                    {"last": last, "oi": poi, "chg": chg, "iv": iv}
-                )
+                chain[strike]["ce"].update(dict(last=last, oi=poi, chg=chg, iv=iv))
 
                 totalCoi += coi
 
@@ -1369,8 +1363,7 @@ class NSE:
                     maxCoi = coi
                     maxCoiStrike = int(strike)
             else:
-                for f in ocFields:
-                    chain[strike]["ce"][f] = 0
+                chain[strike]["ce"] = dict(last=0, oi=0, chg=0, iv=0)
 
             if poi == 0 or coi == 0:
                 chain[strike]["pcr"] = None
@@ -1378,15 +1371,15 @@ class NSE:
                 chain[strike]["pcr"] = round(poi / coi, 2)
 
         oc.update(
-            {
-                "maxpain": self.maxpain(data, expiryDate),
-                "maxCoi": maxCoiStrike,
-                "maxPoi": maxPoiStrike,
-                "coiTotal": totalCoi,
-                "poiTotal": totalPoi,
-                "pcr": round(totalPoi / totalCoi, 2),
-                "chain": chain,
-            }
+            dict(
+                maxpain=self.maxpain(data, expiryDate),
+                maxCoi=maxCoiStrike,
+                maxPoi=maxPoiStrike,
+                coiTotal=totalCoi,
+                poiTotal=totalPoi,
+                pcr=round(totalPoi / totalCoi, 2),
+                chain=chain,
+            )
         )
 
         return oc
