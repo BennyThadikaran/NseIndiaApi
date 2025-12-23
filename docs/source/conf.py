@@ -15,7 +15,7 @@ sys.path.insert(0, src.as_posix())
 project = "nse"
 copyright = "2023, Benny Thadikaran"
 author = "Benny Thadikaran"
-release = "1.2.9"
+release = "1.3.1"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
