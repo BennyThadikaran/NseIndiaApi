@@ -1292,7 +1292,7 @@ class NSE:
         ocFields = ("last", "oi", "chg", "iv")
 
         for idx in data["records"]["data"]:
-            if idx["expiryDate"] != expiryDateStr:
+            if idx["expiryDates"] != expiryDateStr:
                 continue
 
             strike = str(idx["strikePrice"])
