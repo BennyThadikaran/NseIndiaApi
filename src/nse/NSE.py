@@ -1181,32 +1181,70 @@ class NSE:
         :param expiryDate: Options expiry date
         :type expiryDate: datetime.datetime
         :return: max pain strike price
-        :rtype: float"""
+        :rtype: float
 
-        out = {}
+        Uses prefix sums to pre compute values and avoid nested loops.
+        The result in O(n) performance for maxpain calculation.
+
+        See `Prefix sum for details <https://www.geeksforgeeks.org/dsa/prefix-sum-array-implementation-applications-competitive-programming/>`_
+        """
+
         data = optionChain["records"]["data"]
         expiry = expiryDate.strftime("%d-%b-%Y")
 
-        rows = tuple(row for row in data if row["expiryDates"] == expiry)
+        # filter strikes by expiry date and gather strikes and OI into lists
+        ce_oi = []
+        pe_oi = []
+        strikes = []
 
-        for x in rows:
-            expiryStrike = x["strikePrice"]
-            pain = 0
+        for row in data:
+            if row["expiryDates"] != expiry:
+                continue
 
-            for y in rows:
-                diff = expiryStrike - y["strikePrice"]
+            ce_oi.append(row.get("CE", {}).get("openInterest", 0))
+            pe_oi.append(row.get("PE", {}).get("openInterest", 0))
+            strikes.append(row["strikePrice"])
 
-                # strike expiry above strike, loss for CE writers
-                if diff > 0 and "CE" in y:
-                    pain += -diff * y["CE"]["openInterest"]
+        n = len(strikes)
 
-                # strike expiry below strike, loss for PE writers
-                if diff < 0 and "PE" in y:
-                    pain += diff * y["PE"]["openInterest"]
+        # Use prefix sums or cumulative sums
+        # NSE provides strikes in sorted order, so no need to sort them again
+        ce_sum = [0] * n
+        pe_sum = [0] * n
+        ce_val = [0] * n
+        pe_val = [0] * n
 
-            out[expiryStrike] = pain
+        # Call loss = (Settlement Price − Strike) × OI
+        # can be rewritten as: Call loss = (Settlement Price * OI) - (Strike * OI)
+        # We calculate the (Strike * OI) part above as ce_val and pe_val
+        # Later we calculate the option value for each settlement price
+        for i in range(n):
+            # When i = 0, arr[i - 1] is same as arr[-1] which is 0.
+            ce_sum[i] = ce_sum[i - 1] + ce_oi[i]
+            ce_val[i] = ce_val[i - 1] + ce_oi[i] * strikes[i]
 
-        return max(out.keys(), key=(lambda k: out[k]))
+            pe_sum[i] = pe_sum[i - 1] + pe_oi[i]
+            pe_val[i] = pe_val[i - 1] + pe_oi[i] * strikes[i]
+
+        min_payout = float("inf")
+        max_pain_strike = strikes[0]
+
+        for i, settlement in enumerate(strikes):
+            # Call pain for strikes < settlement
+            call_pain = settlement * ce_sum[i] - ce_val[i]
+
+            # Put pain: strikes > settlement
+            # here pe_oi[-1] is the cumulative sum of all PUT OI values.
+            # we need to calculate the difference from last value to current index
+            put_pain = (pe_val[-1] - pe_val[i]) - settlement * (pe_sum[-1] - pe_sum[i])
+
+            total_pain = call_pain + put_pain
+
+            if total_pain < min_payout:
+                min_payout = total_pain
+                max_pain_strike = settlement
+
+        return max_pain_strike
 
     def getFuturesExpiry(
         self, index: Literal["nifty", "banknifty", "finnifty"] = "nifty"
