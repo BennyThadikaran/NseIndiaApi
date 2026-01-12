@@ -1805,38 +1805,49 @@ class NSE:
         index: str,
         from_date: Optional[date] = None,
         to_date: Optional[date] = None,
-    ) -> Dict[str, List[dict]]:
+    ) -> List[Dict]:
         """
-        Downloads the historical index data within a given date range from ``from_date`` to ``to_date``.
+        Retrieve historical index data for a given NSE index within a date range.
 
-        Reference url: https://www.nseindia.com/reports-indices-historical-index-data
+        This method downloads historical index data between ``from_date`` and
+        ``to_date`` (both inclusive). Data is fetched using NSE’s
+        ``/historicalOR/indicesHistory`` endpoint and returned in a flattened,
+        row-based format.
 
-        The data is returned as a dict object with ``price`` and ``turnover`` as keys.
-        The values are stored as a list of rows (indexed starting at 0).
+        Reference URL:
+            https://www.nseindia.com/reports-indices-historical-index-data
 
-        Each row is represented as a dict, with column names as keys and their corresponding values.
+        The returned data is a list of dictionaries, where each dictionary represents
+        a single trading day. Price and turnover values are merged into the same row
+        where available.
 
-        :ref:`See list of acceptable values for index parameter. <fetch_historical_index_data>`
-
-        .. warning::
-
-            While the NSE API returns the entire date range, date values in ``price``
-            and ``turnover`` may not be in sync due to ``turnover`` containing additional dates.
+        Each row is represented as a dictionary with column names as keys and their
+        corresponding values.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_historical_index_data.json>`__
 
-        :param index: The name of the Index.
+        :param index:
+            Name of the index for which historical data is requested.
         :type index: str
-        :param from_date: The starting date from which we fetch the data. If None, the default date is 30 days from ``to_date``.
-        :type from_date: datetime.date
-        :param to_date: The ending date upto which we fetch the data. If None, today's date is taken by default.
-        :type to_date: datetime.date
 
-        :raise ValueError: if ``from_date`` is greater than ``to_date``
-        :raise TypeError: if ``from_date`` or ``to_date`` is not of type datetime.date
+        :param from_date:
+            Start date of the data range. If ``None``, defaults to 30 days prior
+            to ``to_date``.
+        :type from_date: datetime.date, optional
 
-        :return: A dictionary with ``price`` and ``turnover`` as keys and the data as a list of rows, each row is dictionary.
-        :rtype: Dict[str, List]
+        :param to_date:
+            End date of the data range. If ``None``, defaults to today’s date.
+        :type to_date: datetime.date, optional
+
+        :raises TypeError:
+            If ``from_date`` or ``to_date`` is not an instance of ``datetime.date``.
+        :raises ValueError:
+            If ``from_date`` occurs after ``to_date``.
+
+        :return:
+            A list of dictionaries, each representing one day of historical index data.
+            The list is ordered chronologically from oldest to newest.
+        :rtype: List[Dict]
         """
 
         if from_date and not isinstance(from_date, date):
@@ -1856,11 +1867,11 @@ class NSE:
 
         date_chunks = NSE.__split_date_range(from_date, to_date)
 
-        data = dict(price=[], turnover=[])
+        data = []
 
         for chunk in date_chunks:
             dct = self.__req(
-                url=f"{self.base_url}/historical/indicesHistory",
+                url=f"{self.base_url}/historicalOR/indicesHistory",
                 params={
                     "indexType": index.upper(),
                     "from": chunk[0].strftime("%d-%m-%Y"),
@@ -1868,10 +1879,9 @@ class NSE:
                 },
             ).json()["data"]
 
-            data["price"] += dct["indexCloseOnlineRecords"]
-            data["turnover"] += dct["indexTurnoverRecords"]
+            data += dct
 
-        return data
+        return data[::-1]
 
     def fetch_fno_underlying(self) -> Dict[str, List[Dict[str, str]]]:
         """
