@@ -19,7 +19,7 @@ class TestNSEOptionChain(unittest.TestCase):
         cls.nse.exit()
         cls.cache_file.unlink(missing_ok=True)
 
-    def _mock_req(self, responses):
+    def _mock_req(self, responses) -> MagicMock:
         """Helper to mock _NSE__req returning different .json() values
         on sequential calls.
         """
@@ -27,7 +27,7 @@ class TestNSEOptionChain(unittest.TestCase):
         mock.side_effect = [
             MagicMock(json=MagicMock(return_value=resp)) for resp in responses
         ]
-        self.nse._NSE__req = mock
+        self.nse._req = mock
         return mock
 
     def test_uses_cached_expiry_when_valid(self):
@@ -36,12 +36,12 @@ class TestNSEOptionChain(unittest.TestCase):
 
         self.cache_file.write_text(json.dumps(cache))
 
-        self._mock_req([dict(data="OK")])
+        mock = self._mock_req([dict(data="OK")])
 
         result = self.nse.optionChain("nifty")
 
         self.assertEqual(result, dict(data="OK"))
-        self.nse._NSE__req.assert_called_once()
+        mock.assert_called_once()
 
     def test_expired_cached_expiry_is_ignored(self):
         expiry = datetime(2000, 1, 1)
@@ -53,12 +53,12 @@ class TestNSEOptionChain(unittest.TestCase):
             {"data": "ok"},
         ]
 
-        self._mock_req(responses)
+        mock = self._mock_req(responses)
 
         result = self.nse.optionChain("nifty")
 
         self.assertEqual(result, {"data": "ok"})
-        self.assertEqual(self.nse._NSE__req.call_count, 2)
+        self.assertEqual(mock.call_count, 2)
 
     def test_missing_expiry_dates_raises(self):
         self._mock_req([{}])
@@ -95,11 +95,11 @@ class TestNSEOptionChain(unittest.TestCase):
             {"expiryDates": ["01-Jan-2099"]},
             {"data": "ok"},
         ]
-        self._mock_req(responses)
+        mock = self._mock_req(responses)
 
         self.nse.optionChain("reliance")
 
-        _, kwargs = self.nse._NSE__req.call_args
+        _, kwargs = mock.call_args
         self.assertEqual(kwargs["params"]["type"], "Equity")
 
     def test_indices_type_for_index_symbol(self):
@@ -107,21 +107,21 @@ class TestNSEOptionChain(unittest.TestCase):
             {"expiryDates": ["01-Jan-2099"]},
             {"data": "ok"},
         ]
-        self._mock_req(responses)
+        mock = self._mock_req(responses)
 
         self.nse.optionChain("nifty")
 
-        _, kwargs = self.nse._NSE__req.call_args
+        _, kwargs = mock.call_args
         self.assertEqual(kwargs["params"]["type"], "Indices")
 
     def test_explicit_expiry_date_skips_cache_and_contract_info(self):
         expiry = datetime(2099, 1, 1)
-        self._mock_req([{"data": "ok"}])
+        mock = self._mock_req([{"data": "ok"}])
 
         result = self.nse.optionChain("nifty", expiry_date=expiry)
 
         self.assertEqual(result, {"data": "ok"})
-        self.nse._NSE__req.assert_called_once()
+        mock.assert_called_once()
 
     def test_corrupt_cache_file_is_ignored(self):
         self.cache_file.write_text("invalid json")
@@ -130,12 +130,12 @@ class TestNSEOptionChain(unittest.TestCase):
             {"expiryDates": ["01-Jan-2099"]},
             {"data": "ok"},
         ]
-        self._mock_req(responses)
+        mock = self._mock_req(responses)
 
         result = self.nse.optionChain("nifty")
 
         self.assertEqual(result, {"data": "ok"})
-        self.assertEqual(self.nse._NSE__req.call_count, 2)
+        self.assertEqual(mock.call_count, 2)
 
 
 if __name__ == "__main__":

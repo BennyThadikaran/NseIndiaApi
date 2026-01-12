@@ -67,7 +67,7 @@ class NSE:
     FNO_IT = "niftyit"
     UDIFF_SWITCH_DATE = datetime(2024, 7, 8).date()
 
-    __optionIndex = ("banknifty", "nifty", "finnifty", "niftyit")
+    _optionIndex = ("banknifty", "nifty", "finnifty", "niftyit")
     base_url = "https://www.nseindia.com/api"
     archive_url = "https://nsearchives.nseindia.com"
 
@@ -88,7 +88,7 @@ class NSE:
             "Referer": "https://www.nseindia.com/get-quotes/equity?symbol=HDFCBANK",
         }
 
-        self.dir = NSE.__getPath(download_folder, isFolder=True)
+        self.dir = NSE._getPath(download_folder, isFolder=True)
         self.server = server
         self.timeout = timeout
 
@@ -99,7 +99,7 @@ class NSE:
                 )
 
             self.cookie_path = self.dir / "nse_cookies_httpx.pkl"
-            self.__session = Client(http2=True)
+            self._session = Client(http2=True)
             self.ReadTimeout = ReadTimeout
             self.Cookies = Cookies
         else:
@@ -109,14 +109,14 @@ class NSE:
                 )
 
             self.cookie_path = self.dir / "nse_cookies_requests.pkl"
-            self.__session = Session()
+            self._session = Session()
             self.ReadTimeout = ReadTimeout
 
-        self.__session.headers.update(headers)
-        self.__session.cookies.update(self.__getCookies())
+        self._session.headers.update(headers)
+        self._session.cookies.update(self._getCookies())
 
-    def __setCookies(self):
-        r = self.__req("https://www.nseindia.com/option-chain")
+    def _setCookies(self):
+        r = self._req("https://www.nseindia.com/option-chain")
 
         cookies = r.cookies
 
@@ -128,7 +128,7 @@ class NSE:
 
         return cookies
 
-    def __getCookies(self):
+    def _getCookies(self):
         if self.cookie_path.exists():
             if self.server:
                 # Expose the cookie jar object using .jar method.
@@ -136,15 +136,15 @@ class NSE:
             else:
                 cookies = pickle.loads(self.cookie_path.read_bytes())
 
-            if NSE.__hasCookiesExpired(cookies):
-                cookies = self.__setCookies()
+            if NSE._hasCookiesExpired(cookies):
+                cookies = self._setCookies()
 
             return cookies
 
-        return self.__setCookies()
+        return self._setCookies()
 
     @staticmethod
-    def __hasCookiesExpired(cookies) -> bool:
+    def _hasCookiesExpired(cookies) -> bool:
         for cookie in cookies:
             if cookie.is_expired():
                 return True
@@ -154,13 +154,13 @@ class NSE:
         return self
 
     def __exit__(self, *_):
-        self.__session.close()
+        self._session.close()
         self.cookie_path.unlink(missing_ok=True)
 
         return False
 
     @staticmethod
-    def __getPath(path: Union[str, Path], isFolder: bool = False):
+    def _getPath(path: Union[str, Path], isFolder: bool = False):
         path = path if isinstance(path, Path) else Path(path)
         path = path.expanduser().resolve()
 
@@ -174,7 +174,7 @@ class NSE:
         return path
 
     @staticmethod
-    def __unzip(file: Path, folder: Path, extract_files: Optional[List[str]] = None):
+    def _unzip(file: Path, folder: Path, extract_files: Optional[List[str]] = None):
         if file.suffix == ".zip":
             with ZipFile(file) as zip:
                 if extract_files:
@@ -199,7 +199,7 @@ class NSE:
         file.unlink()
         return Path(filepath)
 
-    def __download(self, url: str, folder: Path):
+    def _download(self, url: str, folder: Path):
         """Download a large file in chunks from the given url.
         Returns pathlib.Path object of the downloaded file
         """
@@ -208,7 +208,7 @@ class NSE:
         th.check()
 
         if self.server:
-            with self.__session.stream("GET", url=url, timeout=self.timeout) as r:
+            with self._session.stream("GET", url=url, timeout=self.timeout) as r:
                 contentType = r.headers.get("content-type")
 
                 if contentType and "text/html" in contentType:
@@ -218,7 +218,7 @@ class NSE:
                     for chunk in r.iter_bytes(chunk_size=1000000):
                         f.write(chunk)
         else:
-            with self.__session.get(url, stream=True, timeout=self.timeout) as r:
+            with self._session.get(url, stream=True, timeout=self.timeout) as r:
                 contentType = r.headers.get("content-type")
 
                 if contentType and "text/html" in contentType:
@@ -230,12 +230,12 @@ class NSE:
 
         return fname
 
-    def __req(self, url, params=None):
+    def _req(self, url, params=None):
         """Make a http request"""
         th.check()
 
         try:
-            r = self.__session.get(url, params=params, timeout=self.timeout)
+            r = self._session.get(url, params=params, timeout=self.timeout)
         except self.ReadTimeout as e:
             raise TimeoutError(repr(e))
 
@@ -247,7 +247,7 @@ class NSE:
         return r
 
     @staticmethod
-    def __split_date_range(
+    def _split_date_range(
         from_date: date, to_date: date, max_chunk_size: int = 365
     ) -> List[Tuple[date, date]]:
         """Splits a date range into non-overlapping chunks with each chunk having size at specified by
@@ -289,7 +289,7 @@ class NSE:
 
         *Not required when using the ``with`` statement.*
         """
-        self.__session.close()
+        self._session.close()
         self.cookie_path.unlink(missing_ok=True)
 
     def status(self) -> List[Dict]:
@@ -300,7 +300,7 @@ class NSE:
         :return: Market status of all NSE market segments
         :rtype: list[dict]
         """
-        return self.__req(f"{self.base_url}/marketStatus").json()["marketState"]
+        return self._req(f"{self.base_url}/marketStatus").json()["marketState"]
 
     def lookup(self, query: str) -> dict:
         """
@@ -326,7 +326,7 @@ class NSE:
         :return: A dictionary of results from the query search.
         :rtype: dict
         """
-        return self.__req(
+        return self._req(
             f"{self.base_url}/search/autocomplete",
             params=dict(q=query),
         ).json()
@@ -351,7 +351,7 @@ class NSE:
         :return: Path to saved file
         :rtype: pathlib.Path
         """
-        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
 
         if date.date() < self.UDIFF_SWITCH_DATE:
             date_str = date.strftime("%d%b%Y").upper()
@@ -365,13 +365,13 @@ class NSE:
                 date.strftime("%Y%m%d"),
             )
 
-        file = self.__download(url, folder)
+        file = self._download(url, folder)
 
         if not file.is_file():
             file.unlink()
             raise FileNotFoundError(f"Failed to download file: {file.name}")
 
-        return NSE.__unzip(file, file.parent)
+        return NSE._unzip(file, file.parent)
 
     def deliveryBhavcopy(
         self, date: datetime, folder: Union[str, Path, None] = None
@@ -388,13 +388,13 @@ class NSE:
         :return: Path to saved file
         :rtype: pathlib.Path
         """
-        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
 
         url = "{}/products/content/sec_bhavdata_full_{}.csv".format(
             self.archive_url, date.strftime("%d%m%Y")
         )
 
-        file = self.__download(url, folder)
+        file = self._download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -418,11 +418,11 @@ class NSE:
         :return: Path to saved file
         :rtype: pathlib.Path
         """
-        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/indices/ind_close_all_{date:%d%m%Y}.csv"
 
-        file = self.__download(url, folder)
+        file = self._download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -448,17 +448,17 @@ class NSE:
         """
         dt_str = date.strftime("%Y%m%d")
 
-        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/fo/BhavCopy_NSE_FO_0_0_0_{dt_str}_F_0000.csv.zip"
 
-        file = self.__download(url, folder)
+        file = self._download(url, folder)
 
         if not file.is_file():
             file.unlink()
             raise FileNotFoundError(f"Failed to download file: {file.name}")
 
-        return NSE.__unzip(file, folder=file.parent)
+        return NSE._unzip(file, folder=file.parent)
 
     def priceband_report(
         self, date: datetime, folder: Union[str, Path, None] = None
@@ -478,11 +478,11 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%Y")
 
-        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/equities/sec_list_{dt_str}.csv"
 
-        file = self.__download(url, folder)
+        file = self._download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -512,11 +512,11 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%y")
 
-        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/archives/equities/bhavcopy/pr/PR{dt_str}.zip"
 
-        file = self.__download(url, folder)
+        file = self._download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -544,17 +544,17 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%Y")
 
-        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
+        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/cm/NSE_CM_security_{dt_str}.csv.gz"
 
-        file = self.__download(url, folder)
+        file = self._download(url, folder)
 
         if not file.is_file():
             file.unlink()
             raise FileNotFoundError(f"Failed to download file: {file.name}")
 
-        return self.__unzip(file, folder=file.parent)
+        return self._unzip(file, folder=file.parent)
 
     def actions(
         self,
@@ -605,7 +605,7 @@ class NSE:
 
         url = f"{self.base_url}/corporates-corporateActions"
 
-        return self.__req(url, params=params).json()
+        return self._req(url, params=params).json()
 
     def announcements(
         self,
@@ -660,7 +660,7 @@ class NSE:
 
         url = f"{self.base_url}/corporate-announcements"
 
-        return self.__req(url, params=params).json()
+        return self._req(url, params=params).json()
 
     def boardMeetings(
         self,
@@ -715,7 +715,7 @@ class NSE:
 
         url = f"{self.base_url}/corporate-board-meetings"
 
-        return self.__req(url, params=params).json()
+        return self._req(url, params=params).json()
 
     def annual_reports(
         self, symbol: str, segment: Literal["equities", "sme"] = "equities"
@@ -743,7 +743,7 @@ class NSE:
         :return: A dictionary where keys are years and values are lists of dictionaries with PDF links to annual reports.
         :rtype: dict[str, list[dict[str, str]]]
         """
-        return self.__req(
+        return self._req(
             f"{self.base_url}/annual-reports", params=dict(index=segment, symbol=symbol)
         ).json()
 
@@ -763,7 +763,7 @@ class NSE:
         """
         url = f"{self.base_url}/equity-meta-info"
 
-        return self.__req(url, params={"symbol": symbol.upper()}).json()
+        return self._req(url, params={"symbol": symbol.upper()}).json()
 
     def quote(
         self,
@@ -801,7 +801,7 @@ class NSE:
 
             params["section"] = section
 
-        return self.__req(url, params=params).json()
+        return self._req(url, params=params).json()
 
     def equityQuote(self, symbol) -> Dict[str, Union[str, float]]:
         """A convenience method that extracts date and OCHLV data from ``NSE.quote`` for given stock ``symbol``
@@ -886,7 +886,7 @@ class NSE:
         """
         url = f"{self.base_url}/equity-stockIndices"
 
-        return self.__req(url, params=dict(index=index)).json()
+        return self._req(url, params=dict(index=index)).json()
 
     def listIndices(self) -> dict:
         """List all indices
@@ -897,7 +897,7 @@ class NSE:
         """
         url = f"{self.base_url}/allIndices"
 
-        return self.__req(url).json()
+        return self._req(url).json()
 
     def listIndexStocks(self, index):
         """
@@ -915,7 +915,7 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all ETF's represented by a dictionary with the symbol code and other metadata.
         """
-        return self.__req(f"{self.base_url}/etf").json()
+        return self._req(f"{self.base_url}/etf").json()
 
     def listSme(self) -> dict:
         """List all sme stocks
@@ -924,7 +924,7 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all SME's represented by a dictionary with the symbol code and other metadata.
         """
-        return self.__req(f"{self.base_url}/live-analysis-emerge").json()
+        return self._req(f"{self.base_url}/live-analysis-emerge").json()
 
     def listSgb(self) -> dict:
         """List all sovereign gold bonds
@@ -933,7 +933,7 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all SGB's represented by a dictionary with the symbol code and other metadata.
         """
-        return self.__req(f"{self.base_url}/sovereign-gold-bonds").json()
+        return self._req(f"{self.base_url}/sovereign-gold-bonds").json()
 
     def listCurrentIPO(self) -> List[Dict]:
         """List current IPOs
@@ -943,7 +943,7 @@ class NSE:
         :return: List of Dict containing current IPOs
         :rtype: List[Dict]
         """
-        return self.__req(f"{self.base_url}/ipo-current-issue").json()
+        return self._req(f"{self.base_url}/ipo-current-issue").json()
 
     def listUpcomingIPO(self) -> List[Dict]:
         """List upcoming IPOs
@@ -953,7 +953,7 @@ class NSE:
         :return: List of Dict containing upcoming IPOs
         :rtype: List[Dict]
         """
-        return self.__req(f"{self.base_url}/all-upcoming-issues?category=ipo").json()
+        return self._req(f"{self.base_url}/all-upcoming-issues?category=ipo").json()
 
     def listPastIPO(
         self,
@@ -986,7 +986,7 @@ class NSE:
             to_date=to_date.strftime("%d-%m-%Y"),
         )
 
-        return self.__req(
+        return self._req(
             f"{self.base_url}/public-past-issues",
             params=params,
         ).json()
@@ -1063,7 +1063,7 @@ class NSE:
         if dept_code:
             params["dept"] = dept_code.upper()
 
-        return self.__req(f"{self.base_url}/circulars", params=params).json()
+        return self._req(f"{self.base_url}/circulars", params=params).json()
 
     def blockDeals(self) -> Dict:
         """Block deals
@@ -1073,7 +1073,7 @@ class NSE:
         :return: Block deals. ``data`` key is a list of all block deal (Empty list if no block deals).
         :rtype: dict
         """
-        return self.__req(f"{self.base_url}/block-deal").json()
+        return self._req(f"{self.base_url}/block-deal").json()
 
     def fnoLots(self) -> Dict[str, int]:
         """Get the lot size of FnO stocks.
@@ -1085,7 +1085,7 @@ class NSE:
         """
         url = "https://nsearchives.nseindia.com/content/fo/fo_mktlots.csv"
 
-        res = self.__req(url).content
+        res = self._req(url).content
 
         dct = {}
 
@@ -1163,7 +1163,7 @@ class NSE:
                     expiry_date = None
 
             if not expiry_date:
-                opt_info = self.__req(
+                opt_info = self._req(
                     f"{self.base_url}/option-chain-contract-info", params=params
                 ).json()
 
@@ -1183,12 +1183,12 @@ class NSE:
 
         url = f"{self.base_url}/option-chain-v3"
 
-        params["type"] = "Indices" if symbol in self.__optionIndex else "Equity"
+        params["type"] = "Indices" if symbol in self._optionIndex else "Equity"
 
         if expiry_date:
             params["expiry"] = expiry_date.strftime("%d-%b-%Y")
 
-        data = self.__req(url, params=params).json()
+        data = self._req(url, params=params).json()
 
         return data
 
@@ -1289,7 +1289,7 @@ class NSE:
         else:
             idx = "nse50_fut"
 
-        res: Dict = self.__req(
+        res: Dict = self._req(
             f"{self.base_url}/liveEquity-derivatives",
             params={"index": idx},
         ).json()
@@ -1402,7 +1402,7 @@ class NSE:
 
         return oc
 
-    def advanceDecline(self) -> List[Dict[str, str]]:
+    def advanceDecline(self):
         """
         .. deprecated:: 1.0.9
             Removed in v1.0.9 as url no longer active.
@@ -1427,7 +1427,7 @@ class NSE:
         """
         url = f"{self.base_url}/holiday-master"
 
-        data = self.__req(url, params={"type": type}).json()
+        data = self._req(url, params={"type": type}).json()
 
         return data
 
@@ -1484,7 +1484,7 @@ class NSE:
 
         url = f"{self.base_url}/historicalOR/bulk-block-short-deals"
 
-        data = self.__req(url, params=params).json()
+        data = self._req(url, params=params).json()
 
         if "data" not in data or len(data["data"]) < 1:
             raise RuntimeError(
@@ -1517,8 +1517,8 @@ class NSE:
         :return: Path to saved file (or extracted file if zip). If extract_files is specified, the last filepath in the list is returned.
         :rtype: pathlib.Path
         """
-        folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
-        file = self.__download(url, folder)
+        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
+        file = self._download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -1527,7 +1527,7 @@ class NSE:
         # Check if downloaded file is a zip file
         if file.suffix.lower() == ".zip":
             try:
-                return self.__unzip(file, folder, extract_files)
+                return self._unzip(file, folder, extract_files)
             except Exception as e:
                 file.unlink()
                 raise RuntimeError(f"Failed to extract zip file: {str(e)}")
@@ -1607,13 +1607,13 @@ class NSE:
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
 
-        date_chunks = NSE.__split_date_range(from_date, to_date, 100)
+        date_chunks = NSE._split_date_range(from_date, to_date, 100)
 
         data = []
 
         for chunk in date_chunks:
             data += reversed(
-                self.__req(
+                self._req(
                     url=f"{self.base_url}/NextApi/apiClient/GetQuoteApi",
                     params=dict(
                         functionName="getHistoricalTradeData",
@@ -1671,12 +1671,12 @@ class NSE:
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
 
-        date_chunks = NSE.__split_date_range(from_date, to_date)
+        date_chunks = NSE._split_date_range(from_date, to_date)
 
         data = []
 
         for chunk in date_chunks:
-            data += self.__req(
+            data += self._req(
                 url=f"{self.base_url}/historicalOR/vixhistory",
                 params={
                     "from": chunk[0].strftime("%d-%m-%Y"),
@@ -1768,7 +1768,7 @@ class NSE:
             if strike_price:
                 params["strikePrice"] = strike_price
 
-        date_chunks = NSE.__split_date_range(from_date, to_date)
+        date_chunks = NSE._split_date_range(from_date, to_date)
 
         data = []
 
@@ -1776,7 +1776,7 @@ class NSE:
             params["from"] = chunk[0].strftime("%d-%m-%Y")
             params["to"] = chunk[1].strftime("%d-%m-%Y")
 
-            data += self.__req(
+            data += self._req(
                 url=f"{self.base_url}/historicalOR/foCPV",
                 params=params,
             ).json()["data"]
@@ -1847,12 +1847,12 @@ class NSE:
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
 
-        date_chunks = NSE.__split_date_range(from_date, to_date)
+        date_chunks = NSE._split_date_range(from_date, to_date)
 
         data = []
 
         for chunk in date_chunks:
-            dct = self.__req(
+            dct = self._req(
                 url=f"{self.base_url}/historicalOR/indicesHistory",
                 params={
                     "indexType": index.upper(),
@@ -1876,7 +1876,7 @@ class NSE:
         :rtype: Dict[str, List[Dict[str, str]]]
         """
         url = f"{self.base_url}/underlying-information"
-        data = self.__req(url).json()["data"]
+        data = self._req(url).json()["data"]
         return data
 
     def fetch_index_names(self) -> Dict[str, List[Tuple[str, str]]]:
@@ -1885,7 +1885,7 @@ class NSE:
 
         The full name can be passed as `index` parameter to :meth:`.fetch_historical_index_data`
         """
-        return self.__req(f"{self.base_url}/index-names").json()
+        return self._req(f"{self.base_url}/index-names").json()
 
     def fetch_daily_reports_file_metadata(
         self,
@@ -1917,6 +1917,6 @@ class NSE:
         :return: A dictionary containing metadata about the daily report files for the specified segment.
         :rtype: Dict
         """
-        return self.__req(
+        return self._req(
             f"{self.base_url}/daily-reports", params=dict(key=segment)
         ).json()
