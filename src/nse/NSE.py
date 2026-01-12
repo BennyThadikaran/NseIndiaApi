@@ -52,7 +52,7 @@ class NSE:
     :raises ImportError: If ``server`` set to True and ``httpx[http2] is not installed or ``server`` set to False and ``requests`` is not installed.
     """
 
-    __version__ = "1.3.1"
+    __version__ = "2.0.0"
     SEGMENT_EQUITY = "equities"
     SEGMENT_SME = "sme"
     SEGMENT_MF = "mf"
