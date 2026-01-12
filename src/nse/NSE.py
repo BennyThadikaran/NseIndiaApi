@@ -1794,11 +1794,11 @@ class NSE:
             params["to"] = chunk[1].strftime("%d-%m-%Y")
 
             data += self.__req(
-                url=f"{self.base_url}/historical/foCPV",
+                url=f"{self.base_url}/historicalOR/foCPV",
                 params=params,
             ).json()["data"]
 
-        return data
+        return data[::-1]
 
     def fetch_historical_index_data(
         self,
