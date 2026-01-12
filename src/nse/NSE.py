@@ -1654,6 +1654,8 @@ class NSE:
 
         The data is returned as a JSON object, where the primary data is stored as a list of rows (indexed starting at 0).
 
+        Reference url: https://www.nseindia.com/reports-indices-historical-vix
+
         Each row is represented as a dict, with column names as keys and their corresponding values.
 
         The date is stored under the key ``EOD_TIMESTAMP``.
@@ -1692,7 +1694,7 @@ class NSE:
 
         for chunk in date_chunks:
             data += self.__req(
-                url=f"{self.base_url}/historical/vixhistory",
+                url=f"{self.base_url}/historicalOR/vixhistory",
                 params={
                     "from": chunk[0].strftime("%d-%m-%Y"),
                     "to": chunk[1].strftime("%d-%m-%Y"),
