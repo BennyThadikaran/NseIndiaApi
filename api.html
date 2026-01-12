@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Acceptable values for nse.listEquityStocksByIndex" href="listEquityStocksByIndex.html" /><link rel="prev" title="Usage" href="usage.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2023.09.10 -->
-        <title>API - nse 1.3.1 documentation</title>
+        <title>API - nse 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">nse 1.3.1 documentation</div></a>
+      <a href="index.html"><div class="brand">nse 2.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">nse 1.3.1 documentation</span>
+  <span class="sidebar-brand-text">nse 2.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -313,27 +313,38 @@ The first item is usually an exact match assuming the exact company name or full
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.bulkdeals">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">bulkdeals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fromdate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">todate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.bulkdeals" title="Link to this definition">¶</a></dt>
-<dd><p>Download the bulk deals report for the specified date range and return the data.</p>
-<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals.json">Sample response</a></p>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">bulkdeals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'block_deals'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'bulk_deals'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'short_selling'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromdate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">todate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.bulkdeals" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve bulk, block, or short-selling deal data from NSE for a given date range.</p>
+<p>This method downloads historical deal data based on the selected report type.
+The requested date range must be valid and must not exceed one year.</p>
+<dl class="simple">
+<dt>Sample responses:</dt><dd><ul class="simple">
+<li><p>Bulk deals: <a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-bulk_deals.json">https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-bulk_deals.json</a></p></li>
+<li><p>Block deals: <a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-block_deals.json">https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-block_deals.json</a></p></li>
+<li><p>Short selling: <a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-short_selling.json">https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-short_selling.json</a></p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fromdate</strong> (<em>datetime.datetime</em>) – Start date of the bulk deals report to download</p></li>
-<li><p><strong>todate</strong> (<em>datetime.datetime</em>) – End date of the bulk deals report to download</p></li>
+<li><p><strong>option_type</strong> (<em>Literal</em><em>[</em><em>&quot;block_deals&quot;</em><em>, </em><em>&quot;bulk_deals&quot;</em><em>, </em><em>&quot;short_selling&quot;</em><em>]</em>) – Type of deal report to fetch. Must be one of
+<code class="docutils literal notranslate"><span class="pre">&quot;bulk_deals&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;block_deals&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;short_selling&quot;</span></code>.</p></li>
+<li><p><strong>fromdate</strong> (<em>datetime.datetime</em>) – Start date of the report (inclusive).</p></li>
+<li><p><strong>todate</strong> (<em>datetime.datetime</em>) – End date of the report (inclusive).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – if the date range exceeds one year.</p></li>
-<li><p><strong>RuntimeError</strong> – if no bulk deals data is available for the specified date range.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">fromdate</span></code> is later than <code class="docutils literal notranslate"><span class="pre">todate</span></code> or if the date range exceeds one year.</p></li>
+<li><p><strong>RuntimeError</strong> – If no data is available for the specified date range and report type.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Bulk deals data</p>
+<dd class="field-odd"><p>A list of dictionaries containing deal records for the requested report type.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
+<dd class="field-even"><p>List[Dict]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -456,7 +467,7 @@ The first item is usually an exact match assuming the exact company name or full
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.advanceDecline">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">advanceDecline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.advanceDecline" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">advanceDecline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.advanceDecline" title="Link to this definition">¶</a></dt>
 <dd><div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 1.0.9: </span>Removed in v1.0.9 as url no longer active.</p>
 </div>
@@ -472,49 +483,48 @@ The first item is usually an exact match assuming the exact company name or full
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.fetch_equity_historical_data">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">fetch_equity_historical_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['EQ']</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.fetch_equity_historical_data" title="Link to this definition">¶</a></dt>
-<dd><p>Downloads the historical daily price and volume data for a specified symbol within a given date range,
-from <code class="docutils literal notranslate"><span class="pre">from_date</span></code> to <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p>
-<p>The data is returned as a JSON object, where the primary data is stored as a list of rows (indexed starting at 0).</p>
-<p>Each row is represented as a dict, with column names as keys and their corresponding values.</p>
-<p>The date is stored under the key <code class="docutils literal notranslate"><span class="pre">mTIMESTAMP</span></code>.</p>
-<p>If the provided symbol is incorrect or invalid, an empty JSON will be returned.</p>
-<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_equity_historical_data.json">Sample response</a></p>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">fetch_equity_historical_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'AE'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'AF'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'BE'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'BL'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'EQ'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'IL'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'RL'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'W3'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'GB'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'GS'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'EQ'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.fetch_equity_historical_data" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve historical daily price and volume data for an equity symbol from NSE.</p>
+<p>This method fetches historical trade data for the given symbol and series
+between <code class="docutils literal notranslate"><span class="pre">from_date</span></code> and <code class="docutils literal notranslate"><span class="pre">to_date</span></code> (both inclusive). If no dates are
+provided, data for the last 30 days ending today is returned.</p>
+<p>Data is fetched using NSE’s Next API historical trade data endpoint.</p>
+<dl class="simple">
+<dt>Reference URL:</dt><dd><p><a class="reference external" href="https://www.nseindia.com/get-quote/equity/HDFCBANK/HDFC-Bank-Limited">https://www.nseindia.com/get-quote/equity/HDFCBANK/HDFC-Bank-Limited</a>
+(Historical data section)</p>
+</dd>
+</dl>
+<p>The response is returned as a list of rows, where each row is represented
+as a dictionary with column names as keys and their corresponding values.
+The trade date is available under the key <code class="docutils literal notranslate"><span class="pre">mTIMESTAMP</span></code>.</p>
+<dl class="simple">
+<dt>Sample response:</dt><dd><p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_equity_historical_data.json">https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_equity_historical_data.json</a></p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>symbol</strong> (<em>str</em>) – The exchange-traded symbol for which the data needs to be downloaded e.g. <code class="docutils literal notranslate"><span class="pre">HDFCBANK</span></code>, <code class="docutils literal notranslate"><span class="pre">SGBAPR28I</span></code> or <code class="docutils literal notranslate"><span class="pre">GOLDBEES</span></code></p></li>
-<li><p><strong>from_date</strong> (<em>datetime.date</em>) – The starting date from which we fetch the data. If None, the default date is 30 days from <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p></li>
-<li><p><strong>to_date</strong> (<em>datetime.date</em>) – The ending date upto which we fetch the data. If None, today’s date is taken by default.</p></li>
-<li><p><strong>series</strong> – The series for which we need to fetch the data. A list of the series containing elements from the below list</p></li>
+<li><p><strong>symbol</strong> (<em>str</em>) – Exchange-traded symbol for which historical data is requested
+(e.g. <code class="docutils literal notranslate"><span class="pre">HDFCBANK</span></code>, <code class="docutils literal notranslate"><span class="pre">SGBAPR28I</span></code>, <code class="docutils literal notranslate"><span class="pre">GOLDBEES</span></code>).</p></li>
+<li><p><strong>from_date</strong> (<em>datetime.date</em><em>, </em><em>optional</em>) – Start date of the data range. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, defaults to 30 days prior
+to <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p></li>
+<li><p><strong>to_date</strong> (<em>datetime.date</em><em>, </em><em>optional</em>) – End date of the data range. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, defaults to today’s date.</p></li>
+<li><p><strong>series</strong> (<em>Literal</em><em>[</em><em>&quot;AE&quot;</em><em>, </em><em>&quot;AF&quot;</em><em>, </em><em>&quot;BE&quot;</em><em>, </em><em>&quot;BL&quot;</em><em>, </em><em>&quot;EQ&quot;</em><em>, </em><em>&quot;IL&quot;</em><em>, </em><em>&quot;RL&quot;</em><em>, </em><em>&quot;W3&quot;</em><em>, </em><em>&quot;GB&quot;</em><em>, </em><em>&quot;GS&quot;</em><em>]</em>) – Equity series for which historical data is requested.
+Must be one of the valid NSE equity series values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">from_date</span></code> is greater than <code class="docutils literal notranslate"><span class="pre">to_date</span></code></p></li>
-<li><p><strong>TypeError</strong> – if <code class="docutils literal notranslate"><span class="pre">from_date</span></code> or <code class="docutils literal notranslate"><span class="pre">to_date</span></code> is not of type datetime.date</p></li>
+<li><p><strong>TypeError</strong> – If <code class="docutils literal notranslate"><span class="pre">from_date</span></code> or <code class="docutils literal notranslate"><span class="pre">to_date</span></code> is not an instance of <code class="docutils literal notranslate"><span class="pre">datetime.date</span></code>.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">from_date</span></code> occurs after <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Data as a list of rows, each row as dictionary with key as column name mapped to the value</p>
+<dd class="field-odd"><p>A list of dictionaries, each representing one day of historical trade data.
+The list is ordered chronologically from oldest to newest.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>List[Dict]</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>The list of valid series</dt><dd><ul class="simple">
-<li><p>AE</p></li>
-<li><p>AF</p></li>
-<li><p>BE</p></li>
-<li><p>BL</p></li>
-<li><p>EQ</p></li>
-<li><p>IL</p></li>
-<li><p>RL</p></li>
-<li><p>W3</p></li>
-<li><p>GB</p></li>
-<li><p>GS</p></li>
-</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -524,6 +534,7 @@ from <code class="docutils literal notranslate"><span class="pre">from_date</spa
 <span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">fetch_historical_vix_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.fetch_historical_vix_data" title="Link to this definition">¶</a></dt>
 <dd><p>Downloads the historical India VIX within a given date range from <code class="docutils literal notranslate"><span class="pre">from_date</span></code> to <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p>
 <p>The data is returned as a JSON object, where the primary data is stored as a list of rows (indexed starting at 0).</p>
+<p>Reference url: <a class="reference external" href="https://www.nseindia.com/reports-indices-historical-vix">https://www.nseindia.com/reports-indices-historical-vix</a></p>
 <p>Each row is represented as a dict, with column names as keys and their corresponding values.</p>
 <p>The date is stored under the key <code class="docutils literal notranslate"><span class="pre">EOD_TIMESTAMP</span></code>.</p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_historical_vix_data.json">Sample response</a></p>
@@ -586,38 +597,43 @@ from <code class="docutils literal notranslate"><span class="pre">from_date</spa
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.fetch_historical_index_data">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">fetch_historical_index_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.fetch_historical_index_data" title="Link to this definition">¶</a></dt>
-<dd><p>Downloads the historical index data within a given date range from <code class="docutils literal notranslate"><span class="pre">from_date</span></code> to <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p>
-<p>Reference url: <a class="reference external" href="https://www.nseindia.com/reports-indices-historical-index-data">https://www.nseindia.com/reports-indices-historical-index-data</a></p>
-<p>The data is returned as a dict object with <code class="docutils literal notranslate"><span class="pre">price</span></code> and <code class="docutils literal notranslate"><span class="pre">turnover</span></code> as keys.
-The values are stored as a list of rows (indexed starting at 0).</p>
-<p>Each row is represented as a dict, with column names as keys and their corresponding values.</p>
-<p><a class="reference internal" href="fetch_historical_index_data.html#fetch-historical-index-data"><span class="std std-ref">See list of acceptable values for index parameter.</span></a></p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>While the NSE API returns the entire date range, date values in <code class="docutils literal notranslate"><span class="pre">price</span></code>
-and <code class="docutils literal notranslate"><span class="pre">turnover</span></code> may not be in sync due to <code class="docutils literal notranslate"><span class="pre">turnover</span></code> containing additional dates.</p>
-</div>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">fetch_historical_index_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.fetch_historical_index_data" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve historical index data for a given NSE index within a date range.</p>
+<p>This method downloads historical index data between <code class="docutils literal notranslate"><span class="pre">from_date</span></code> and
+<code class="docutils literal notranslate"><span class="pre">to_date</span></code> (both inclusive). Data is fetched using NSE’s
+<code class="docutils literal notranslate"><span class="pre">/historicalOR/indicesHistory</span></code> endpoint and returned in a flattened,
+row-based format.</p>
+<dl class="simple">
+<dt>Reference URL:</dt><dd><p><a class="reference external" href="https://www.nseindia.com/reports-indices-historical-index-data">https://www.nseindia.com/reports-indices-historical-index-data</a></p>
+</dd>
+</dl>
+<p>The returned data is a list of dictionaries, where each dictionary represents
+a single trading day. Price and turnover values are merged into the same row
+where available.</p>
+<p>Each row is represented as a dictionary with column names as keys and their
+corresponding values.</p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_historical_index_data.json">Sample response</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index</strong> (<em>str</em>) – The name of the Index.</p></li>
-<li><p><strong>from_date</strong> (<em>datetime.date</em>) – The starting date from which we fetch the data. If None, the default date is 30 days from <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p></li>
-<li><p><strong>to_date</strong> (<em>datetime.date</em>) – The ending date upto which we fetch the data. If None, today’s date is taken by default.</p></li>
+<li><p><strong>index</strong> (<em>str</em>) – Name of the index for which historical data is requested.</p></li>
+<li><p><strong>from_date</strong> (<em>datetime.date</em><em>, </em><em>optional</em>) – Start date of the data range. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, defaults to 30 days prior
+to <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p></li>
+<li><p><strong>to_date</strong> (<em>datetime.date</em><em>, </em><em>optional</em>) – End date of the data range. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, defaults to today’s date.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">from_date</span></code> is greater than <code class="docutils literal notranslate"><span class="pre">to_date</span></code></p></li>
-<li><p><strong>TypeError</strong> – if <code class="docutils literal notranslate"><span class="pre">from_date</span></code> or <code class="docutils literal notranslate"><span class="pre">to_date</span></code> is not of type datetime.date</p></li>
+<li><p><strong>TypeError</strong> – If <code class="docutils literal notranslate"><span class="pre">from_date</span></code> or <code class="docutils literal notranslate"><span class="pre">to_date</span></code> is not an instance of <code class="docutils literal notranslate"><span class="pre">datetime.date</span></code>.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">from_date</span></code> occurs after <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary with <code class="docutils literal notranslate"><span class="pre">price</span></code> and <code class="docutils literal notranslate"><span class="pre">turnover</span></code> as keys and the data as a list of rows, each row is dictionary.</p>
+<dd class="field-odd"><p>A list of dictionaries, each representing one day of historical index data.
+The list is ordered chronologically from oldest to newest.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dict[str, List]</p>
+<dd class="field-even"><p>List[Dict]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1297,20 +1313,44 @@ But you need to consider holidays.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.optionChain">
 <span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">optionChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'banknifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'nifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'finnifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'niftyit'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiry_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#nse.NSE.optionChain" title="Link to this definition">¶</a></dt>
-<dd><p>Unprocessed option chain from NSE for Index futures or FNO stocks</p>
-<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/optionChain.json">Sample response</a></p>
+<dd><p>Fetch the raw (unprocessed) option chain data from NSE for index futures or
+F&amp;O stocks.</p>
+<p>If <cite>expiry_date</cite> is not provided, the function automatically determines the
+nearest valid expiry using the following order:</p>
+<ol class="arabic simple">
+<li><p>Reads a locally cached expiry date from <cite>opt-expiry.json</cite> (if available).</p></li>
+<li><p>Validates the cached expiry against the current date.</p></li>
+<li><p>If missing or expired, fetches expiry dates from NSE’s
+<cite>option-chain-contract-info</cite> endpoint and selects the first (nearest)
+expiry.</p></li>
+<li><p>Updates the local cache with the resolved expiry date.</p></li>
+</ol>
+<p>The final option chain data is fetched from NSE’s <cite>option-chain-v3</cite> endpoint.</p>
+<p>Reference sample response:
+<a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/optionChain.json">https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/optionChain.json</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>symbol</strong> (<em>str</em>) – FnO stock or index futures code. For Index futures, must be one of <code class="docutils literal notranslate"><span class="pre">banknifty</span></code>, <code class="docutils literal notranslate"><span class="pre">nifty</span></code>, <code class="docutils literal notranslate"><span class="pre">finnifty</span></code>, <code class="docutils literal notranslate"><span class="pre">niftyit</span></code></p></li>
-<li><p><strong>expiry_date</strong> (<em>datetime</em><em> or </em><em>None</em>) – Expiry date of the instrument</p></li>
+<li><p><strong>symbol</strong> (<em>str</em>) – F&amp;O stock symbol or index futures identifier.
+For index futures, must be one of:
+<code class="docutils literal notranslate"><span class="pre">banknifty</span></code>, <code class="docutils literal notranslate"><span class="pre">nifty</span></code>, <code class="docutils literal notranslate"><span class="pre">finnifty</span></code>, <code class="docutils literal notranslate"><span class="pre">niftyit</span></code>.</p></li>
+<li><p><strong>expiry_date</strong> (<em>datetime</em><em> or </em><em>None</em>) – Expiry date of the instrument. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the nearest valid expiry
+is automatically resolved and cached.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Option chain for all expiries</p>
+<dd class="field-even"><p>Raw JSON response from NSE containing the option chain for the
+requested symbol and expiry.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<li><p>If the NSE response does not contain the <code class="docutils literal notranslate"><span class="pre">expiryDates</span></code> field.</p></li>
+<li><p>If NSE returns an empty list of expiry dates.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1513,7 +1553,7 @@ The result in O(n) performance for maxpain calculation.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=bb516dca"></script>
+</div><script src="_static/documentation_options.js?v=51b770b3"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
