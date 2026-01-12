@@ -8,10 +8,7 @@ from nse import NSE
 
 
 def get_last_working_date():
-    dt = datetime.now()
-
-    if dt.hour < 19:
-        dt -= timedelta(1)
+    dt = datetime.now() - timedelta(1)
 
     while True:
         if dt.weekday() in (5, 6):
