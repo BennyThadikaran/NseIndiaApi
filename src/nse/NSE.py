@@ -1118,48 +1118,83 @@ class NSE:
         symbol: Union[Literal["banknifty", "nifty", "finnifty", "niftyit"], str],
         expiry_date: Optional[datetime] = None,
     ) -> Dict:
-        """Unprocessed option chain from NSE for Index futures or FNO stocks
+        """
+        Fetch the raw (unprocessed) option chain data from NSE for index futures or
+        F&O stocks.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/optionChain.json>`__
+        If `expiry_date` is not provided, the function automatically determines the
+        nearest valid expiry using the following order:
 
-        :param symbol: FnO stock or index futures code. For Index futures, must be one of ``banknifty``, ``nifty``, ``finnifty``, ``niftyit``
+        1. Reads a locally cached expiry date from `opt-expiry.json` (if available).
+        2. Validates the cached expiry against the current date.
+        3. If missing or expired, fetches expiry dates from NSE’s
+           `option-chain-contract-info` endpoint and selects the first (nearest)
+           expiry.
+        4. Updates the local cache with the resolved expiry date.
+
+        The final option chain data is fetched from NSE’s `option-chain-v3` endpoint.
+
+        Reference sample response:
+        https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/optionChain.json
+
+        :param symbol:
+            F&O stock symbol or index futures identifier.
+            For index futures, must be one of:
+            ``banknifty``, ``nifty``, ``finnifty``, ``niftyit``.
         :type symbol: str
-        :param expiry_date: Expiry date of the instrument
-        :type expiry_date: datetime or None
-        :return: Option chain for all expiries
-        :rtype: dict"""
 
-        params = {
-            "symbol": symbol.upper(),
-        }
+        :param expiry_date:
+            Expiry date of the instrument. If ``None``, the nearest valid expiry
+            is automatically resolved and cached.
+        :type expiry_date: datetime or None
+
+        :return:
+            Raw JSON response from NSE containing the option chain for the
+            requested symbol and expiry.
+        :rtype: Dict
+
+        :raises ValueError:
+            - If the NSE response does not contain the ``expiryDates`` field.
+            - If NSE returns an empty list of expiry dates.
+        """
+
+        symbol_key = symbol.lower()
+        params = dict(symbol=symbol.upper())
 
         if not expiry_date:
-            opt_info = None
-            opt_info_folder = self.dir / "opt-info"
-            opt_info_file = opt_info_folder / f"{symbol}.json"
+            cache = {}
+            cache_file = self.dir / "opt-expiry.json"
 
-            if not opt_info_folder.exists():
-                opt_info_folder.mkdir(parents=True, exist_ok=True)
+            if cache_file.exists():
+                try:
+                    cache = json.loads(cache_file.read_bytes())
+                except (json.JSONDecodeError, OSError):
+                    cache = {}
 
-            if opt_info_file.exists():
-                opt_info = json.loads(opt_info_file.read_bytes())
-
-                expiry_date = datetime.fromisoformat(opt_info["expiry"])
+            if symbol_key in cache:
+                expiry_date = datetime.fromisoformat(cache[symbol_key])
 
                 if date.today() > expiry_date.date():
-                    opt_info_file.unlink()
-                    opt_info = None
+                    expiry_date = None
 
-            if not opt_info:
+            if not expiry_date:
                 opt_info = self.__req(
                     f"{self.base_url}/option-chain-contract-info", params=params
                 ).json()
 
+                if "expiryDates" not in opt_info:
+                    raise ValueError(
+                        "Missing `expiryDates` field in option chain contract info"
+                    )
+
+                if not opt_info["expiryDates"]:
+                    raise ValueError("No expiry dates returned from NSE")
+
                 expiry_date = datetime.strptime(opt_info["expiryDates"][0], "%d-%b-%Y")
 
-                opt_info["expiry"] = expiry_date.isoformat()
+                cache[symbol_key] = expiry_date.isoformat()
 
-                opt_info_file.write_text(json.dumps(opt_info))
+                cache_file.write_text(json.dumps(opt_info))
 
         url = f"{self.base_url}/option-chain-v3"
 
