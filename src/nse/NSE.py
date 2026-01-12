@@ -1556,57 +1556,59 @@ class NSE:
         symbol: str,
         from_date: Optional[date] = None,
         to_date: Optional[date] = None,
-        series: List[str] = ["EQ"],
+        series: Literal[
+            "AE", "AF", "BE", "BL", "EQ", "IL", "RL", "W3", "GB", "GS"
+        ] = "EQ",
     ) -> List[Dict]:
         """
-        Downloads the historical daily price and volume data for a specified symbol within a given date range,
-        from ``from_date`` to ``to_date``.
+        Retrieve historical daily price and volume data for an equity symbol from NSE.
 
-        The data is returned as a JSON object, where the primary data is stored as a list of rows (indexed starting at 0).
+        This method fetches historical trade data for the given symbol and series
+        between ``from_date`` and ``to_date`` (both inclusive). If no dates are
+        provided, data for the last 30 days ending today is returned.
 
-        Each row is represented as a dict, with column names as keys and their corresponding values.
+        Data is fetched using NSE’s Next API historical trade data endpoint.
 
-        The date is stored under the key ``mTIMESTAMP``.
+        Reference URL:
+            https://www.nseindia.com/get-quote/equity/HDFCBANK/HDFC-Bank-Limited
+            (Historical data section)
 
-        If the provided symbol is incorrect or invalid, an empty JSON will be returned.
+        The response is returned as a list of rows, where each row is represented
+        as a dictionary with column names as keys and their corresponding values.
+        The trade date is available under the key ``mTIMESTAMP``.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_equity_historical_data.json>`__
+        Sample response:
+            https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_equity_historical_data.json
 
-        :param symbol: The exchange-traded symbol for which the data needs to be downloaded e.g. ``HDFCBANK``, ``SGBAPR28I`` or ``GOLDBEES``
+        :param symbol:
+            Exchange-traded symbol for which historical data is requested
+            (e.g. ``HDFCBANK``, ``SGBAPR28I``, ``GOLDBEES``).
         :type symbol: str
-        :param from_date: The starting date from which we fetch the data. If None, the default date is 30 days from ``to_date``.
-        :type from_date: datetime.date
-        :param to_date: The ending date upto which we fetch the data. If None, today's date is taken by default.
-        :type to_date: datetime.date
-        :param series: The series for which we need to fetch the data. A list of the series containing elements from the below list
 
-        :raise ValueError: if ``from_date`` is greater than ``to_date``
-        :raise TypeError: if ``from_date`` or ``to_date`` is not of type datetime.date
+        :param from_date:
+            Start date of the data range. If ``None``, defaults to 30 days prior
+            to ``to_date``.
+        :type from_date: datetime.date, optional
 
-        :return: Data as a list of rows, each row as dictionary with key as column name mapped to the value
+        :param to_date:
+            End date of the data range. If ``None``, defaults to today’s date.
+        :type to_date: datetime.date, optional
+
+        :param series:
+            Equity series for which historical data is requested.
+            Must be one of the valid NSE equity series values.
+        :type series: Literal["AE", "AF", "BE", "BL", "EQ", "IL", "RL", "W3", "GB", "GS"]
+
+        :raises TypeError:
+            If ``from_date`` or ``to_date`` is not an instance of ``datetime.date``.
+        :raises ValueError:
+            If ``from_date`` occurs after ``to_date``.
+
+        :return:
+            A list of dictionaries, each representing one day of historical trade data.
+            The list is ordered chronologically from oldest to newest.
         :rtype: List[Dict]
-
-        The list of valid series
-            - AE
-            - AF
-            - BE
-            - BL
-            - EQ
-            - IL
-            - RL
-            - W3
-            - GB
-            - GS
         """
-        # Simple case
-        if not from_date and not to_date and series == ["EQ"]:
-            data = self.__req(
-                url=f"{self.base_url}/historical/cm/equity",
-                params={"symbol": symbol},
-            ).json()
-
-            return data["data"][::-1]
-
         if from_date and not isinstance(from_date, date):
             raise TypeError("Starting date must be an object of type datetime.date")
 
@@ -1629,14 +1631,15 @@ class NSE:
         for chunk in date_chunks:
             data += reversed(
                 self.__req(
-                    url=f"{self.base_url}/historical/cm/equity",
-                    params={
-                        "symbol": symbol,
-                        "series": json.dumps(series),
-                        "from": chunk[0].strftime("%d-%m-%Y"),
-                        "to": chunk[1].strftime("%d-%m-%Y"),
-                    },
-                ).json()["data"]
+                    url=f"{self.base_url}/NextApi/apiClient/GetQuoteApi",
+                    params=dict(
+                        functionName="getHistoricalTradeData",
+                        symbol=symbol,
+                        series=series.upper(),
+                        fromDate=chunk[0].strftime("%d-%m-%Y"),
+                        toDate=chunk[1].strftime("%d-%m-%Y"),
+                    ),
+                ).json()
             )
 
         return data
