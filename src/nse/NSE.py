@@ -163,6 +163,7 @@ class NSE:
     @staticmethod
     def __getPath(path: Union[str, Path], isFolder: bool = False):
         path = path if isinstance(path, Path) else Path(path)
+        path = path.expanduser().resolve()
 
         if isFolder:
             if path.is_file():
