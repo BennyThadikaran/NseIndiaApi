@@ -78,7 +78,6 @@ class NSE:
         timeout: int = 15,
     ):
         """Initialise NSE"""
-
         uAgent = "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/118.0"
 
         headers = {
@@ -187,9 +186,11 @@ class NSE:
                     filepath = zip.extract(member=zip.namelist()[0], path=folder)
 
         elif file.suffix == ".gz":
-            with open(file, "rb") as f_in:
-                with open(file.stem, "wb") as f_out:
-                    f_out.write(zlib.decompress(f_in.read(), wbits=31))
+            with (
+                open(file, "rb") as f_in,
+                open(file.stem, "wb") as f_out,
+            ):
+                f_out.write(zlib.decompress(f_in.read(), wbits=31))
 
             filepath = file.stem
         else:
@@ -200,8 +201,8 @@ class NSE:
 
     def __download(self, url: str, folder: Path):
         """Download a large file in chunks from the given url.
-        Returns pathlib.Path object of the downloaded file"""
-
+        Returns pathlib.Path object of the downloaded file
+        """
         fname = folder / url.split("/")[-1]
 
         th.check()
@@ -231,7 +232,6 @@ class NSE:
 
     def __req(self, url, params=None):
         """Make a http request"""
-
         th.check()
 
         try:
@@ -263,7 +263,6 @@ class NSE:
         :return: A sorted list of tuples. Each element of the list is a range (`start_date`, `end_date`)
         :rtype: List[Tuple[datetime.date, datetime.date]]
         """
-
         chunks = []
         current_start = from_date
 
@@ -288,8 +287,8 @@ class NSE:
 
         *Use at the end of script or when class is no longer required.*
 
-        *Not required when using the ``with`` statement.*"""
-
+        *Not required when using the ``with`` statement.*
+        """
         self.__session.close()
         self.cookie_path.unlink(missing_ok=True)
 
@@ -301,7 +300,6 @@ class NSE:
         :return: Market status of all NSE market segments
         :rtype: list[dict]
         """
-
         return self.__req(f"{self.base_url}/marketStatus").json()["marketState"]
 
     def lookup(self, query: str) -> dict:
@@ -353,16 +351,13 @@ class NSE:
         :return: Path to saved file
         :rtype: pathlib.Path
         """
-
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
         if date.date() < self.UDIFF_SWITCH_DATE:
             date_str = date.strftime("%d%b%Y").upper()
             month = date_str[2:5]
 
-            url = "{}/content/historical/EQUITIES/{}/{}/cm{}bhav.csv.zip".format(
-                self.archive_url, date.year, month, date_str
-            )
+            url = f"{self.archive_url}/content/historical/EQUITIES/{date.year}/{month}/cm{date_str}bhav.csv.zip"
 
         else:
             url = "{}/content/cm/BhavCopy_NSE_CM_0_0_0_{}_F_0000.csv.zip".format(
@@ -391,8 +386,8 @@ class NSE:
         :raise FileNotFoundError: if download failed or file corrupted
         :raise RuntimeError: if report unavailable or not yet updated.
         :return: Path to saved file
-        :rtype: pathlib.Path"""
-
+        :rtype: pathlib.Path
+        """
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
         url = "{}/products/content/sec_bhavdata_full_{}.csv".format(
@@ -421,8 +416,8 @@ class NSE:
         :raise FileNotFoundError: if download failed or file corrupted
         :raise RuntimeError: if report unavailable or not yet updated.
         :return: Path to saved file
-        :rtype: pathlib.Path"""
-
+        :rtype: pathlib.Path
+        """
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/indices/ind_close_all_{date:%d%m%Y}.csv"
@@ -449,8 +444,8 @@ class NSE:
         :raise FileNotFoundError: if download failed or file corrupted
         :raise RuntimeError: if report unavailable or not yet updated.
         :return: Path to saved file
-        :rtype: pathlib.Path"""
-
+        :rtype: pathlib.Path
+        """
         dt_str = date.strftime("%Y%m%d")
 
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
@@ -479,8 +474,8 @@ class NSE:
         :raise FileNotFoundError: if download failed or file corrupted
         :raise RuntimeError: if report unavailable or not yet updated.
         :return: Path to saved file
-        :rtype: pathlib.Path"""
-
+        :rtype: pathlib.Path
+        """
         dt_str = date.strftime("%d%m%Y")
 
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
@@ -515,7 +510,6 @@ class NSE:
         :return: Path to saved zip file
         :rtype: pathlib.Path
         """
-
         dt_str = date.strftime("%d%m%y")
 
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
@@ -548,7 +542,6 @@ class NSE:
         :return: Path to saved zip file
         :rtype: pathlib.Path
         """
-
         dt_str = date.strftime("%d%m%Y")
 
         folder = NSE.__getPath(folder, isFolder=True) if folder else self.dir
@@ -588,8 +581,8 @@ class NSE:
         :type to_date: datetime.datetime
         :raise ValueError: if ``from_date`` is greater than ``to_date``
         :return: A list of corporate actions
-        :rtype: list[dict]"""
-
+        :rtype: list[dict]
+        """
         fmt = "%d-%m-%Y"
 
         params = {
@@ -642,8 +635,8 @@ class NSE:
         :type to_date: datetime.datetime
         :raise ValueError: if ``from_date`` is greater than ``to_date``
         :return: A list of corporate actions
-        :rtype: list[dict]"""
-
+        :rtype: list[dict]
+        """
         fmt = "%d-%m-%Y"
 
         params: Dict[str, Any] = {"index": index}
@@ -697,8 +690,8 @@ class NSE:
         :type to_date: datetime.datetime
         :raise ValueError: if ``from_date`` is greater than ``to_date``
         :return: A list of corporate board meetings
-        :rtype: list[dict]"""
-
+        :rtype: list[dict]
+        """
         fmt = "%d-%m-%Y"
 
         params: Dict[str, Any] = {"index": index}
@@ -766,8 +759,8 @@ class NSE:
         :param symbol: Equity symbol code
         :type symbol: str
         :return: Stock meta info
-        :rtype: dict"""
-
+        :rtype: dict
+        """
         url = f"{self.base_url}/equity-meta-info"
 
         return self.__req(url, params={"symbol": symbol.upper()}).json()
@@ -793,8 +786,8 @@ class NSE:
         :param section: Optional. If specified must be ``trade_info``
         :raise ValueError: if ``section`` does not equal ``trade_info``
         :return: Price quote and other stock meta info
-        :rtype: dict"""
-
+        :rtype: dict
+        """
         if type == "equity":
             url = f"{self.base_url}/quote-equity"
         else:
@@ -818,8 +811,8 @@ class NSE:
         :param symbol: Equity symbol code
         :type symbol: str
         :return: Date and OCHLV data
-        :rtype: dict[str, str or float]"""
-
+        :rtype: dict[str, str or float]
+        """
         q = self.quote(symbol, type="equity")
         v = self.quote(symbol, type="equity", section="trade_info")
 
@@ -847,8 +840,8 @@ class NSE:
         :param count: Optional. Limit number of result returned
         :type count: int
         :return: List of top gainers
-        :rtype: list[dict]"""
-
+        :rtype: list[dict]
+        """
         return sorted(
             filter(lambda dct: dct["pChange"] > 0, data["data"]),
             key=lambda dct: dct["pChange"],
@@ -865,8 +858,8 @@ class NSE:
         :param count: Optional. Limit number of result returned
         :type count: int
         :return: List of top losers
-        :rtype: list[dict]"""
-
+        :rtype: list[dict]
+        """
         return sorted(
             filter(lambda dct: dct["pChange"] < 0, data["data"]),
             key=lambda dct: dct["pChange"],
@@ -902,7 +895,6 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all Indices represented by a dictionary with the symbol code and other metadata.
         """
-
         url = f"{self.base_url}/allIndices"
 
         return self.__req(url).json()
@@ -923,7 +915,6 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all ETF's represented by a dictionary with the symbol code and other metadata.
         """
-
         return self.__req(f"{self.base_url}/etf").json()
 
     def listSme(self) -> dict:
@@ -933,7 +924,6 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all SME's represented by a dictionary with the symbol code and other metadata.
         """
-
         return self.__req(f"{self.base_url}/live-analysis-emerge").json()
 
     def listSgb(self) -> dict:
@@ -943,7 +933,6 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all SGB's represented by a dictionary with the symbol code and other metadata.
         """
-
         return self.__req(f"{self.base_url}/sovereign-gold-bonds").json()
 
     def listCurrentIPO(self) -> List[Dict]:
@@ -954,7 +943,6 @@ class NSE:
         :return: List of Dict containing current IPOs
         :rtype: List[Dict]
         """
-
         return self.__req(f"{self.base_url}/ipo-current-issue").json()
 
     def listUpcomingIPO(self) -> List[Dict]:
@@ -965,7 +953,6 @@ class NSE:
         :return: List of Dict containing upcoming IPOs
         :rtype: List[Dict]
         """
-
         return self.__req(f"{self.base_url}/all-upcoming-issues?category=ipo").json()
 
     def listPastIPO(
@@ -985,7 +972,6 @@ class NSE:
         :return: List of Dict containing past IPOs
         :rtype: List[Dict]
         """
-
         if to_date is None:
             to_date = datetime.now()
 
@@ -1057,7 +1043,6 @@ class NSE:
         - UCIBD - UCI Business Development
         - WDTR - Wholesale Debt Market
         """
-
         if to_date is None:
             to_date = datetime.now()
 
@@ -1086,7 +1071,8 @@ class NSE:
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/blockDeals.json>`__
 
         :return: Block deals. ``data`` key is a list of all block deal (Empty list if no block deals).
-        :rtype: dict"""
+        :rtype: dict
+        """
         return self.__req(f"{self.base_url}/block-deal").json()
 
     def fnoLots(self) -> Dict[str, int]:
@@ -1095,8 +1081,8 @@ class NSE:
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fnoLots.json>`__
 
         :return: A dictionary with symbol code as keys and lot sizes for values
-        :rtype: dict[str, int]"""
-
+        :rtype: dict[str, int]
+        """
         url = "https://nsearchives.nseindia.com/content/fo/fo_mktlots.csv"
 
         res = self.__req(url).content
@@ -1157,7 +1143,6 @@ class NSE:
             - If the NSE response does not contain the ``expiryDates`` field.
             - If NSE returns an empty list of expiry dates.
         """
-
         symbol_key = symbol.lower()
         params = dict(symbol=symbol.upper())
 
@@ -1223,7 +1208,6 @@ class NSE:
 
         See `Prefix sum for details <https://www.geeksforgeeks.org/dsa/prefix-sum-array-implementation-applications-competitive-programming/>`_
         """
-
         data = optionChain["records"]["data"]
         expiry = expiryDate.strftime("%d-%b-%Y")
 
@@ -1298,7 +1282,6 @@ class NSE:
         :return: Sorted list of current, next and far month expiry
         :rtype: list[str]
         """
-
         if index == "banknifty":
             idx = "nifty_bank_fut"
         elif index == "finnifty":
@@ -1339,8 +1322,8 @@ class NSE:
         :param expiryDate: Option chain Expiry date
         :type expiryDate: datetime.datetime
         :return: Option chain filtered by ``expiryDate``
-        :rtype: dict[str, str | float | int]"""
-
+        :rtype: dict[str, str | float | int]
+        """
         data = self.optionChain(symbol)
 
         chain = {}
@@ -1440,8 +1423,8 @@ class NSE:
         :param type: Default ``trading``. One of ``trading`` or ``clearing``
         :type type: str
         :return: Market holidays for all market segments.
-        :rtype: dict[str, list[dict]]"""
-
+        :rtype: dict[str, list[dict]]
+        """
         url = f"{self.base_url}/holiday-master"
 
         data = self.__req(url, params={"type": type}).json()
@@ -1849,7 +1832,6 @@ class NSE:
             The list is ordered chronologically from oldest to newest.
         :rtype: List[Dict]
         """
-
         if from_date and not isinstance(from_date, date):
             raise TypeError("Starting date must be an object of type datetime.date")
 

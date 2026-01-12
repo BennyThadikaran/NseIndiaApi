@@ -1,8 +1,9 @@
-import unittest
-from unittest.mock import MagicMock
 import json
+import unittest
 from datetime import datetime
 from pathlib import Path
+from unittest.mock import MagicMock
+
 from context import NSE
 
 
@@ -19,8 +20,7 @@ class TestNSEOptionChain(unittest.TestCase):
         cls.cache_file.unlink(missing_ok=True)
 
     def _mock_req(self, responses):
-        """
-        Helper to mock _NSE__req returning different .json() values
+        """Helper to mock _NSE__req returning different .json() values
         on sequential calls.
         """
         mock = MagicMock()
@@ -60,7 +60,7 @@ class TestNSEOptionChain(unittest.TestCase):
         self.assertEqual(result, {"data": "ok"})
         self.assertEqual(self.nse._NSE__req.call_count, 2)
 
-    def test_missing_expiryDates_raises(self):
+    def test_missing_expiry_dates_raises(self):
         self._mock_req([{}])
 
         with self.assertRaises(ValueError) as ctx:
@@ -68,7 +68,7 @@ class TestNSEOptionChain(unittest.TestCase):
 
         self.assertIn("expiryDates", str(ctx.exception))
 
-    def test_empty_expiryDates_raises(self):
+    def test_empty_expiry_dates_raises(self):
         self._mock_req([{"expiryDates": []}])
 
         with self.assertRaises(ValueError) as ctx:
