@@ -1087,7 +1087,6 @@ class NSE:
 
         :return: Block deals. ``data`` key is a list of all block deal (Empty list if no block deals).
         :rtype: dict"""
-
         return self.__req(f"{self.base_url}/block-deal").json()
 
     def fnoLots(self) -> Dict[str, int]:
@@ -1449,35 +1448,64 @@ class NSE:
 
         return data
 
-    def bulkdeals(self, fromdate: datetime, todate: datetime) -> List[Dict]:
-        """Download the bulk deals report for the specified date range and return the data.
-
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals.json>`__
-
-        :param fromdate: Start date of the bulk deals report to download
-        :type fromdate: datetime.datetime
-        :param todate: End date of the bulk deals report to download
-        :type todate: datetime.datetime
-        :raise ValueError: if the date range exceeds one year.
-        :raise RuntimeError: if no bulk deals data is available for the specified date range.
-        :return: Bulk deals data
-        :rtype: dict
+    def bulkdeals(
+        self,
+        option_type: Literal["block_deals", "bulk_deals", "short_selling"],
+        fromdate: datetime,
+        todate: datetime,
+    ) -> List[Dict]:
         """
+        Retrieve bulk, block, or short-selling deal data from NSE for a given date range.
+
+        This method downloads historical deal data based on the selected report type.
+        The requested date range must be valid and must not exceed one year.
+
+        Sample responses:
+            - Bulk deals: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-bulk_deals.json
+            - Block deals: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-block_deals.json
+            - Short selling: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-short_selling.json
+
+        :param option_type:
+            Type of deal report to fetch. Must be one of
+            ``"bulk_deals"``, ``"block_deals"``, or ``"short_selling"``.
+        :type option_type: Literal["block_deals", "bulk_deals", "short_selling"]
+
+        :param fromdate:
+            Start date of the report (inclusive).
+        :type fromdate: datetime.datetime
+
+        :param todate:
+            End date of the report (inclusive).
+        :type todate: datetime.datetime
+
+        :raises ValueError:
+            If ``fromdate`` is later than ``todate`` or if the date range exceeds one year.
+        :raises RuntimeError:
+            If no data is available for the specified date range and report type.
+
+        :return:
+            A list of dictionaries containing deal records for the requested report type.
+        :rtype: List[Dict]
+        """
+        if fromdate > todate:
+            raise ValueError("fromdate must be earlier than or equal to todate.")
 
         if (todate - fromdate).days > 365:
             raise ValueError("The date range cannot exceed one year.")
 
-        url = "{}/historical/bulk-deals?from={}&to={}".format(
-            self.base_url,
-            fromdate.strftime("%d-%m-%Y"),
-            todate.strftime("%d-%m-%Y"),
-        )
+        params = {
+            "optionType": option_type,
+            "from": fromdate.strftime("%d-%m-%Y"),
+            "to": todate.strftime("%d-%m-%Y"),
+        }
 
-        data = self.__req(url).json()
+        url = f"{self.base_url}/historicalOR/bulk-block-short-deals"
+
+        data = self.__req(url, params=params).json()
 
         if "data" not in data or len(data["data"]) < 1:
             raise RuntimeError(
-                "No bulk deals data available for the specified date range."
+                f"No {option_type} data available from {fromdate:%d-%m-%Y} to {todate:%d-%m-%Y}."
             )
 
         return data["data"]
