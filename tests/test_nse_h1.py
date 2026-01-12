@@ -40,12 +40,12 @@ class TestNseApiH1(unittest.TestCase):
         today = datetime.now()
 
         response = self.nse.bulkdeals(
-            fromdate=today - timedelta(3), todate=today
+            option_type="bulk_deals", fromdate=today - timedelta(3), todate=today
         )
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
-        self.assertTrue("TIMESTAMP" in response[0])
+        self.assertTrue("BD_DT_DATE" in response[0])
 
     def test_equityMetaInfo(self):
         response = self.nse.equityMetaInfo("reliance")
@@ -199,7 +199,7 @@ class TestNseApiH1(unittest.TestCase):
         response = self.nse.fetch_historical_vix_data()
 
         self.assertIsInstance(response, list)
-        self.assertTrue("TIMESTAMP" in response[0])
+        self.assertTrue("VIX_PERC_CHG" in response[0])
 
     def test_fetch_historical_fno_data(self):
         response = self.nse.fetch_historical_fno_data(
@@ -207,13 +207,14 @@ class TestNseApiH1(unittest.TestCase):
         )
 
         self.assertIsInstance(response, list)
-        self.assertTrue("TIMESTAMP" in response[0])
+        self.assertTrue("FH_TIMESTAMP" in response[0])
 
     def test_fetch_historical_index_data(self):
         response = self.nse.fetch_historical_index_data(index="NIFTY 50")
 
-        self.assertIsInstance(response, dict)
-        self.assertTrue("TIMESTAMP" in response["price"][0])
+        self.assertIsInstance(response, list)
+        self.assertIsInstance(response[0], dict)
+        self.assertTrue("EOD_TIMESTAMP" in response[0])
 
     def test_fetch_fno_underlying(self):
         response = self.nse.fetch_fno_underlying()
