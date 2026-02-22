@@ -222,6 +222,13 @@ class TestNseApiH2(unittest.TestCase):
         self.assertIsInstance(response, dict)
         self.assertTrue("IndexList" in response)
 
+    def test_fetch_symbol_data(self):
+        response = self.nse.fetch_symbol_data(symbol="ETERNAL", series="EQ")
+
+        self.assertIsInstance(response, dict)
+        self.assertTrue("equityResponse" in response)
+        self.assertEqual(response["equityResponse"][0]["metaData"]["symbol"], "ETERNAL")
+
 
 if __name__ == "__main__":
     unittest.main()

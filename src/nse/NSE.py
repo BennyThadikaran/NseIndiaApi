@@ -1920,3 +1920,44 @@ class NSE:
         return self._req(
             f"{self.base_url}/daily-reports", params=dict(key=segment)
         ).json()
+
+    def fetch_symbol_data(
+        self,
+        symbol: str,
+        series: Literal["EQ", "ST", "SM"] = "EQ",
+    ) -> Dict:
+        """
+        Retrieve detailed symbol data for an equity or SME symbol from NSE using the Next API.
+
+        This method fetches comprehensive data including order book, metadata, trade information,
+        price information, and security information for the given symbol and series.
+
+        Reference URL:
+            https://www.nseindia.com/get-quotes/equity?symbol=ETERNAL
+
+        Sample response:
+            https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_symbol_data.json
+
+        :param symbol:
+            Exchange-traded symbol for which data is requested (e.g. ``ETERNAL``, ``HDFCBANK``).
+        :type symbol: str
+
+        :param series:
+            Equity or SME series for which data is requested.
+            Must be one of ``EQ``, ``ST``, or ``SM``. Default is ``EQ``.
+        :type series: Literal["EQ", "ST", "SM"]
+
+        :return:
+            A dictionary containing detailed symbol data.
+        :rtype: Dict
+        """
+        params = {
+            "functionName": "getSymbolData",
+            "marketType": "N",
+            "series": series.upper(),
+            "symbol": symbol.upper(),
+        }
+
+        url = f"{self.base_url}/NextApi/apiClient/GetQuoteApi"
+
+        return self._req(url, params=params).json()

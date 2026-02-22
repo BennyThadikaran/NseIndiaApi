@@ -27,6 +27,8 @@ Stocks Quotes and Market info
 
 .. automethod:: nse.NSE.equityQuote
 
+.. automethod:: nse.NSE.fetch_symbol_data
+
 .. automethod:: nse.NSE.gainers
 
 .. automethod:: nse.NSE.losers
