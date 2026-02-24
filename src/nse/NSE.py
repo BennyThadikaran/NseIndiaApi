@@ -1921,10 +1921,10 @@ class NSE:
             f"{self.base_url}/daily-reports", params=dict(key=segment)
         ).json()
 
-    def fetch_symbol_data(
+    def getDetailedScripData(
         self,
         symbol: str,
-        series: Literal["EQ", "ST", "SM"] = "EQ",
+        series: Literal["EQ", "BE", "BZ", "SM", "ST", "SZ"] = "EQ",
     ) -> Dict:
         """
         Retrieve detailed symbol data for an equity or SME symbol from NSE using the Next API.
@@ -1936,7 +1936,7 @@ class NSE:
             https://www.nseindia.com/get-quotes/equity?symbol=ETERNAL
 
         Sample response:
-            https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_symbol_data.json
+            https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/getDetailedScripData.json
 
         :param symbol:
             Exchange-traded symbol for which data is requested (e.g. ``ETERNAL``, ``HDFCBANK``).
@@ -1944,8 +1944,9 @@ class NSE:
 
         :param series:
             Equity or SME series for which data is requested.
-            Must be one of ``EQ``, ``ST``, or ``SM``. Default is ``EQ``.
-        :type series: Literal["EQ", "ST", "SM"]
+            Must be one of "EQ", "BE", "BZ", "SM", "ST", or "SZ". Default is "EQ".
+            `Reference <https://www.nseindia.com/market-data/legend-of-series>`_
+        :type series: Literal["EQ", "BE", "BZ", "SM", "ST", "SZ"]
 
         :return:
             A dictionary containing detailed symbol data.

@@ -222,8 +222,8 @@ class TestNseApiH2(unittest.TestCase):
         self.assertIsInstance(response, dict)
         self.assertTrue("IndexList" in response)
 
-    def test_fetch_symbol_data(self):
-        response = self.nse.fetch_symbol_data(symbol="ETERNAL", series="EQ")
+    def test_getDetailedScripData(self):
+        response = self.nse.getDetailedScripData(symbol="ETERNAL", series="EQ")
 
         self.assertIsInstance(response, dict)
         self.assertTrue("equityResponse" in response)
