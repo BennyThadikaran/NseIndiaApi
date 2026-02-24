@@ -1925,6 +1925,7 @@ class NSE:
         self,
         symbol: str,
         series: Literal["EQ", "BE", "BZ", "SM", "ST", "SZ"] = "EQ",
+        marketType: str = "N",
     ) -> Dict:
         """
         Retrieve detailed symbol data for an equity or SME symbol from NSE using the Next API.
@@ -1948,13 +1949,17 @@ class NSE:
             `Reference <https://www.nseindia.com/market-data/legend-of-series>`_
         :type series: Literal["EQ", "BE", "BZ", "SM", "ST", "SZ"]
 
+        :param marketType:
+            Market type for which data is requested. Default is "N".
+        :type marketType: str
+
         :return:
             A dictionary containing detailed symbol data.
         :rtype: Dict
         """
         params = {
             "functionName": "getSymbolData",
-            "marketType": "N",
+            "marketType": marketType,
             "series": series.upper(),
             "symbol": symbol.upper(),
         }
