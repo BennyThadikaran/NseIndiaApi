@@ -23,6 +23,8 @@ Stocks Quotes and Market info
 
 .. automethod:: nse.NSE.equityMetaInfo
 
+.. automethod:: nse.NSE.shareholding
+
 .. automethod:: nse.NSE.quote
 
 .. automethod:: nse.NSE.equityQuote

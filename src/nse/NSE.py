@@ -747,6 +747,41 @@ class NSE:
             f"{self.base_url}/annual-reports", params=dict(index=segment, symbol=symbol)
         ).json()
 
+    def shareholding(
+        self, symbol: str, index: Literal["equities", "sme"] = "equities"
+    ) -> List[dict]:
+        """
+        Fetch shareholding pattern data for the given stock ``symbol``.
+
+        Returns quarterly shareholding details with the latest quarter first.
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/shareholding.json>`__
+
+        Reference URL:
+            https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=HDFCBANK&tabIndex=equity
+            (company listing page)
+
+        :param symbol: Stock symbol code
+        :type symbol: str
+        :param index: Market segment, either ``"equities"`` or ``"sme"``
+        :type index: Literal["equities", "sme"]
+        :return: List of quarterly shareholding records. Each dictionary contains
+                 key fields including:
+
+                 - ``symbol`` – Stock symbol name
+                 - ``date`` – Shareholding as-on date
+                 - ``pr_and_prgrp`` – Shares held by Promoter and Promoter Group
+                 - ``public_val`` – Shares held by Public
+                 - ``employeeTrusts`` – Shares held by Employee Trusts
+
+                 The first item in the list corresponds to the most recent quarter.
+        :rtype: list[dict[str, Any]]
+        """
+        return self._req(
+            f"{self.base_url}/corporate-share-holdings-master",
+            params=dict(index=index, symbol=symbol.upper()),
+        ).json()
+
     def equityMetaInfo(self, symbol) -> Dict:
         """Meta info for equity symbols.
 
