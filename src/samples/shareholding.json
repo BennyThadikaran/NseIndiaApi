@@ -1,0 +1,35 @@
+[
+  {
+    "symbol": "MARKSANS",
+    "desc": "NEW_1",
+    "industry": "-",
+    "name": "Marksans Pharma Limited",
+    "date": "31-DEC-2025",
+    "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/SHP_1599713_13012026034135_WEB.xml",
+    "revisedData": "N",
+    "recordId": "205402",
+    "cgTimeStamp": null,
+    "remarksWeb": "N",
+    "countString": null,
+    "isin": null,
+    "pr_and_prgrp": "43.87",
+    "public_val": "56.13",
+    "underlyingDrs": null,
+    "employeeTrusts": "0",
+    "format": null,
+    "revisionDate": null,
+    "submissionDate": "13-JAN-2026",
+    "revisionRemark": null,
+    "broadcastDate": "13-JAN-2026 15:41:40",
+    "systemDate": "13-JAN-2026 15:41:44",
+    "revisedStatus": "-",
+    "typeOfSubmission": null,
+    "revisedDate": null,
+    "revisedRemark": null,
+    "xbrlFileSize": "131.71 KB",
+    "newColumn": true,
+    "timeDifference": "00:00:04",
+    "index": "-"
+  }
+]
+
