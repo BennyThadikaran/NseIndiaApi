@@ -1,4 +1,4 @@
-import pickle
+import json
 import unittest
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -7,12 +7,13 @@ from unittest.mock import patch
 from context import NSE
 from httpx import Cookies
 from requests.cookies import RequestsCookieJar
+from requests.utils import cookiejar_from_dict, dict_from_cookiejar
 
 DIR = Path(__file__).parent
 timestamp = int((datetime.now(tz=UTC) - timedelta(1)).timestamp())
 
-requests_cookie_file = DIR / "nse_cookies_requests.pkl"
-httpx_cookie_file = DIR / "nse_cookies_httpx.pkl"
+requests_cookie_file = DIR / "nse_cookies_requests.json"
+httpx_cookie_file = DIR / "nse_cookies_httpx.json"
 
 
 class TestNseCookies(unittest.TestCase):
@@ -60,11 +61,11 @@ class TestNseCookies(unittest.TestCase):
             expires=timestamp,
         )
 
-        requests_cookie_file.write_bytes(pickle.dumps(cookie_jar))
+        requests_cookie_file.write_text(json.dumps(dict_from_cookiejar(cookie_jar)))
 
         nse = NSE(download_folder=DIR, server=False)
 
-        cookie_jar = pickle.loads(requests_cookie_file.read_bytes())
+        cookie_jar = cookiejar_from_dict(json.loads(requests_cookie_file.read_text()))
 
         # Cookies not expired
         for cookie in cookie_jar:
@@ -100,11 +101,11 @@ class TestNseCookies(unittest.TestCase):
         """Test if cookies are reset when expired, using httpx library"""
         cookies = dict(nsit="nse", expires=timestamp)
 
-        httpx_cookie_file.write_bytes(pickle.dumps(cookies))
+        httpx_cookie_file.write_text(json.dumps(cookies))
 
         nse = NSE(download_folder=DIR, server=True)
 
-        cookie_jar = Cookies(pickle.loads(httpx_cookie_file.read_bytes()))
+        cookie_jar = Cookies(json.loads(httpx_cookie_file.read_text()))
 
         # Cookies not expired
         for cookie in cookie_jar.jar:

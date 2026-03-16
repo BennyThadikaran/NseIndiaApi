@@ -8,16 +8,14 @@ from context import NSE
 
 
 class TestNSEOptionChain(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         DIR = Path(__file__).parent
-        cls.nse = NSE(DIR, server=False)
-        cls.cache_file = cls.nse.dir / "opt-expiry.json"
+        self.nse = NSE(DIR, server=False)
+        self.cache_file = DIR / "opt-expiry.json"
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.nse.exit()
-        cls.cache_file.unlink(missing_ok=True)
+    def tearDown(self):
+        self.nse.exit()
+        self.cache_file.unlink(missing_ok=True)
 
     def _mock_req(self, responses) -> MagicMock:
         """Helper to mock _NSE__req returning different .json() values
@@ -80,6 +78,7 @@ class TestNSEOptionChain(unittest.TestCase):
         self._mock_req(
             [
                 {"expiryDates": ["01-Jan-2099"]},
+                {},
             ]
         )
 
