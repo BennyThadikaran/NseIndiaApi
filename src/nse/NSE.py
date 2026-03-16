@@ -1419,7 +1419,7 @@ class NSE:
             else:
                 chain[strike]["ce"] = dict(last=0, oi=0, chg=0, iv=0)
 
-            if poi == 0 or coi == 0:
+            if coi == 0:
                 chain[strike]["pcr"] = None
             else:
                 chain[strike]["pcr"] = round(poi / coi, 2)
@@ -1431,7 +1431,7 @@ class NSE:
                 maxPoi=maxPoiStrike,
                 coiTotal=totalCoi,
                 poiTotal=totalPoi,
-                pcr=round(totalPoi / totalCoi, 2),
+                pcr=None if totalCoi == 0 else round(totalPoi / totalCoi, 2),
                 chain=chain,
             )
         )
