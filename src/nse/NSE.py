@@ -1215,7 +1215,7 @@ class NSE:
 
                 cache[symbol_key] = expiry_date.isoformat()
 
-                cache_file.write_text(json.dumps(opt_info))
+                cache_file.write_text(json.dumps(cache))
 
         url = f"{self.base_url}/option-chain-v3"
 
