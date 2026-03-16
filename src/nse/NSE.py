@@ -122,9 +122,7 @@ class NSE:
         cookies = r.cookies
 
         if self.server:
-            # cookies is an https.Cookies object which isn't directly picklable
             self.cookie_path.write_text(json.dumps(dict(cookies)))
-        else:  # cookies is a RequestsCookiesJar object which is directly picklable
             self.cookie_path.write_text(json.dumps(dict_from_cookiejar(cookies)))
 
         return cookies
