@@ -1409,7 +1409,7 @@ class NSE:
             if "CE" in idx:
                 coi, last, chg, iv = map(idx["CE"].get, dataFields)
 
-                chain[strike]["ce"].update(dict(last=last, oi=poi, chg=chg, iv=iv))
+                chain[strike]["ce"].update(dict(last=last, oi=coi, chg=chg, iv=iv))
 
                 totalCoi += coi
 
