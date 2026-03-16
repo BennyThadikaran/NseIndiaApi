@@ -1219,7 +1219,7 @@ class NSE:
 
         url = f"{self.base_url}/option-chain-v3"
 
-        params["type"] = "Indices" if symbol in self._optionIndex else "Equity"
+        params["type"] = "Indices" if symbol_key in self._optionIndex else "Equity"
 
         if expiry_date:
             params["expiry"] = expiry_date.strftime("%d-%b-%Y")
