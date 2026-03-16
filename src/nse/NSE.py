@@ -1,6 +1,5 @@
 import gzip
 import json
-import pickle
 import shutil
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -19,6 +18,7 @@ except ModuleNotFoundError:
 try:
     from requests import Session
     from requests.exceptions import ReadTimeout
+    from requests.utils import cookiejar_from_dict, dict_from_cookiejar
 
     HAS_REQUESTS = True
 except ModuleNotFoundError:
@@ -99,7 +99,7 @@ class NSE:
                     "The httpx module with HTTP/2 support is required to run NSE on server. Run `pip install httpx[http2]"
                 )
 
-            self.cookie_path = self.dir / "nse_cookies_httpx.pkl"
+            self.cookie_path = self.dir / "nse_cookies_httpx.json"
             self._session = Client(http2=True)
             self.ReadTimeout = ReadTimeout
             self.Cookies = Cookies
@@ -109,7 +109,7 @@ class NSE:
                     "Missing requests module. Run `pip install requests`. If running NSE on server, set `server=True`"
                 )
 
-            self.cookie_path = self.dir / "nse_cookies_requests.pkl"
+            self.cookie_path = self.dir / "nse_cookies_requests.json"
             self._session = Session()
             self.ReadTimeout = ReadTimeout
 
@@ -123,9 +123,9 @@ class NSE:
 
         if self.server:
             # cookies is an https.Cookies object which isn't directly picklable
-            self.cookie_path.write_bytes(pickle.dumps(dict(cookies)))
+            self.cookie_path.write_text(json.dumps(dict(cookies)))
         else:  # cookies is a RequestsCookiesJar object which is directly picklable
-            self.cookie_path.write_bytes(pickle.dumps(cookies))
+            self.cookie_path.write_text(json.dumps(dict_from_cookiejar(cookies)))
 
         return cookies
 
@@ -133,9 +133,9 @@ class NSE:
         if self.cookie_path.exists():
             if self.server:
                 # Expose the cookie jar object using .jar method.
-                cookies = self.Cookies(pickle.loads(self.cookie_path.read_bytes())).jar
+                cookies = self.Cookies(json.loads(self.cookie_path.read_bytes())).jar
             else:
-                cookies = pickle.loads(self.cookie_path.read_bytes())
+                cookies = cookiejar_from_dict(json.loads(self.cookie_path.read_bytes()))
 
             if NSE._hasCookiesExpired(cookies):
                 cookies = self._setCookies()
