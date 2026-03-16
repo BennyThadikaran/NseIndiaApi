@@ -1,6 +1,7 @@
+import gzip
 import json
 import pickle
-import zlib
+import shutil
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
@@ -186,13 +187,13 @@ class NSE:
                     filepath = zip.extract(member=zip.namelist()[0], path=folder)
 
         elif file.suffix == ".gz":
-            with (
-                open(file, "rb") as f_in,
-                open(file.stem, "wb") as f_out,
-            ):
-                f_out.write(zlib.decompress(f_in.read(), wbits=31))
+            filepath = folder / file.stem
 
-            filepath = file.stem
+            with (
+                gzip.open(file, "rb") as f_in,
+                open(filepath, "wb") as f_out,
+            ):
+                shutil.copyfileobj(f_in, f_out)
         else:
             raise ValueError("Unknown file format")
 
