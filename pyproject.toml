@@ -4,7 +4,7 @@ requires = [ "hatchling" ]
 
 [project]
 name = "nse"
-version = "2.1.0"
+version = "2.1.2"
 description = "Unofficial Python Api for NSE India stock exchange"
 readme = "README.md"
 keywords = [ "nse", "nse-stock-data", "stock-market-api", "stock-news-api" ]
@@ -35,7 +35,7 @@ optional-dependencies.dev = [ "furo==2023.9.10", "sphinx==7.4.7" ]
 optional-dependencies.local = [ "requests>=2.31" ]
 optional-dependencies.server = [ "httpx[http2]==0.28.1" ]
 urls."Bug Tracker" = "https://github.com/BennyThadikaran/NseIndiaApi/issues"
-urls."Homepage" = "https://github.com/BennyThadikaran/NseIndiaApi"
+urls.Homepage = "https://github.com/BennyThadikaran/NseIndiaApi"
 
 [tool.hatch]
 build.targets.sdist.exclude = [ "docs", "tests", ".github", "src/samples" ]
