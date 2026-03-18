@@ -123,6 +123,7 @@ class NSE:
 
         if self.server:
             self.cookie_path.write_text(json.dumps(dict(cookies)))
+        else:
             self.cookie_path.write_text(json.dumps(dict_from_cookiejar(cookies)))
 
         return cookies
