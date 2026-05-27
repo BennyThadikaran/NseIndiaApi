@@ -1656,7 +1656,7 @@ class NSE:
         for chunk in date_chunks:
             data += reversed(
                 self._req(
-                    url=f"{self.base_url}/NextApi/apiClient/GetQuoteApi",
+                    url=self.next_api_url,
                     params=dict(
                         functionName="getHistoricalTradeData",
                         symbol=symbol,
