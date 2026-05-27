@@ -899,11 +899,14 @@ class NSE:
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listEquityStocksByIndex.json>`__
 
+        Reference Page:
+            https://www.nseindia.com/market-data/live-equity-market?symbol=NIFTY%2050
+
         :return: A dictionary. The ``data`` key is a list of all stocks represented by a dictionary with the symbol name and other metadata.
         """
-        url = f"{self.base_url}/equity-stockIndices"
+        url = f"{self.base_url}/equity-stock-indices"
 
-        return self._req(url, params=dict(index=index)).json()
+        return self._req(url, params=dict(index=index.upper())).json()
 
     def listIndices(self) -> dict:
         """List all indices
