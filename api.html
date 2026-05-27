@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Acceptable values for nse.listEquityStocksByIndex" href="listEquityStocksByIndex.html" /><link rel="prev" title="Usage" href="usage.html" />
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2023.09.10 -->
-        <title>API - nse 2.1.3 documentation</title>
+        <title>API - nse 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">nse 2.1.3 documentation</div></a>
+      <a href="index.html"><div class="brand">nse 3.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">nse 2.1.3 documentation</span>
+  <span class="sidebar-brand-text">nse 3.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -411,27 +411,18 @@ key fields including:</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.quote">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">quote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'equity'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'fno'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'equity'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'trade_info'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#nse.NSE.quote" title="Link to this definition">¶</a></dt>
-<dd><p>Price quotes and other data for equity or derivative symbols</p>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">quote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'EQ'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#nse.NSE.quote" title="Link to this definition">¶</a></dt>
+<dd><p>Price quotes and other data for equity symbols</p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/quote.json">Sample response</a></p>
-<p>For Market cap, delivery data and order book, use pass <cite>section=’trade_info’</cite> as keyword argument. See sample response below:</p>
-<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/quote-trade_info.json">Sample response</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>symbol</strong> (<em>str</em>) – Equity symbol code</p></li>
-<li><p><strong>type</strong> (<em>str</em>) – One of <code class="docutils literal notranslate"><span class="pre">equity</span></code> or <code class="docutils literal notranslate"><span class="pre">fno</span></code>. Default <code class="docutils literal notranslate"><span class="pre">equity</span></code></p></li>
-<li><p><strong>section</strong> – Optional. If specified must be <code class="docutils literal notranslate"><span class="pre">trade_info</span></code></p></li>
-</ul>
+<dd class="field-odd"><p><strong>symbol</strong> (<em>str</em>) – Equity symbol code</p>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">section</span></code> does not equal <code class="docutils literal notranslate"><span class="pre">trade_info</span></code></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Price quote and other stock meta info</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Price quote and other stock meta info</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -535,11 +526,29 @@ Must be one of “EQ”, “BE”, “BZ”, “SM”, “ST”, or “SZ”. De
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.advanceDecline">
-<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">advanceDecline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nse.NSE.advanceDecline" title="Link to this definition">¶</a></dt>
-<dd><div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 1.0.9: </span>Removed in v1.0.9 as url no longer active.</p>
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">advanceDecline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'NIFTY</span> <span class="pre">50'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#nse.NSE.advanceDecline" title="Link to this definition">¶</a></dt>
+<dd><p>Fetch advance-decline data for a given NSE index.</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/advanceDecline.json">Sample response</a></p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.0.0.</span></p>
 </div>
-<p>Use nse.listEquityStocksByIndex</p>
+<p>Reintroduced using the new NSE API endpoint</p>
+<p>Deprecated in v1.0.9 because the original NSE endpoint
+was no longer active.</p>
+<p>Example:
+advanceDecline()
+advanceDecline(“NIFTY BANK”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>str</em>) – NSE index name. Default is <code class="docutils literal notranslate"><span class="pre">NIFTY</span> <span class="pre">50</span></code></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Advance-decline statistics</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -740,6 +749,10 @@ with their names and tickers respectively in alphabetical order for stocks.</p>
 <dd><p>List Equity stocks by their Index name. Defaults to <cite>NIFTY 50</cite></p>
 <p><a class="reference internal" href="listEquityStocksByIndex.html#listequitystocksbyindex"><span class="std std-ref">See list of acceptable values for index argument.</span></a></p>
 <p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listEquityStocksByIndex.json">Sample response</a></p>
+<dl class="simple">
+<dt>Reference Page:</dt><dd><p><a class="reference external" href="https://www.nseindia.com/market-data/live-equity-market?symbol=NIFTY%2050">https://www.nseindia.com/market-data/live-equity-market?symbol=NIFTY%2050</a></p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A dictionary. The <code class="docutils literal notranslate"><span class="pre">data</span></code> key is a list of all stocks represented by a dictionary with the symbol name and other metadata.</p>
@@ -1426,7 +1439,8 @@ requested symbol and expiry.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="nse.NSE.compileOptionChain">
 <span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">compileOptionChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'banknifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'nifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'finnifty'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'niftyit'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiryDate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.compileOptionChain" title="Link to this definition">¶</a></dt>
-<dd><p>Filter raw option chain by <code class="docutils literal notranslate"><span class="pre">expiryDate</span></code> and calculate various statistics required for analysis. This makes it easy to build an option chain for analysis using a simple loop.</p>
+<dd><p>Filter raw option chain by <code class="docutils literal notranslate"><span class="pre">expiryDate</span></code> and calculate various statistics required for analysis.
+This makes it easy to build an option chain for analysis using a simple loop.</p>
 <dl class="simple">
 <dt>Statistics include:</dt><dd><ul class="simple">
 <li><p>Max Pain,</p></li>
@@ -1623,7 +1637,7 @@ The result in O(n) performance for maxpain calculation.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=179ab080"></script>
+</div><script src="_static/documentation_options.js?v=acc74ff5"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
