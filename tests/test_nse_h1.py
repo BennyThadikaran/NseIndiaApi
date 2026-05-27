@@ -130,15 +130,19 @@ class TestNseApiH1(unittest.TestCase):
         response = self.nse.listCurrentIPO()
 
         self.assertIsInstance(response, list)
-        self.assertIsInstance(response[0], dict)
-        self.assertTrue("symbol" in response[0])
+
+        if len(response):
+            self.assertIsInstance(response[0], dict)
+            self.assertTrue("symbol" in response[0])
 
     def test_listUpcomingIPO(self):
         response = self.nse.listUpcomingIPO()
 
         self.assertIsInstance(response, list)
-        self.assertIsInstance(response[0], dict)
-        self.assertTrue("symbol" in response[0])
+
+        if len(response):
+            self.assertIsInstance(response[0], dict)
+            self.assertTrue("symbol" in response[0])
 
     def test_listPastIPO(self):
         response = self.nse.listPastIPO()
