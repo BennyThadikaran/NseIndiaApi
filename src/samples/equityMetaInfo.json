@@ -1,18 +1,25 @@
 {
-  "symbol": "TCS",
-  "companyName": "Tata Consultancy Services Limited",
-  "industry": "COMPUTERS - SOFTWARE",
+  "symbol": "HDFCBANK",
   "activeSeries": [
-    "EQ"
+    "EQ",
+    "T0"
   ],
+  "companyName": "HDFC Bank Limited",
   "debtSeries": [],
-  "tempSuspendedSeries": [],
-  "isFNOSec": true,
-  "isCASec": false,
-  "isSLBSec": true,
-  "isDebtSec": false,
-  "isSuspended": false,
-  "isETFSec": false,
-  "isDelisted": false,
-  "isin": "INE467B01029"
+  "isFNOSec": "true",
+  "isCASec": "false",
+  "isSLBSec": "true",
+  "isDebtSec": "true",
+  "tempSuspendedSeries": [
+    "IL",
+    "W3"
+  ],
+  "isSuspended": "false",
+  "isETFSec": "false",
+  "isDelisted": "false",
+  "isin": "INE040A01034",
+  "isMunicipalBond": "false",
+  "isHybridSymbol": "false",
+  "marketType": "N",
+  "parentSymbol": "HDFCBANK"
 }
