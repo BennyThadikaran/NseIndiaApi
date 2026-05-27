@@ -836,22 +836,16 @@ class NSE:
         :return: Date and OCHLV data
         :rtype: dict[str, str or float]
         """
-        q = self.quote(symbol, type="equity")
-        v = self.quote(symbol, type="equity", section="trade_info")
+        q = self.quote(symbol)
 
-        _open, minmax, close, ltp = map(
-            q["priceInfo"].get,
-            ("open", "intraDayHighLow", "close", "lastPrice"),
+        return dict(
+            date=q["lastUpdateTime"],
+            open=q["metaData"]["open"],
+            high=q["metaData"]["dayHigh"],
+            low=q["metaData"]["dayLow"],
+            close=q["orderBook"]["lastPrice"],
+            volume=q["tradeInfo"]["totalTradedVolume"],
         )
-
-        return {
-            "date": q["metadata"]["lastUpdateTime"],
-            "open": _open,
-            "high": minmax["max"],
-            "low": minmax["min"],
-            "close": close or ltp,
-            "volume": v["securityWiseDP"]["quantityTraded"],
-        }
 
     def gainers(self, data: Dict, count: Optional[int] = None) -> List[Dict]:
         """Top gainers by percent change above zero.
