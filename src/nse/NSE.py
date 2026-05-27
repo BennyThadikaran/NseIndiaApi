@@ -70,6 +70,7 @@ class NSE:
 
     _optionIndex = ("banknifty", "nifty", "finnifty", "niftyit")
     base_url = "https://www.nseindia.com/api"
+    next_api_url = f"{base_url}/NextApi/apiClient/GetQuoteApi"
     archive_url = "https://nsearchives.nseindia.com"
 
     def __init__(
