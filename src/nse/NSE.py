@@ -797,9 +797,10 @@ class NSE:
         :return: Stock meta info
         :rtype: dict
         """
-        url = f"{self.base_url}/equity-meta-info"
-
-        return self._req(url, params={"symbol": symbol.upper()}).json()
+        return self._req(
+            self.next_api_url,
+            params=dict(functionName="getMetaData", symbol=symbol.upper()),
+        ).json()
 
     def quote(
         self,
