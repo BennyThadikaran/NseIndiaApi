@@ -53,7 +53,7 @@ class NSE:
     :raises ImportError: If ``server`` set to True and ``httpx[http2] is not installed or ``server`` set to False and ``requests`` is not installed.
     """
 
-    __version__ = "2.1.3"
+    __version__ = "3.0.0"
     SEGMENT_EQUITY = "equities"
     SEGMENT_SME = "sme"
     SEGMENT_MF = "mf"
@@ -1430,16 +1430,12 @@ class NSE:
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/advanceDecline.json>`__
 
-        .. deprecated:: 1.0.9
+        .. versionadded:: 3.0.0
+
+        Reintroduced using the new NSE API endpoint
+
         Deprecated in v1.0.9 because the original NSE endpoint
         was no longer active.
-
-        .. versionadded:: 3.0.0
-        Reintroduced using the new NSE API endpoint
-        ``/api/equity-stockIndices-adu``.
-
-        Endpoint used:
-        https://www.nseindia.com/api/equity-stockIndices-adu
 
         Example:
         advanceDecline()
