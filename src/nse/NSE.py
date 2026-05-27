@@ -804,41 +804,27 @@ class NSE:
 
     def quote(
         self,
-        symbol,
-        type: Literal["equity", "fno"] = "equity",
-        section: Optional[Literal["trade_info"]] = None,
+        symbol: str,
+        series: str = "EQ",
     ) -> Dict:
-        """Price quotes and other data for equity or derivative symbols
+        """Price quotes and other data for equity symbols
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/quote.json>`__
 
-        For Market cap, delivery data and order book, use pass `section='trade_info'` as keyword argument. See sample response below:
-
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/quote-trade_info.json>`__
-
         :param symbol: Equity symbol code
         :type symbol: str
-        :param type: One of ``equity`` or ``fno``. Default ``equity``
-        :type type: str
-        :param section: Optional. If specified must be ``trade_info``
-        :raise ValueError: if ``section`` does not equal ``trade_info``
         :return: Price quote and other stock meta info
         :rtype: dict
         """
-        if type == "equity":
-            url = f"{self.base_url}/quote-equity"
-        else:
-            url = f"{self.base_url}/quote-derivative"
+        params = {
+            "functionName": "getSymbolData",
+            "marketType": "N",
+            "series": series,
+            "symbol": symbol.upper(),
+        }
 
-        params = {"symbol": symbol.upper()}
-
-        if section:
-            if section != "trade_info":
-                raise ValueError("'Section' if specified must be 'trade_info'")
-
-            params["section"] = section
-
-        return self._req(url, params=params).json()
+        result = self._req(self.next_api_url, params=params).json()
+        return result["equityResponse"][0]
 
     def equityQuote(self, symbol) -> Dict[str, Union[str, float]]:
         """A convenience method that extracts date and OCHLV data from ``NSE.quote`` for given stock ``symbol``
