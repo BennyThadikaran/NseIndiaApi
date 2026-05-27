@@ -1323,7 +1323,9 @@ class NSE:
         symbol: Union[str, Literal["banknifty", "nifty", "finnifty", "niftyit"]],
         expiryDate: datetime,
     ) -> Dict[str, Union[str, float, int]]:
-        """Filter raw option chain by ``expiryDate`` and calculate various statistics required for analysis. This makes it easy to build an option chain for analysis using a simple loop.
+        """
+        Filter raw option chain by ``expiryDate`` and calculate various statistics required for analysis.
+        This makes it easy to build an option chain for analysis using a simple loop.
 
         Statistics include:
             - Max Pain,
