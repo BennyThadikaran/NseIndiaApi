@@ -54,7 +54,7 @@ class TestNseApiH2(unittest.TestCase):
         self.assertTrue("symbol" in response)
 
     def test_quote(self):
-        response = self.nse.quote(symbol="reliance", type="equity")
+        response = self.nse.quote(symbol="reliance", series="EQ")
 
         self.assertIsInstance(response, dict)
         self.assertTrue("priceInfo" in response)
