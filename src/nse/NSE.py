@@ -2006,6 +2006,4 @@ class NSE:
             "symbol": symbol.upper(),
         }
 
-        url = f"{self.base_url}/NextApi/apiClient/GetQuoteApi"
-
-        return self._req(url, params=params).json()
+        return self._req(self.next_api_url, params=params).json()
