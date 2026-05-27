@@ -1422,14 +1422,36 @@ class NSE:
 
         return oc
 
-    def advanceDecline(self):
+    def advanceDecline(self, index: str = "NIFTY 50") -> Dict:
         """
-        .. deprecated:: 1.0.9
-            Removed in v1.0.9 as url no longer active.
+        Fetch advance-decline data for a given NSE index.
 
-        Use nse.listEquityStocksByIndex
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/advanceDecline.json>`__
+
+        .. deprecated:: 1.0.9
+        Deprecated in v1.0.9 because the original NSE endpoint
+        was no longer active.
+
+        .. versionadded:: 3.0.0
+        Reintroduced using the new NSE API endpoint
+        ``/api/equity-stockIndices-adu``.
+
+        Endpoint used:
+        https://www.nseindia.com/api/equity-stockIndices-adu
+
+        Example:
+        advanceDecline()
+        advanceDecline("NIFTY BANK")
+
+        :param index: NSE index name. Default is ``NIFTY 50``
+        :type index: str
+
+        :return: Advance-decline statistics
+        :rtype: dict
         """
-        pass
+        url = f"{self.base_url}/equity-stockIndices-adu"
+
+        return self._req(url, params=dict(index=index.upper())).json()
 
     def holidays(
         self, type: Literal["trading", "clearing"] = "trading"
