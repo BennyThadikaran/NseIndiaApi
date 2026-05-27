@@ -95,7 +95,7 @@ class TestNseApiH1(unittest.TestCase):
         response = self.nse.listEquityStocksByIndex(index="NIFTY 50")
 
         self.assertIsInstance(response, dict)
-        self.assertTrue("advance" in response)
+        self.assertTrue("data" in response)
         self.assertTrue("pChange" in response["data"][0])
 
     def test_listIndices(self):
