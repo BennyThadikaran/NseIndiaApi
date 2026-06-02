@@ -6,107 +6,125 @@ Acceptable values for nse.listEquityStocksByIndex
 
 These are values that can be passed to `index` argument.
 
-- NIFTY 50
-- NIFTY NEXT 50
-- NIFTY MIDCAP 50
-- NIFTY MIDCAP 100
-- NIFTY MIDCAP 150
-- NIFTY SMALLCAP 50
-- NIFTY SMALLCAP 100
-- NIFTY SMALLCAP 250
-- NIFTY MIDSMALLCAP 400
-- NIFTY 100
-- NIFTY 200
-- NIFTY500 MULTICAP 50:25:25
-- NIFTY LARGEMIDCAP 250
-- NIFTY MIDCAP SELECT
-- NIFTY TOTAL MARKET
-- NIFTY MICROCAP 250
-- NIFTY 500
-- NIFTY500 LARGEMIDSMALL EQUAL-CAP WEIGHTED
-- NIFTY AUTO
-- NIFTY BANK
-- NIFTY ENERGY
-- NIFTY FINANCIAL SERVICES
-- NIFTY FINANCIAL SERVICES 25/50
-- NIFTY FMCG
-- NIFTY IT
-- NIFTY MEDIA
-- NIFTY METAL
-- NIFTY PHARMA
-- NIFTY PSU BANK
-- NIFTY REALTY
-- NIFTY PRIVATE BANK
-- NIFTY HEALTHCARE INDEX
-- NIFTY CONSUMER DURABLES
-- NIFTY OIL & GAS
-- NIFTY MIDSMALL HEALTHCARE
-- NIFTY FINANCIAL SERVICES EX-BANK
-- NIFTY MIDSMALL FINANCIAL SERVICES
-- NIFTY MIDSMALL IT & TELECOM
-- NIFTY COMMODITIES
-- NIFTY INDIA CONSUMPTION
-- NIFTY CPSE
-- NIFTY INFRASTRUCTURE
-- NIFTY MNC
-- NIFTY GROWTH SECTORS 15
-- NIFTY PSE
-- NIFTY SERVICES SECTOR
-- NIFTY100 LIQUID 15
-- NIFTY MIDCAP LIQUID 15
-- NIFTY INDIA DIGITAL
-- NIFTY100 ESG
-- NIFTY INDIA MANUFACTURING
-- NIFTY INDIA CORPORATE GROUP INDEX - TATA GROUP 25% CAP
-- NIFTY500 MULTICAP INDIA MANUFACTURING 50:30:20
-- NIFTY500 MULTICAP INFRASTRUCTURE 50:30:20
-- NIFTY INDIA DEFENCE
-- NIFTY INDIA TOURISM
-- NIFTY CAPITAL MARKETS
-- NIFTY EV & NEW AGE AUTOMOTIVE
-- NIFTY INDIA NEW AGE CONSUMPTION
-- NIFTY INDIA SELECT 5 CORPORATE GROUPS (MAATR)
-- NIFTY MOBILITY
-- NIFTY100 ENHANCED ESG
-- NIFTY CORE HOUSING
-- NIFTY HOUSING
-- NIFTY IPO
-- NIFTY MIDSMALL INDIA CONSUMPTION
-- NIFTY NON-CYCLICAL CONSUMER
-- NIFTY RURAL
-- NIFTY SHARIAH 25
-- NIFTY TRANSPORTATION & LOGISTICS
-- NIFTY50 SHARIAH
-- NIFTY500 SHARIAH
-- NIFTY DIVIDEND OPPORTUNITIES 50
-- NIFTY50 VALUE 20
-- NIFTY100 QUALITY 30
-- NIFTY50 EQUAL WEIGHT
-- NIFTY100 EQUAL WEIGHT
-- NIFTY100 LOW VOLATILITY 30
-- NIFTY ALPHA 50
-- NIFTY200 QUALITY 30
-- NIFTY ALPHA LOW-VOLATILITY 30
-- NIFTY200 MOMENTUM 30
-- NIFTY MIDCAP150 QUALITY 50
-- NIFTY200 ALPHA 30
-- NIFTY MIDCAP150 MOMENTUM 50
-- NIFTY500 MOMENTUM 50
-- NIFTY MIDSMALLCAP400 MOMENTUM QUALITY 100
-- NIFTY SMALLCAP250 MOMENTUM QUALITY 100
-- NIFTY TOP 10 EQUAL WEIGHT
-- NIFTY ALPHA QUALITY LOW-VOLATILITY 30
-- NIFTY ALPHA QUALITY VALUE LOW-VOLATILITY 30
-- NIFTY HIGH BETA 50
-- NIFTY LOW VOLATILITY 50
-- NIFTY QUALITY LOW-VOLATILITY 30
-- NIFTY SMALLCAP250 QUALITY 50
-- NIFTY TOP 15 EQUAL WEIGHT
-- NIFTY100 ALPHA 30
-- NIFTY200 VALUE 30
-- NIFTY500 EQUAL WEIGHT
-- NIFTY500 MULTICAP MOMENTUM QUALITY 50
-- NIFTY500 VALUE 50
-- NIFTY TOP 20 EQUAL WEIGHT
-- SECURITIES IN F&O
-- PERMITTED TO TRADE
+- nifty 50
+- nifty bank
+- nifty fin service
+- nifty mid select
+- nifty next 50
+- nifty 100
+- nifty 200
+- nifty 500
+- nifty fpi 150
+- nifty largemid250
+- nifty microcap250
+- nifty midcap 100
+- nifty midcap 150
+- nifty midcap 50
+- nifty midsmall 50 50
+- nifty midsml 400
+- nifty smallcap 500
+- nifty smlcap 100
+- nifty smlcap 250
+- nifty smlcap 50
+- nifty total mkt
+- nifty500 lms eql
+- nifty500 multicap
+- nifty auto
+- nifty cement
+- nifty chemicals
+- nifty consr durbl
+- nifty finserexbnk
+- nifty finsrv25 50
+- nifty fmcg
+- nifty healthcare
+- nifty it
+- nifty media
+- nifty metal
+- nifty midsml hlth
+- nifty ms fin serv
+- nifty ms it telcm
+- nifty oil and gas
+- nifty pharma
+- nifty psu bank
+- nifty pvt bank
+- nifty realty
+- nifty reits realty
+- nifty500 health
+- nifty capital mkt
+- nifty commodities
+- nifty consumption
+- nifty corehousing
+- nifty corp maatr
+- nifty cpse
+- nifty energy
+- nifty ev
+- nifty housing
+- nifty ind defence
+- nifty ind digital
+- nifty ind tourism
+- nifty india mfg
+- nifty infra
+- nifty infralog
+- nifty internet
+- nifty ipo
+- nifty mid liq 15
+- nifty mnc
+- nifty mobility
+- nifty ms ind cons
+- nifty multi infra
+- nifty multi mfg
+- nifty new consump
+- nifty noncyc cons
+- nifty pse
+- nifty railwayspsu
+- nifty rural
+- nifty serv sector
+- nifty shariah 25
+- nifty sme emerge
+- nifty tata 25 cap
+- nifty trans logis
+- nifty waves
+- nifty100 enh esg
+- nifty100 esg
+- nifty100 liq 15
+- nifty50 shariah
+- nifty500 shariah
+- niftyconglomerate
+- nifty alpha 50
+- nifty alphalowvol
+- nifty aql 30
+- nifty aqlv 30
+- nifty div opps 50
+- nifty growsect 15
+- nifty highbeta 50
+- nifty low vol 50
+- nifty m150 qlty50
+- nifty multi mq 50
+- nifty qlty lv 30
+- nifty sml250 q50
+- nifty tmmq 50
+- nifty top 10 ew
+- nifty top 15 ew
+- nifty top 20 ew
+- nifty100 alpha 30
+- nifty100 eql wgt
+- nifty100 lowvol30
+- nifty100 qualty30
+- nifty200 alpha 30
+- nifty200 qualty30
+- nifty200 value 30
+- nifty200momentm30
+- nifty50 eql wgt
+- nifty50 value 20
+- nifty500 ew
+- nifty500 flexicap
+- nifty500 lowvol50
+- nifty500 mqvlv50
+- nifty500 qlty50
+- nifty500 value 50
+- nifty500momentm50
+- niftym150momntm50
+- niftyms400 mq 100
+- niftysml250mq 100
+- permitted to trade
+- securities in f&o
