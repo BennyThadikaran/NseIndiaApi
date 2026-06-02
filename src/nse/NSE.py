@@ -904,9 +904,14 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all stocks represented by a dictionary with the symbol name and other metadata.
         """
-        url = f"{self.base_url}/equity-stock-indices"
+        endpoint = "equity-stock-indices"
 
-        return self._req(url, params=dict(index=index.upper())).json()
+        if index.upper() in ("PERMITTED TO TRADE", "SECURITIES IN F&O"):
+            endpoint = "equity-stockIndex"
+
+        return self._req(
+            f"{self.base_url}/{endpoint}", params=dict(index=index.upper())
+        ).json()
 
     def listIndices(self) -> dict:
         """List all indices
