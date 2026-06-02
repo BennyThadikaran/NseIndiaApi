@@ -31,6 +31,8 @@ Stocks Quotes and Market info
 
 .. automethod:: nse.NSE.getDetailedScripData
 
+.. automethod:: nse.NSE.liveVolumeGainers
+
 .. automethod:: nse.NSE.gainers
 
 .. automethod:: nse.NSE.losers

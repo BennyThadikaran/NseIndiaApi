@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "symbol": "NEWGEN",
+      "companyName": "Newgen Software Technologies Limited",
+      "volume": 35273385,
+      "week1AvgVolume": 643349,
+      "week1volChange": 54.82776067111319,
+      "week2AvgVolume": 619266,
+      "week2volChange": 56.959989729776865,
+      "ltp": 529.45,
+      "pChange": 19.92,
+      "turnover": 176264.63218
+    }
+  ],
+  "timestamp": "02-Jun-2026 16:00:00"
+}

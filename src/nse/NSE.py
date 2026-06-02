@@ -847,6 +847,17 @@ class NSE:
             volume=q["tradeInfo"]["totalTradedVolume"],
         )
 
+    def liveVolumeGainers(self) -> dict:
+        """
+        Get live volume gainers.
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/liveVolumeGainers.json>`__
+
+        :return: A dictionary. The ``data`` key contains a list of stocks with
+            volume surge metrics, price performance, and turnover data.
+        """
+        return self._req(f"{self.base_url}/live-analysis-volume-gainers").json()
+
     def gainers(self, data: Dict, count: Optional[int] = None) -> List[Dict]:
         """Top gainers by percent change above zero.
 
