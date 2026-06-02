@@ -59,6 +59,18 @@ class TestNseApiH2(unittest.TestCase):
         self.assertIsInstance(response, dict)
         self.assertTrue("priceInfo" in response)
 
+    def test_live_volume_gainers(self):
+        response = self.nse.liveVolumeGainers()
+
+        self.assertIsInstance(response, dict)
+        self.assertIsInstance(response["data"], list)
+
+        if response["data"]:
+            dct = response["data"][0]
+            self.assertIsInstance(dct, dict)
+            self.assertTrue("symbol" in dct)
+            self.assertTrue("volume" in dct)
+
     def test_gainers(self):
         test_data = dict(data=[dict(pChange=i) for i in range(10)])
         response = self.nse.gainers(test_data)
