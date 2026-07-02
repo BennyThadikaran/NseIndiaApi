@@ -10,6 +10,7 @@ HAS_HTTPX = HAS_REQUESTS = False
 
 try:
     from httpx import Client, Cookies, ReadTimeout
+    from httpx import ReadTimeout as HttpxReadTimeout
 
     HAS_HTTPX = True
 except ModuleNotFoundError:
@@ -17,7 +18,7 @@ except ModuleNotFoundError:
 
 try:
     from requests import Session
-    from requests.exceptions import ReadTimeout
+    from requests.exceptions import ReadTimeout as RequestsReadTimeout
     from requests.utils import cookiejar_from_dict, dict_from_cookiejar
 
     HAS_REQUESTS = True
@@ -102,7 +103,7 @@ class NSE:
 
             self.cookie_path = self.dir / "nse_cookies_httpx.json"
             self._session = Client(http2=True)
-            self.ReadTimeout = ReadTimeout
+            self.ReadTimeout = HttpxReadTimeout
             self.Cookies = Cookies
         else:
             if not HAS_REQUESTS:
@@ -112,7 +113,7 @@ class NSE:
 
             self.cookie_path = self.dir / "nse_cookies_requests.json"
             self._session = Session()
-            self.ReadTimeout = ReadTimeout
+            self.ReadTimeout = RequestsReadTimeout
 
         self._session.headers.update(headers)
         self._session.cookies.update(self._getCookies())
