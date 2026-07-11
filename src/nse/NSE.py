@@ -190,10 +190,7 @@ class NSE:
         elif file.suffix == ".gz":
             filepath = folder / file.stem
 
-            with (
-                gzip.open(file, "rb") as f_in,
-                open(filepath, "wb") as f_out,
-            ):
+            with gzip.open(file, "rb") as f_in, open(filepath, "wb") as f_out:
                 shutil.copyfileobj(f_in, f_out)
         else:
             raise ValueError("Unknown file format")
