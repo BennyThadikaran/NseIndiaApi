@@ -1,0 +1,18 @@
+[
+  {
+    "symbol": "RELIANCE",
+    "series": "EQ",
+    "isin": "INE002A01018",
+    "comp": "Reliance Industries Limited",
+    "period": "Quarterly",
+    "fromDate": "01-Oct-2024",
+    "toDate": "31-Dec-2024",
+    "relatingTo": "Third Quarter",
+    "financialYear": "01-Apr-2024 To 31-Mar-2025",
+    "consolidated": "Consolidated",
+    "audited": "Un-Audited",
+    "filingDate": "16-Jan-2025 15:30",
+    "broadCastDate": "16-Jan-2025 15:29:51",
+    "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/example.xml"
+  }
+]

@@ -746,6 +746,97 @@ class NSE:
             f"{self.base_url}/annual-reports", params=dict(index=segment, symbol=symbol)
         ).json()
 
+    def financial_results(
+        self,
+        index: Literal["equities", "sme", "debt", "mf"] = "equities",
+        period: Literal["Quarterly", "Annual", "Half-Yearly"] = "Quarterly",
+        symbol: Optional[str] = None,
+        from_date: Optional[datetime] = None,
+        to_date: Optional[datetime] = None,
+    ) -> List[Dict]:
+        """Get corporate financial-results filings (metadata) for a date range.
+
+        Returns one row per filing with broadcast/filing dates, the quarter
+        covered (``fromDate`` / ``toDate``), ``relatingTo`` (e.g. "Third Quarter"),
+        consolidated/audited flags, and an optional XBRL link. Revenue and EPS
+        figures are **not** included here — use :meth:`results_comparison` for
+        the numeric P&L summary per symbol.
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/financial_results.json>`__
+
+        Reference URL:
+            https://www.nseindia.com/companies-listing/corporate-filings-financial-results
+
+        :param index: One of ``equities``, ``sme``, ``debt`` or ``mf``. Default ``equities``
+        :type index: str
+        :param period: One of ``Quarterly``, ``Annual`` or ``Half-Yearly``. Default ``Quarterly``
+        :type period: str
+        :param symbol: Optional stock symbol to filter filings
+        :type symbol: str or None
+        :param from_date: Optional start of broadcast-date window (inclusive)
+        :type from_date: datetime.datetime
+        :param to_date: Optional end of broadcast-date window (inclusive)
+        :type to_date: datetime.datetime
+        :raise ValueError: if ``from_date`` is greater than ``to_date``
+        :return: A list of financial-results filing records
+        :rtype: list[dict]
+        """
+        fmt = "%d-%m-%Y"
+
+        params: Dict[str, Any] = {
+            "index": index,
+            "period": period,
+        }
+
+        if symbol:
+            params["symbol"] = symbol.upper()
+
+        if from_date and to_date:
+            if from_date > to_date:
+                raise ValueError("'from_date' cannot be greater than 'to_date'")
+
+            params.update(
+                {
+                    "from_date": from_date.strftime(fmt),
+                    "to_date": to_date.strftime(fmt),
+                }
+            )
+
+        url = f"{self.base_url}/corporates-financial-results"
+
+        return self._req(url, params=params).json()
+
+    def results_comparison(self, symbol: str) -> Dict:
+        """Get quarterly financial results comparison (P&L summary) for a symbol.
+
+        NSE's endpoint path is spelled ``results-comparision`` (official typo).
+
+        The response contains a ``resCmpData`` list — typically the last ~5
+        quarters — with revenue, net profit and EPS fields. Monetary amounts are
+        in **Rupees Lakhs** (divide by 100 for Crores).
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/results_comparison.json>`__
+
+        Reference URL:
+            https://www.nseindia.com/companies-listing/corporate-filings-financial-results
+
+        .. code-block:: python
+
+            with NSE("") as nse:
+                data = nse.results_comparison("RELIANCE")
+                for row in data["resCmpData"]:
+                    print(row["re_to_dt"], row.get("re_total_inc"), row.get("re_net_profit"))
+
+        :param symbol: Stock symbol (e.g. ``RELIANCE``, ``HDFCBANK``)
+        :type symbol: str
+        :return: Dictionary with ``resCmpData`` — list of quarter rows
+        :rtype: dict
+        """
+        return self._req(
+            f"{self.base_url}/results-comparision",
+            params={"symbol": symbol.upper()},
+        ).json()
+
     def shareholding(
         self, symbol: str, index: Literal["equities", "sme"] = "equities"
     ) -> List[dict]:

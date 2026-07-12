@@ -1,0 +1,25 @@
+{
+  "resCmpData": [
+    {
+      "re_from_dt": "01-Oct-2024",
+      "re_to_dt": "31-Dec-2024",
+      "re_create_dt": "16-JAN-2025",
+      "re_total_inc": "13147400",
+      "re_net_sale": "12826000",
+      "re_net_profit": "872100",
+      "re_con_pro_loss": "872100",
+      "re_basic_eps_for_cont_dic_opr": "6.44",
+      "re_dilut_eps_for_cont_dic_opr": "6.44",
+      "re_bank": "N"
+    },
+    {
+      "re_from_dt": "01-Jul-2024",
+      "re_to_dt": "30-Sep-2024",
+      "re_create_dt": "14-OCT-2024",
+      "re_total_inc": "13433100",
+      "re_net_profit": "771300",
+      "re_basic_eps_for_cont_dic_opr": "11.4",
+      "re_bank": "N"
+    }
+  ]
+}
