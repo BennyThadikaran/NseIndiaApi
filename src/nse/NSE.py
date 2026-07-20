@@ -748,7 +748,7 @@ class NSE:
 
     def financial_results(
         self,
-        index: Literal["equities", "sme", "debt", "mf"] = "equities",
+        segment: Literal["equities", "sme", "debt", "mf"] = "equities",
         period: Literal["Quarterly", "Annual", "Half-Yearly"] = "Quarterly",
         symbol: Optional[str] = None,
         from_date: Optional[datetime] = None,
@@ -767,8 +767,8 @@ class NSE:
         Reference URL:
             https://www.nseindia.com/companies-listing/corporate-filings-financial-results
 
-        :param index: One of ``equities``, ``sme``, ``debt`` or ``mf``. Default ``equities``
-        :type index: str
+        :param segment: One of ``equities``, ``sme``, ``debt`` or ``mf``. Default ``equities``
+        :type segment: str
         :param period: One of ``Quarterly``, ``Annual`` or ``Half-Yearly``. Default ``Quarterly``
         :type period: str
         :param symbol: Optional stock symbol to filter filings
@@ -784,7 +784,7 @@ class NSE:
         fmt = "%d-%m-%Y"
 
         params: Dict[str, Any] = {
-            "index": index,
+            "index": segment,
             "period": period,
         }
 
