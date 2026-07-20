@@ -749,7 +749,7 @@ class NSE:
     def financial_results(
         self,
         segment: Literal["equities", "sme", "debt", "mf"] = "equities",
-        period: Literal["Quarterly", "Annual", "Half-Yearly"] = "Quarterly",
+        period: Literal["quarterly", "annual", "half-yearly"] = "quarterly",
         symbol: Optional[str] = None,
         from_date: Optional[datetime] = None,
         to_date: Optional[datetime] = None,
@@ -769,7 +769,7 @@ class NSE:
 
         :param segment: One of ``equities``, ``sme``, ``debt`` or ``mf``. Default ``equities``
         :type segment: str
-        :param period: One of ``Quarterly``, ``Annual`` or ``Half-Yearly``. Default ``Quarterly``
+        :param period: One of ``quarterly``, ``annual`` or ``half-yearly``. Default ``quarterly``
         :type period: str
         :param symbol: Optional stock symbol to filter filings
         :type symbol: str or None
