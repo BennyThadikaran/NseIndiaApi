@@ -783,10 +783,10 @@ class NSE:
         """
         fmt = "%d-%m-%Y"
 
-        params: Dict[str, Any] = {
-            "index": segment,
-            "period": period,
-        }
+        params: Dict[str, Any] = dict(
+            index=segment,
+            period=period,
+        )
 
         if symbol:
             params["symbol"] = symbol.upper()
@@ -796,10 +796,10 @@ class NSE:
                 raise ValueError("'from_date' cannot be greater than 'to_date'")
 
             params.update(
-                {
-                    "from_date": from_date.strftime(fmt),
-                    "to_date": to_date.strftime(fmt),
-                }
+                dict(
+                    from_date=from_date.strftime(fmt),
+                    to_date=to_date.strftime(fmt),
+                )
             )
 
         url = f"{self.base_url}/corporates-financial-results"
@@ -834,7 +834,7 @@ class NSE:
         """
         return self._req(
             f"{self.base_url}/results-comparision",
-            params={"symbol": symbol.upper()},
+            params=dict(symbol=symbol.upper()),
         ).json()
 
     def shareholding(
