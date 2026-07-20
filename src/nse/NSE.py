@@ -762,6 +762,9 @@ class NSE:
         figures are **not** included here — use :meth:`results_comparison` for
         the numeric P&L summary per symbol.
 
+        If ``from_date`` and ``to_date`` are omitted, the API returns filings for the
+        current year to date.
+
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/financial_results.json>`__
 
         Reference URL:
