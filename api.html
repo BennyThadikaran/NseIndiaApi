@@ -1365,6 +1365,76 @@ If the downloaded file is a zip file, extracts its contents to the specified fol
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.financial_results">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">financial_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'equities'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'sme'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'debt'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'mf'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'equities'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'quarterly'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'annual'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'half-yearly'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'quarterly'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nse.NSE.financial_results" title="Link to this definition">¶</a></dt>
+<dd><p>Get corporate financial-results filings (metadata) for a date range.</p>
+<p>Returns one row per filing with broadcast/filing dates, the quarter
+covered (<code class="docutils literal notranslate"><span class="pre">fromDate</span></code> / <code class="docutils literal notranslate"><span class="pre">toDate</span></code>), <code class="docutils literal notranslate"><span class="pre">relatingTo</span></code> (e.g. “Third Quarter”),
+consolidated/audited flags, and an optional XBRL link. Revenue and EPS
+figures are <strong>not</strong> included here — use <a class="reference internal" href="#nse.NSE.results_comparison" title="nse.NSE.results_comparison"><code class="xref py py-meth docutils literal notranslate"><span class="pre">results_comparison()</span></code></a> for
+the numeric P&amp;L summary per symbol.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">from_date</span></code> and <code class="docutils literal notranslate"><span class="pre">to_date</span></code> are omitted, the API returns filings for the
+current year to date.</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/financial_results.json">Sample response</a></p>
+<dl class="simple">
+<dt>Reference URL:</dt><dd><p><a class="reference external" href="https://www.nseindia.com/companies-listing/corporate-filings-financial-results">https://www.nseindia.com/companies-listing/corporate-filings-financial-results</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – One of <code class="docutils literal notranslate"><span class="pre">equities</span></code>, <code class="docutils literal notranslate"><span class="pre">sme</span></code>, <code class="docutils literal notranslate"><span class="pre">debt</span></code> or <code class="docutils literal notranslate"><span class="pre">mf</span></code>. Default <code class="docutils literal notranslate"><span class="pre">equities</span></code></p></li>
+<li><p><strong>period</strong> (<em>str</em>) – One of <code class="docutils literal notranslate"><span class="pre">quarterly</span></code>, <code class="docutils literal notranslate"><span class="pre">annual</span></code> or <code class="docutils literal notranslate"><span class="pre">half-yearly</span></code>. Default <code class="docutils literal notranslate"><span class="pre">quarterly</span></code></p></li>
+<li><p><strong>symbol</strong> (<em>str</em><em> or </em><em>None</em>) – Optional stock symbol to filter filings</p></li>
+<li><p><strong>from_date</strong> (<em>datetime.datetime</em>) – Optional start of broadcast-date window (inclusive)</p></li>
+<li><p><strong>to_date</strong> (<em>datetime.datetime</em>) – Optional end of broadcast-date window (inclusive)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">from_date</span></code> is greater than <code class="docutils literal notranslate"><span class="pre">to_date</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of financial-results filing records</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nse.NSE.results_comparison">
+<span class="sig-prename descclassname"><span class="pre">NSE.</span></span><span class="sig-name descname"><span class="pre">results_comparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#nse.NSE.results_comparison" title="Link to this definition">¶</a></dt>
+<dd><p>Get quarterly financial results comparison (P&amp;L summary) for a symbol.</p>
+<p>NSE’s endpoint path is spelled <code class="docutils literal notranslate"><span class="pre">results-comparision</span></code> (official typo).</p>
+<p>The response contains a <code class="docutils literal notranslate"><span class="pre">resCmpData</span></code> list — typically the last ~5
+quarters — with revenue, net profit and EPS fields. Monetary amounts are
+in <strong>Rupees Lakhs</strong> (divide by 100 for Crores).</p>
+<p><a class="reference external" href="https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/results_comparison.json">Sample response</a></p>
+<dl class="simple">
+<dt>Reference URL:</dt><dd><p><a class="reference external" href="https://www.nseindia.com/companies-listing/corporate-filings-financial-results">https://www.nseindia.com/companies-listing/corporate-filings-financial-results</a></p>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">NSE</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">nse</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">nse</span><span class="o">.</span><span class="n">results_comparison</span><span class="p">(</span><span class="s2">&quot;RELIANCE&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;resCmpData&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;re_to_dt&quot;</span><span class="p">],</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;re_total_inc&quot;</span><span class="p">),</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;re_net_profit&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>symbol</strong> (<em>str</em>) – Stock symbol (e.g. <code class="docutils literal notranslate"><span class="pre">RELIANCE</span></code>, <code class="docutils literal notranslate"><span class="pre">HDFCBANK</span></code>)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with <code class="docutils literal notranslate"><span class="pre">resCmpData</span></code> — list of quarter rows</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="futures-and-options-fno">
 <h2>Futures and Options (FnO)<a class="headerlink" href="#futures-and-options-fno" title="Link to this heading">¶</a></h2>
@@ -1630,6 +1700,8 @@ The result in O(n) performance for maxpain calculation.</p>
 <li><a class="reference internal" href="#nse.NSE.announcements"><code class="docutils literal notranslate"><span class="pre">NSE.announcements()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.boardMeetings"><code class="docutils literal notranslate"><span class="pre">NSE.boardMeetings()</span></code></a></li>
 <li><a class="reference internal" href="#nse.NSE.annual_reports"><code class="docutils literal notranslate"><span class="pre">NSE.annual_reports()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.financial_results"><code class="docutils literal notranslate"><span class="pre">NSE.financial_results()</span></code></a></li>
+<li><a class="reference internal" href="#nse.NSE.results_comparison"><code class="docutils literal notranslate"><span class="pre">NSE.results_comparison()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#futures-and-options-fno">Futures and Options (FnO)</a><ul>
