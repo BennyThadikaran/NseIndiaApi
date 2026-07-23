@@ -880,7 +880,10 @@ class NSE:
 
         Provides useful info like stock name, code, industry, ISIN code, current status like suspended, delisted etc.
 
-        Also has info if stock is an FnO, ETF or Debt security
+        Returns a dictionary containing the symbol, company name, ISIN, market type,
+        available and suspended trading series, and flags indicating whether the
+        security is listed, suspended, delisted, or belongs to categories such as
+        FnO, ETF, SLB, debt, municipal bond, or hybrid symbol.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/equityMetaInfo.json>`__
 
