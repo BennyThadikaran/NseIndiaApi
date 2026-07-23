@@ -35,7 +35,7 @@ class TestNseFinancialResults(unittest.TestCase):
         to_dt = datetime(2025, 3, 31)
 
         result = self.nse.financial_results(
-            index="equities",
+            segment="equities",
             period="Quarterly",
             symbol="reliance",
             from_date=from_dt,
