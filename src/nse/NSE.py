@@ -903,13 +903,26 @@ class NSE:
         series: str = "EQ",
         market_type: str = "N",
     ) -> Dict:
-        """Price quotes and other data for equity symbols
+        """Price quotes and other data for equity symbols.
+
+        Returns a dictionary containing the current quote, market depth (order book),
+        OHLC and price statistics, trading metrics, security information, and the
+        last update timestamp.
+
+        The `series` and `market_type` values can be obtained from
+        :meth:`NSE.equityMetaInfo`.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/quote.json>`__
 
         :param symbol: Equity symbol code
         :type symbol: str
-        :return: Price quote and other stock meta info
+        :param series: Default `EQ`. Any of the NSE equity series, e.g. `EQ`, `BE`,
+        `BZ`, `SM`, `ST`. Can be obtained from :meth:`NSE.equityMetaInfo`.
+        :type series: str
+        :param market_type: Default `N`. Internal NSE market classification. Can be
+        obtained from :meth:`NSE.equityMetaInfo`.
+        :type market_type: str
+        :return: Price quote and other stock information.
         :rtype: dict
         """
         params = {
