@@ -901,6 +901,7 @@ class NSE:
         self,
         symbol: str,
         series: str = "EQ",
+        market_type: str = "N",
     ) -> Dict:
         """Price quotes and other data for equity symbols
 
@@ -913,8 +914,8 @@ class NSE:
         """
         params = {
             "functionName": "getSymbolData",
-            "marketType": "N",
-            "series": series,
+            "marketType": market_type.upper(),
+            "series": series.upper(),
             "symbol": symbol.upper(),
         }
 
