@@ -878,8 +878,6 @@ class NSE:
     def equityMetaInfo(self, symbol) -> Dict:
         """Meta info for equity symbols.
 
-        Provides useful info like stock name, code, industry, ISIN code, current status like suspended, delisted etc.
-
         Returns a dictionary containing the symbol, company name, ISIN, market type,
         available and suspended trading series, and flags indicating whether the
         security is listed, suspended, delisted, or belongs to categories such as
@@ -917,10 +915,10 @@ class NSE:
         :param symbol: Equity symbol code
         :type symbol: str
         :param series: Default `EQ`. Any of the NSE equity series, e.g. `EQ`, `BE`,
-        `BZ`, `SM`, `ST`. Can be obtained from :meth:`NSE.equityMetaInfo`.
+            `BZ`, `SM`, `ST`. Can be obtained from :meth:`NSE.equityMetaInfo`.
         :type series: str
         :param market_type: Default `N`. Internal NSE market classification. Can be
-        obtained from :meth:`NSE.equityMetaInfo`.
+            obtained from :meth:`NSE.equityMetaInfo`.
         :type market_type: str
         :return: Price quote and other stock information.
         :rtype: dict
