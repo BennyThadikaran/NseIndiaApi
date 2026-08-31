@@ -25,7 +25,7 @@ class TestNSEOptionChain(unittest.TestCase):
         mock.side_effect = [
             MagicMock(json=MagicMock(return_value=resp)) for resp in responses
         ]
-        self.nse._req = mock
+        self.nse._transport.request = mock
         return mock
 
     def test_uses_cached_expiry_when_valid(self):

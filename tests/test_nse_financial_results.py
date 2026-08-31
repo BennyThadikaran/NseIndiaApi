@@ -24,7 +24,7 @@ class TestNseFinancialResults(unittest.TestCase):
     def _mock_req_json(self, payload):
         mock = MagicMock()
         mock.return_value.json.return_value = payload
-        self.nse._req = mock
+        self.nse._transport.request = mock
         return mock
 
     def test_financial_results_params(self):
