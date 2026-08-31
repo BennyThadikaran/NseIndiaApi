@@ -1,19 +1,42 @@
 name: "Sphinx: Render docs"
 
-on: push
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
 
 jobs:
-  pages:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+
     steps:
-      - id: deployment
+      - uses: actions/checkout@v4
+
+      - id: sphinx
         uses: sphinx-notes/pages@v3
         with:
           publish: false
           documentation_path: ./docs/source
-      - uses: peaceiris/actions-gh-pages@v4
+
+      - uses: actions/upload-pages-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ steps.deployment.outputs.artifact }}
+          path: ${{ steps.sphinx.outputs.artifact }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
