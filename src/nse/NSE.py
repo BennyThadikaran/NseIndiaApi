@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 from zipfile import ZipFile
 
-from .request_transport import RequestTransport
 from .transport import Transport
 
 
@@ -70,6 +69,8 @@ class NSE:
         self.dir = NSE._getPath(download_folder, isFolder=True)
 
         if use_requests_library:
+            from .request_transport import RequestTransport
+
             self._transport = RequestTransport(
                 folder=self.dir, headers=headers, timeout=timeout
             )
