@@ -71,6 +71,11 @@ class Transport:
             r = self._session.get(url, params=params, timeout=self.timeout)
         except httpx.ReadTimeout as e:
             raise TimeoutError("The request timed out.") from e
+        except httpx.RemoteProtocolError as e:
+            self.exit()
+            raise ConnectionError(
+                "The connection to the remote server was unexpectedly closed."
+            ) from e
 
         if not 200 <= r.status_code < 300:
             raise ConnectionError(f"{url} {r.status_code}: {r.reason_phrase}")
