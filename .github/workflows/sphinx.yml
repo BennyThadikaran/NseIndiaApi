@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - id: sphinx
         uses: sphinx-notes/pages@v3
@@ -21,7 +21,7 @@ jobs:
           publish: false
           documentation_path: ./docs/source
 
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: ${{ steps.sphinx.outputs.artifact }}
 
@@ -39,4 +39,4 @@ jobs:
 
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
