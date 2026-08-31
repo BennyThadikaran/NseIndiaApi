@@ -27,10 +27,9 @@ class NSE:
     :param use_requests_library: Default False. Use ``requests`` library instead of ``httpx``
     :type use_requests_library: bool
     :raise ValueError: if ``download_folder`` is not a folder/dir
-    :raises ImportError: If ``server`` set to True and ``httpx[http2] is not installed or ``server`` set to False and ``requests`` is not installed.
     """
 
-    __version__ = "3.2.1"
+    __version__ = "4.0.0"
     SEGMENT_EQUITY = "equities"
     SEGMENT_SME = "sme"
     SEGMENT_MF = "mf"
