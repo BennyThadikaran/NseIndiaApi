@@ -36,7 +36,7 @@ class TestNseFinancialResults(unittest.TestCase):
 
         result = self.nse.financial_results(
             segment="equities",
-            period="Quarterly",
+            period="quarterly",
             symbol="reliance",
             from_date=from_dt,
             to_date=to_dt,
@@ -49,7 +49,7 @@ class TestNseFinancialResults(unittest.TestCase):
             kwargs["params"],
             {
                 "index": "equities",
-                "period": "Quarterly",
+                "period": "quarterly",
                 "symbol": "RELIANCE",
                 "from_date": "01-01-2025",
                 "to_date": "31-03-2025",
