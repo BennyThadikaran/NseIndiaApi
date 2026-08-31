@@ -6,34 +6,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 from zipfile import ZipFile
 
-HAS_HTTPX = HAS_REQUESTS = False
-
-try:
-    from httpx import Client, Cookies, ReadTimeout
-    from httpx import ReadTimeout as HttpxReadTimeout
-
-    HAS_HTTPX = True
-except ModuleNotFoundError:
-    pass
-
-try:
-    from requests import Session
-    from requests.exceptions import ReadTimeout as RequestsReadTimeout
-    from requests.utils import cookiejar_from_dict, dict_from_cookiejar
-
-    HAS_REQUESTS = True
-except ModuleNotFoundError:
-    pass
-
-from mthrottle import Throttle
-
-throttleConfig = {
-    "default": {
-        "rps": 3,
-    },
-}
-
-th = Throttle(throttleConfig, 10)
+from .request_transport import RequestTransport
+from .transport import Transport
 
 
 class NSE:
@@ -50,6 +24,8 @@ class NSE:
     :type server: bool
     :param timeout: Default 15. Network timeout in seconds
     :type timeout: int
+    :param use_requests_library: Default False. Use ``requests`` library instead of ``httpx``
+    :type use_requests_library: bool
     :raise ValueError: if ``download_folder`` is not a folder/dir
     :raises ImportError: If ``server`` set to True and ``httpx[http2] is not installed or ``server`` set to False and ``requests`` is not installed.
     """
@@ -79,6 +55,7 @@ class NSE:
         download_folder: Union[str, Path],
         server: bool = False,
         timeout: int = 15,
+        use_requests_library=False,
     ):
         """Initialise NSE"""
         uAgent = "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/118.0"
@@ -92,72 +69,21 @@ class NSE:
         }
 
         self.dir = NSE._getPath(download_folder, isFolder=True)
-        self.server = server
-        self.timeout = timeout
 
-        if server:
-            if not HAS_HTTPX:
-                raise ImportError(
-                    "The httpx module with HTTP/2 support is required to run NSE on server. Run `pip install httpx[http2]"
-                )
-
-            self.cookie_path = self.dir / "nse_cookies_httpx.json"
-            self._session = Client(http2=True)
-            self.ReadTimeout = HttpxReadTimeout
-            self.Cookies = Cookies
+        if use_requests_library:
+            self._transport = RequestTransport(
+                folder=self.dir, headers=headers, timeout=timeout
+            )
         else:
-            if not HAS_REQUESTS:
-                raise ImportError(
-                    "Missing requests module. Run `pip install requests`. If running NSE on server, set `server=True`"
-                )
-
-            self.cookie_path = self.dir / "nse_cookies_requests.json"
-            self._session = Session()
-            self.ReadTimeout = RequestsReadTimeout
-
-        self._session.headers.update(headers)
-        self._session.cookies.update(self._getCookies())
-
-    def _setCookies(self):
-        r = self._req("https://www.nseindia.com/option-chain")
-
-        cookies = r.cookies
-
-        if self.server:
-            self.cookie_path.write_text(json.dumps(dict(cookies)))
-        else:
-            self.cookie_path.write_text(json.dumps(dict_from_cookiejar(cookies)))
-
-        return cookies
-
-    def _getCookies(self):
-        if self.cookie_path.exists():
-            if self.server:
-                # Expose the cookie jar object using .jar method.
-                cookies = self.Cookies(json.loads(self.cookie_path.read_bytes())).jar
-            else:
-                cookies = cookiejar_from_dict(json.loads(self.cookie_path.read_bytes()))
-
-            if NSE._hasCookiesExpired(cookies):
-                cookies = self._setCookies()
-
-            return cookies
-
-        return self._setCookies()
-
-    @staticmethod
-    def _hasCookiesExpired(cookies) -> bool:
-        for cookie in cookies:
-            if cookie.is_expired():
-                return True
-        return False
+            self._transport = Transport(
+                folder=self.dir, headers=headers, server=server, timeout=timeout
+            )
 
     def __enter__(self):
         return self
 
     def __exit__(self, *_):
-        self._session.close()
-        self.cookie_path.unlink(missing_ok=True)
+        self._transport.exit()
 
         return False
 
@@ -197,53 +123,6 @@ class NSE:
 
         file.unlink()
         return Path(filepath)
-
-    def _download(self, url: str, folder: Path):
-        """Download a large file in chunks from the given url.
-        Returns pathlib.Path object of the downloaded file
-        """
-        fname = folder / url.split("/")[-1]
-
-        th.check()
-
-        if self.server:
-            with self._session.stream("GET", url=url, timeout=self.timeout) as r:
-                contentType = r.headers.get("content-type")
-
-                if contentType and "text/html" in contentType:
-                    raise RuntimeError("NSE file is unavailable or not yet updated.")
-
-                with fname.open(mode="wb") as f:
-                    for chunk in r.iter_bytes(chunk_size=1000000):
-                        f.write(chunk)
-        else:
-            with self._session.get(url, stream=True, timeout=self.timeout) as r:
-                contentType = r.headers.get("content-type")
-
-                if contentType and "text/html" in contentType:
-                    raise RuntimeError("NSE file is unavailable or not yet updated.")
-
-                with fname.open(mode="wb") as f:
-                    for chunk in r.iter_content(chunk_size=1000000):
-                        f.write(chunk)
-
-        return fname
-
-    def _req(self, url, params=None):
-        """Make a http request"""
-        th.check()
-
-        try:
-            r = self._session.get(url, params=params, timeout=self.timeout)
-        except self.ReadTimeout as e:
-            raise TimeoutError(repr(e))
-
-        if not 200 <= r.status_code < 300:
-            reason = r.reason if hasattr(r, "reason") else r.reason_phrase
-
-            raise ConnectionError(f"{url} {r.status_code}: {reason}")
-
-        return r
 
     @staticmethod
     def _split_date_range(
@@ -288,8 +167,7 @@ class NSE:
 
         *Not required when using the ``with`` statement.*
         """
-        self._session.close()
-        self.cookie_path.unlink(missing_ok=True)
+        self._transport.exit()
 
     def status(self) -> List[Dict]:
         """Returns market status
@@ -299,7 +177,9 @@ class NSE:
         :return: Market status of all NSE market segments
         :rtype: list[dict]
         """
-        return self._req(f"{self.base_url}/marketStatus").json()["marketState"]
+        return self._transport.request(f"{self.base_url}/marketStatus").json()[
+            "marketState"
+        ]
 
     def lookup(self, query: str) -> dict:
         """
@@ -325,7 +205,7 @@ class NSE:
         :return: A dictionary of results from the query search.
         :rtype: dict
         """
-        return self._req(
+        return self._transport.request(
             f"{self.base_url}/search/autocomplete",
             params=dict(q=query),
         ).json()
@@ -364,7 +244,7 @@ class NSE:
                 date.strftime("%Y%m%d"),
             )
 
-        file = self._download(url, folder)
+        file = self._transport.download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -393,7 +273,7 @@ class NSE:
             self.archive_url, date.strftime("%d%m%Y")
         )
 
-        file = self._download(url, folder)
+        file = self._transport.download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -421,7 +301,7 @@ class NSE:
 
         url = f"{self.archive_url}/content/indices/ind_close_all_{date:%d%m%Y}.csv"
 
-        file = self._download(url, folder)
+        file = self._transport.download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -451,7 +331,7 @@ class NSE:
 
         url = f"{self.archive_url}/content/fo/BhavCopy_NSE_FO_0_0_0_{dt_str}_F_0000.csv.zip"
 
-        file = self._download(url, folder)
+        file = self._transport.download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -481,7 +361,7 @@ class NSE:
 
         url = f"{self.archive_url}/content/equities/sec_list_{dt_str}.csv"
 
-        file = self._download(url, folder)
+        file = self._transport.download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -515,7 +395,7 @@ class NSE:
 
         url = f"{self.archive_url}/archives/equities/bhavcopy/pr/PR{dt_str}.zip"
 
-        file = self._download(url, folder)
+        file = self._transport.download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -547,7 +427,7 @@ class NSE:
 
         url = f"{self.archive_url}/content/cm/NSE_CM_security_{dt_str}.csv.gz"
 
-        file = self._download(url, folder)
+        file = self._transport.download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -604,7 +484,7 @@ class NSE:
 
         url = f"{self.base_url}/corporates-corporateActions"
 
-        return self._req(url, params=params).json()
+        return self._transport.request(url, params=params).json()
 
     def announcements(
         self,
@@ -659,7 +539,7 @@ class NSE:
 
         url = f"{self.base_url}/corporate-announcements"
 
-        return self._req(url, params=params).json()
+        return self._transport.request(url, params=params).json()
 
     def boardMeetings(
         self,
@@ -714,7 +594,7 @@ class NSE:
 
         url = f"{self.base_url}/corporate-board-meetings"
 
-        return self._req(url, params=params).json()
+        return self._transport.request(url, params=params).json()
 
     def annual_reports(
         self, symbol: str, segment: Literal["equities", "sme"] = "equities"
@@ -742,7 +622,7 @@ class NSE:
         :return: A dictionary where keys are years and values are lists of dictionaries with PDF links to annual reports.
         :rtype: dict[str, list[dict[str, str]]]
         """
-        return self._req(
+        return self._transport.request(
             f"{self.base_url}/annual-reports", params=dict(index=segment, symbol=symbol)
         ).json()
 
@@ -807,7 +687,7 @@ class NSE:
 
         url = f"{self.base_url}/corporates-financial-results"
 
-        return self._req(url, params=params).json()
+        return self._transport.request(url, params=params).json()
 
     def results_comparison(self, symbol: str) -> Dict:
         """Get quarterly financial results comparison (P&L summary) for a symbol.
@@ -835,7 +715,7 @@ class NSE:
         :return: Dictionary with ``resCmpData`` — list of quarter rows
         :rtype: dict
         """
-        return self._req(
+        return self._transport.request(
             f"{self.base_url}/results-comparision",
             params=dict(symbol=symbol.upper()),
         ).json()
@@ -870,7 +750,7 @@ class NSE:
                  The first item in the list corresponds to the most recent quarter.
         :rtype: list[dict[str, Any]]
         """
-        return self._req(
+        return self._transport.request(
             f"{self.base_url}/corporate-share-holdings-master",
             params=dict(index=index, symbol=symbol.upper()),
         ).json()
@@ -890,7 +770,7 @@ class NSE:
         :return: Stock meta info
         :rtype: dict
         """
-        return self._req(
+        return self._transport.request(
             self.next_api_url,
             params=dict(functionName="getMetaData", symbol=symbol.upper()),
         ).json()
@@ -930,7 +810,7 @@ class NSE:
             "symbol": symbol.upper(),
         }
 
-        result = self._req(self.next_api_url, params=params).json()
+        result = self._transport.request(self.next_api_url, params=params).json()
         return result["equityResponse"][0]
 
     def equityQuote(self, symbol) -> Dict[str, Union[str, float]]:
@@ -963,7 +843,9 @@ class NSE:
         :return: A dictionary. The ``data`` key contains a list of stocks with
             volume surge metrics, price performance, and turnover data.
         """
-        return self._req(f"{self.base_url}/live-analysis-volume-gainers").json()
+        return self._transport.request(
+            f"{self.base_url}/live-analysis-volume-gainers"
+        ).json()
 
     def gainers(self, data: Dict, count: Optional[int] = None) -> List[Dict]:
         """Top gainers by percent change above zero.
@@ -1027,7 +909,7 @@ class NSE:
         if index.upper() in ("PERMITTED TO TRADE", "SECURITIES IN F&O"):
             endpoint = "equity-stockIndex"
 
-        return self._req(
+        return self._transport.request(
             f"{self.base_url}/{endpoint}", params=dict(index=index.upper())
         ).json()
 
@@ -1040,7 +922,7 @@ class NSE:
         """
         url = f"{self.base_url}/allIndices"
 
-        return self._req(url).json()
+        return self._transport.request(url).json()
 
     def listIndexStocks(self, index):
         """
@@ -1058,7 +940,7 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all ETF's represented by a dictionary with the symbol code and other metadata.
         """
-        return self._req(f"{self.base_url}/etf").json()
+        return self._transport.request(f"{self.base_url}/etf").json()
 
     def listSme(self) -> dict:
         """List all sme stocks
@@ -1067,7 +949,7 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all SME's represented by a dictionary with the symbol code and other metadata.
         """
-        return self._req(f"{self.base_url}/live-analysis-emerge").json()
+        return self._transport.request(f"{self.base_url}/live-analysis-emerge").json()
 
     def listSgb(self) -> dict:
         """List all sovereign gold bonds
@@ -1076,7 +958,7 @@ class NSE:
 
         :return: A dictionary. The ``data`` key is a list of all SGB's represented by a dictionary with the symbol code and other metadata.
         """
-        return self._req(f"{self.base_url}/sovereign-gold-bonds").json()
+        return self._transport.request(f"{self.base_url}/sovereign-gold-bonds").json()
 
     def listCurrentIPO(self) -> List[Dict]:
         """List current IPOs
@@ -1086,7 +968,7 @@ class NSE:
         :return: List of Dict containing current IPOs
         :rtype: List[Dict]
         """
-        return self._req(f"{self.base_url}/ipo-current-issue").json()
+        return self._transport.request(f"{self.base_url}/ipo-current-issue").json()
 
     def listUpcomingIPO(self) -> List[Dict]:
         """List upcoming IPOs
@@ -1096,7 +978,9 @@ class NSE:
         :return: List of Dict containing upcoming IPOs
         :rtype: List[Dict]
         """
-        return self._req(f"{self.base_url}/all-upcoming-issues?category=ipo").json()
+        return self._transport.request(
+            f"{self.base_url}/all-upcoming-issues?category=ipo"
+        ).json()
 
     def listPastIPO(
         self,
@@ -1129,7 +1013,7 @@ class NSE:
             to_date=to_date.strftime("%d-%m-%Y"),
         )
 
-        return self._req(
+        return self._transport.request(
             f"{self.base_url}/public-past-issues",
             params=params,
         ).json()
@@ -1206,7 +1090,9 @@ class NSE:
         if dept_code:
             params["dept"] = dept_code.upper()
 
-        return self._req(f"{self.base_url}/circulars", params=params).json()
+        return self._transport.request(
+            f"{self.base_url}/circulars", params=params
+        ).json()
 
     def blockDeals(self) -> Dict:
         """Block deals
@@ -1216,7 +1102,7 @@ class NSE:
         :return: Block deals. ``data`` key is a list of all block deal (Empty list if no block deals).
         :rtype: dict
         """
-        return self._req(f"{self.base_url}/block-deal").json()
+        return self._transport.request(f"{self.base_url}/block-deal").json()
 
     def fnoLots(self) -> Dict[str, int]:
         """Get the lot size of FnO stocks.
@@ -1228,7 +1114,7 @@ class NSE:
         """
         url = "https://nsearchives.nseindia.com/content/fo/fo_mktlots.csv"
 
-        res = self._req(url).content
+        res = self._transport.request(url).content
 
         dct = {}
 
@@ -1306,7 +1192,7 @@ class NSE:
                     expiry_date = None
 
             if not expiry_date:
-                opt_info = self._req(
+                opt_info = self._transport.request(
                     f"{self.base_url}/option-chain-contract-info", params=params
                 ).json()
 
@@ -1331,7 +1217,7 @@ class NSE:
         if expiry_date:
             params["expiry"] = expiry_date.strftime("%d-%b-%Y")
 
-        data = self._req(url, params=params).json()
+        data = self._transport.request(url, params=params).json()
 
         return data
 
@@ -1432,7 +1318,7 @@ class NSE:
         else:
             idx = "nse50_fut"
 
-        res: Dict = self._req(
+        res: Dict = self._transport.request(
             f"{self.base_url}/liveEquity-derivatives",
             params={"index": idx},
         ).json()
@@ -1572,7 +1458,7 @@ class NSE:
         """
         url = f"{self.base_url}/equity-stockIndices-adu"
 
-        return self._req(url, params=dict(index=index.upper())).json()
+        return self._transport.request(url, params=dict(index=index.upper())).json()
 
     def holidays(
         self, type: Literal["trading", "clearing"] = "trading"
@@ -1590,7 +1476,7 @@ class NSE:
         """
         url = f"{self.base_url}/holiday-master"
 
-        data = self._req(url, params={"type": type}).json()
+        data = self._transport.request(url, params={"type": type}).json()
 
         return data
 
@@ -1647,7 +1533,7 @@ class NSE:
 
         url = f"{self.base_url}/historicalOR/bulk-block-short-deals"
 
-        data = self._req(url, params=params).json()
+        data = self._transport.request(url, params=params).json()
 
         if "data" not in data or len(data["data"]) < 1:
             raise RuntimeError(
@@ -1681,7 +1567,7 @@ class NSE:
         :rtype: pathlib.Path
         """
         folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
-        file = self._download(url, folder)
+        file = self._transport.download(url, folder)
 
         if not file.is_file():
             file.unlink()
@@ -1776,7 +1662,7 @@ class NSE:
 
         for chunk in date_chunks:
             data += reversed(
-                self._req(
+                self._transport.request(
                     url=self.next_api_url,
                     params=dict(
                         functionName="getHistoricalTradeData",
@@ -1839,7 +1725,7 @@ class NSE:
         data = []
 
         for chunk in date_chunks:
-            data += self._req(
+            data += self._transport.request(
                 url=f"{self.base_url}/historicalOR/vixhistory",
                 params={
                     "from": chunk[0].strftime("%d-%m-%Y"),
@@ -1939,7 +1825,7 @@ class NSE:
             params["from"] = chunk[0].strftime("%d-%m-%Y")
             params["to"] = chunk[1].strftime("%d-%m-%Y")
 
-            data += self._req(
+            data += self._transport.request(
                 url=f"{self.base_url}/historicalOR/foCPV",
                 params=params,
             ).json()["data"]
@@ -2015,7 +1901,7 @@ class NSE:
         data = []
 
         for chunk in date_chunks:
-            dct = self._req(
+            dct = self._transport.request(
                 url=f"{self.base_url}/historicalOR/indicesHistory",
                 params={
                     "indexType": index.upper(),
@@ -2039,7 +1925,7 @@ class NSE:
         :rtype: Dict[str, List[Dict[str, str]]]
         """
         url = f"{self.base_url}/underlying-information"
-        data = self._req(url).json()["data"]
+        data = self._transport.request(url).json()["data"]
         return data
 
     def fetch_index_names(self) -> Dict[str, List[Tuple[str, str]]]:
@@ -2048,7 +1934,7 @@ class NSE:
 
         The full name can be passed as `index` parameter to :meth:`.fetch_historical_index_data`
         """
-        return self._req(f"{self.base_url}/index-names").json()
+        return self._transport.request(f"{self.base_url}/index-names").json()
 
     def fetch_daily_reports_file_metadata(
         self,
@@ -2080,7 +1966,7 @@ class NSE:
         :return: A dictionary containing metadata about the daily report files for the specified segment.
         :rtype: Dict
         """
-        return self._req(
+        return self._transport.request(
             f"{self.base_url}/daily-reports", params=dict(key=segment)
         ).json()
 
@@ -2127,4 +2013,4 @@ class NSE:
             "symbol": symbol.upper(),
         }
 
-        return self._req(self.next_api_url, params=params).json()
+        return self._transport.request(self.next_api_url, params=params).json()
