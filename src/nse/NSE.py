@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 from zipfile import ZipFile
 
+from .cookie_store import CookieStore
 from .transport import Transport
 
 
@@ -52,8 +53,10 @@ class NSE:
         self,
         download_folder: Union[str, Path],
         server: bool = False,
+        cookie_store: Optional[CookieStore] = None,
         timeout: int = 15,
         use_requests_library=False,
+        cookie_filename: str = "cookies_httpx.txt",
     ):
         """Initialise NSE"""
         uAgent = "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/118.0"
@@ -76,7 +79,12 @@ class NSE:
             )
         else:
             self._transport = Transport(
-                folder=self.dir, headers=headers, server=server, timeout=timeout
+                folder=self.dir,
+                headers=headers,
+                server=server,
+                cookie_store=cookie_store,
+                timeout=timeout,
+                cookie_filename=cookie_filename,
             )
 
     def __enter__(self):

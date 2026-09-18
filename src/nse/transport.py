@@ -1,9 +1,10 @@
-import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import httpx
 from mthrottle import Throttle
+
+from .cookie_store import CookieStore, FileCookieStore
 
 throttleConfig = {
     "default": {
@@ -19,49 +20,32 @@ class Transport:
         self,
         folder: Path,
         headers: Dict[str, Any],
+        cookie_store: Optional[CookieStore] = None,
         server: bool = False,
         timeout: int = 15,
+        cookie_filename: str = "cookies_httpx.txt",
     ) -> None:
 
         self.timeout = timeout
 
-        self._session = httpx.Client(http2=server)
-
         self.cookie_path = folder / "nse_cookies_httpx.json"
 
+        self.cookie_store = cookie_store or FileCookieStore(
+            path=folder / cookie_filename,
+            fetcher=self._fetch_cookies,
+        )
+
+        self._session = httpx.Client(http2=server)
         self._session.headers.update(headers)
-        self._session.cookies.update(self._getCookies())
-
-    def _setCookies(self):
-        r = self.request("https://www.nseindia.com/option-chain")
-
-        cookies = r.cookies
-
-        self.cookie_path.write_text(json.dumps(dict(cookies)))
-
-        return cookies
-
-    def _getCookies(self):
-        if self.cookie_path.exists():
-            cookies = httpx.Cookies(json.loads(self.cookie_path.read_bytes())).jar
-
-            if self._hasCookiesExpired(cookies):
-                cookies = self._setCookies()
-
-            return cookies
-
-        return self._setCookies()
+        self._session.cookies.update(self.cookie_store.load())
 
     def exit(self):
+        self.cookie_store.save(self._session.cookies)
         self._session.close()
-        self.cookie_path.unlink(missing_ok=True)
 
-    @staticmethod
-    def _hasCookiesExpired(cookies) -> bool:
-        for cookie in cookies:
-            if cookie.is_expired():
-                return True
-        return False
+    def _fetch_cookies(self) -> httpx.Cookies:
+        r = self.request("https://www.nseindia.com/option-chain")
+        return r.cookies
 
     def request(self, url, params=None):
         """Make a http request"""
