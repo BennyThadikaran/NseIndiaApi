@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 from zipfile import ZipFile
 
+from pyrate_limiter import Limiter
+
 from .cookie_store import CookieStore
 from .transport import Transport
 
@@ -54,6 +56,7 @@ class NSE:
         download_folder: Union[str, Path],
         server: bool = False,
         cookie_store: Optional[CookieStore] = None,
+        throttle: Optional[Limiter] = None,
         timeout: int = 15,
         use_requests_library=False,
         cookie_filename: str = "cookies_httpx.txt",
@@ -83,6 +86,7 @@ class NSE:
                 headers=headers,
                 server=server,
                 cookie_store=cookie_store,
+                throttle=throttle,
                 timeout=timeout,
                 cookie_filename=cookie_filename,
             )

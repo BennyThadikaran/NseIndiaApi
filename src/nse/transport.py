@@ -2,17 +2,9 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import httpx
-from mthrottle import Throttle
+from pyrate_limiter import Duration, Limiter, Rate
 
 from .cookie_store import CookieStore, FileCookieStore
-
-throttleConfig = {
-    "default": {
-        "rps": 3,
-    },
-}
-
-th = Throttle(throttleConfig, 10)
 
 
 class Transport:
@@ -21,6 +13,7 @@ class Transport:
         folder: Path,
         headers: Dict[str, Any],
         cookie_store: Optional[CookieStore] = None,
+        throttle: Optional[Limiter] = None,
         server: bool = False,
         timeout: int = 15,
         cookie_filename: str = "cookies_httpx.txt",
@@ -34,6 +27,8 @@ class Transport:
             path=folder / cookie_filename,
             fetcher=self._fetch_cookies,
         )
+
+        self.throttle = throttle or Limiter(Rate(3, Duration.SECOND))
 
         self._session = httpx.Client(http2=server)
         self._session.headers.update(headers)
@@ -49,7 +44,7 @@ class Transport:
 
     def request(self, url, params=None):
         """Make a http request"""
-        th.check()
+        self.throttle.try_acquire("api")
 
         try:
             r = self._session.get(url, params=params, timeout=self.timeout)
@@ -72,7 +67,7 @@ class Transport:
         """
         fname = folder / url.split("/")[-1]
 
-        th.check()
+        self.throttle.try_acquire("file")
 
         with self._session.stream("GET", url=url, timeout=self.timeout) as r:
             contentType = r.headers.get("content-type")
