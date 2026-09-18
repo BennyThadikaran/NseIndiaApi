@@ -21,8 +21,6 @@ class Transport:
 
         self.timeout = timeout
 
-        self.cookie_path = folder / "nse_cookies_httpx.json"
-
         self.cookie_store = cookie_store or FileCookieStore(
             path=folder / cookie_filename,
             fetcher=self._fetch_cookies,
@@ -30,9 +28,22 @@ class Transport:
 
         self.throttle = throttle or Limiter(Rate(3, Duration.SECOND))
 
-        self._session = httpx.Client(http2=use_http2)
-        self._session.headers.update(headers)
+        self.use_http2 = use_http2
+        self.headers = headers
+
+        self._start_session()
+
+    def _start_session(self) -> None:
+        self._session = httpx.Client(
+            headers=self.headers,
+            http2=self.use_http2,
+            timeout=self.timeout,
+        )
         self._session.cookies.update(self.cookie_store.load())
+
+    def _restart_session(self) -> None:
+        self.exit()
+        self._start_session()
 
     def exit(self):
         self.cookie_store.save(self._session.cookies)
@@ -47,7 +58,7 @@ class Transport:
         self.throttle.try_acquire("api")
 
         try:
-            r = self._session.get(url, params=params, timeout=self.timeout)
+            r = self._session.get(url, params=params)
         except httpx.ReadTimeout as e:
             raise TimeoutError("The request timed out.") from e
         except httpx.RemoteProtocolError as e:
@@ -69,7 +80,7 @@ class Transport:
 
         self.throttle.try_acquire("file")
 
-        with self._session.stream("GET", url=url, timeout=self.timeout) as r:
+        with self._session.stream("GET", url=url) as r:
             contentType = r.headers.get("content-type")
 
             if contentType and "text/html" in contentType:
