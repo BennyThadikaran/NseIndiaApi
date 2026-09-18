@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, Optional
+from urllib.parse import urlsplit
 
 import httpx
 from pyrate_limiter import Duration, Limiter, Rate
@@ -76,7 +77,12 @@ class Transport:
         """Download a large file in chunks from the given url.
         Returns pathlib.Path object of the downloaded file
         """
-        fname = folder / url.split("/")[-1]
+        url_path = urlsplit(url).path
+
+        fname = folder / Path(url_path).name
+
+        if not fname.name:
+            raise RuntimeError(f"Path not detected in url: {url}")
 
         self.throttle.try_acquire("file")
 
