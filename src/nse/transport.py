@@ -14,7 +14,7 @@ class Transport:
         headers: Dict[str, Any],
         cookie_store: Optional[CookieStore] = None,
         throttle: Optional[Limiter] = None,
-        server: bool = False,
+        use_http2: bool = False,
         timeout: int = 15,
         cookie_filename: str = "cookies_httpx.txt",
     ) -> None:
@@ -30,7 +30,7 @@ class Transport:
 
         self.throttle = throttle or Limiter(Rate(3, Duration.SECOND))
 
-        self._session = httpx.Client(http2=server)
+        self._session = httpx.Client(http2=use_http2)
         self._session.headers.update(headers)
         self._session.cookies.update(self.cookie_store.load())
 

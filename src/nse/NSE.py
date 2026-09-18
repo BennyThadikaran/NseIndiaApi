@@ -54,7 +54,7 @@ class NSE:
     def __init__(
         self,
         download_folder: Union[str, Path],
-        server: bool = False,
+        use_http2: bool = False,
         cookie_store: Optional[CookieStore] = None,
         throttle: Optional[Limiter] = None,
         timeout: int = 15,
@@ -84,7 +84,7 @@ class NSE:
             self._transport = Transport(
                 folder=self.dir,
                 headers=headers,
-                server=server,
+                use_http2=use_http2,
                 cookie_store=cookie_store,
                 throttle=throttle,
                 timeout=timeout,
