@@ -84,6 +84,9 @@ class Transport:
         if not fname.name:
             raise RuntimeError(f"Path not detected in url: {url}")
 
+        # filename.csv -> filename.csv.part
+        tmp = fname.with_suffix(fname.suffix + ".part")
+
         self.throttle.try_acquire("file")
 
         with self._session.stream("GET", url=url) as r:
@@ -92,8 +95,13 @@ class Transport:
             if contentType and "text/html" in contentType:
                 raise RuntimeError("NSE file is unavailable or not yet updated.")
 
-            with fname.open(mode="wb") as f:
-                for chunk in r.iter_bytes(chunk_size=1000000):
-                    f.write(chunk)
+            try:
+                with tmp.open(mode="wb") as f:
+                    for chunk in r.iter_bytes(chunk_size=1000000):
+                        f.write(chunk)
+                tmp.replace(fname)
+            except Exception:
+                tmp.unlink(missing_ok=True)
+                raise
 
         return fname
