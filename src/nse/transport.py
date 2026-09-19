@@ -8,6 +8,10 @@ from pyrate_limiter import Duration, Limiter, Rate
 from .cookie_store import CookieStore, FileCookieStore
 
 
+class NSEFileUnavailableError(Exception):
+    """Raised when the requested NSE file is unavailable or not yet updated."""
+
+
 class Transport:
     def __init__(
         self,
@@ -90,10 +94,10 @@ class Transport:
         self.throttle.try_acquire("file")
 
         with self._session.stream("GET", url=url) as r:
-            contentType = r.headers.get("content-type")
-
-            if contentType and "text/html" in contentType:
-                raise RuntimeError("NSE file is unavailable or not yet updated.")
+            if r.status_code == 404:
+                raise NSEFileUnavailableError(
+                    "NSE file is unavailable or not yet updated."
+                )
 
             try:
                 with tmp.open(mode="wb") as f:
