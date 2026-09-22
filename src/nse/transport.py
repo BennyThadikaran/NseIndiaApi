@@ -6,6 +6,7 @@ import httpx
 from pyrate_limiter import Duration, Limiter, Rate
 
 from .cookie_store import CookieStore, FileCookieStore
+from .retry import STATUS_FORCELIST, RetryableStatusError, RetryConfig, retry
 
 
 class NSEFileUnavailableError(Exception):
@@ -19,6 +20,7 @@ class Transport:
         headers: Dict[str, Any],
         cookie_store: Optional[CookieStore] = None,
         throttle: Optional[Limiter] = None,
+        retry_config: RetryConfig | None = None,
         use_http2: bool = False,
         timeout: int = 15,
         cookie_filename: str = "cookies_httpx.txt",
@@ -26,12 +28,14 @@ class Transport:
 
         self.timeout = timeout
 
+        self.throttle = throttle or Limiter(Rate(3, Duration.SECOND))
+
+        self.retry_config = retry_config or RetryConfig()
+
         self.cookie_store = cookie_store or FileCookieStore(
             path=folder / cookie_filename,
             fetcher=self._fetch_cookies,
         )
-
-        self.throttle = throttle or Limiter(Rate(3, Duration.SECOND))
 
         self.use_http2 = use_http2
         self.headers = headers
@@ -58,25 +62,25 @@ class Transport:
         r = self.request("https://www.nseindia.com/option-chain")
         return r.cookies
 
+    @retry
     def request(self, url, params=None):
         """Make a http request"""
         self.throttle.try_acquire("api")
 
-        try:
-            r = self._session.get(url, params=params)
-        except httpx.ReadTimeout as e:
-            raise TimeoutError("The request timed out.") from e
-        except httpx.RemoteProtocolError as e:
-            self.exit()
-            raise ConnectionError(
-                "The connection to the remote server was unexpectedly closed."
-            ) from e
+        r = self._session.get(url, params=params)
 
-        if not 200 <= r.status_code < 300:
-            raise ConnectionError(f"{url} {r.status_code}: {r.reason_phrase}")
+        if r.status_code in STATUS_FORCELIST:
+            raise RetryableStatusError(
+                f"HTTP error: {r.status_code} - {r.reason_phrase}",
+                request=r.request,
+                response=r,
+            )
+
+        r.raise_for_status()
 
         return r
 
+    @retry
     def download(self, url: str, folder: Path):
         """Download a large file in chunks from the given url.
         Returns pathlib.Path object of the downloaded file
@@ -102,6 +106,15 @@ class Transport:
                 raise NSEFileUnavailableError(
                     "NSE file is unavailable or not yet updated."
                 )
+
+            if r.status_code in STATUS_FORCELIST:
+                raise RetryableStatusError(
+                    f"HTTP error: {r.status_code} - {r.reason_phrase}",
+                    request=r.request,
+                    response=r,
+                )
+
+            r.raise_for_status()
 
             try:
                 with tmp.open(mode="wb") as f:
