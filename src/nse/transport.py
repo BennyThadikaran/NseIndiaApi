@@ -83,13 +83,17 @@ class Transport:
         """
         url_path = urlsplit(url).path
 
-        fname = folder / Path(url_path).name
+        fpath = folder / Path(url_path).name
 
-        if not fname.name:
+        if not fpath.name:
             raise RuntimeError(f"Path not detected in url: {url}")
 
+        # check if the file was already downloaded and return it
+        if fpath.exists():
+            return fpath
+
         # filename.csv -> filename.csv.part
-        tmp = fname.with_suffix(fname.suffix + ".part")
+        tmp = fpath.with_suffix(fpath.suffix + ".part")
 
         self.throttle.try_acquire("file")
 
@@ -103,9 +107,9 @@ class Transport:
                 with tmp.open(mode="wb") as f:
                     for chunk in r.iter_bytes(chunk_size=1000000):
                         f.write(chunk)
-                tmp.replace(fname)
+                tmp.replace(fpath)
             except Exception:
                 tmp.unlink(missing_ok=True)
                 raise
 
-        return fname
+        return fpath
