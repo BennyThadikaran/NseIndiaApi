@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
 from urllib.parse import urlsplit
@@ -7,6 +8,8 @@ from pyrate_limiter import Duration, Limiter, Rate
 
 from .cookie_store import CookieStore, FileCookieStore
 from .retry import STATUS_FORCELIST, RetryableStatusError, RetryConfig, retry
+
+logger = logging.getLogger(__name__)
 
 
 class NSEFileUnavailableError(Exception):
@@ -51,7 +54,10 @@ class Transport:
         self._session.cookies.update(self.cookie_store.load())
 
     def _restart_session(self) -> None:
-        self.exit()
+        try:
+            self.exit()
+        except Exception:
+            logger.exception("Failed to cleanly exit old session during restart.")
         self._start_session()
 
     def exit(self):
