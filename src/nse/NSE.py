@@ -58,7 +58,6 @@ class NSE:
         cookie_store: Optional[CookieStore] = None,
         throttle: Optional[Limiter] = None,
         timeout: int = 15,
-        use_requests_library=False,
         cookie_filename: str = "cookies_httpx.txt",
     ):
         """Initialise NSE"""
@@ -74,22 +73,15 @@ class NSE:
 
         self.dir = NSE._getPath(download_folder, isFolder=True)
 
-        if use_requests_library:
-            from .request_transport import RequestTransport
-
-            self._transport = RequestTransport(
-                folder=self.dir, headers=headers, timeout=timeout
-            )
-        else:
-            self._transport = Transport(
-                folder=self.dir,
-                headers=headers,
-                use_http2=use_http2,
-                cookie_store=cookie_store,
-                throttle=throttle,
-                timeout=timeout,
-                cookie_filename=cookie_filename,
-            )
+        self._transport = Transport(
+            folder=self.dir,
+            headers=headers,
+            use_http2=use_http2,
+            cookie_store=cookie_store,
+            throttle=throttle,
+            timeout=timeout,
+            cookie_filename=cookie_filename,
+        )
 
     def __enter__(self):
         return self
