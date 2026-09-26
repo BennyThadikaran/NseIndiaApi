@@ -100,11 +100,10 @@ class NSE:
         path = path.expanduser().resolve()
 
         if isFolder:
-            if path.is_file():
-                raise ValueError(f"{path}: must be a folder")
+            if path.exists() and not path.is_dir():
+                raise NotADirectoryError(f"{path}: must be a folder")
 
-            if not path.exists():
-                path.mkdir(parents=True)
+            path.mkdir(parents=True, exist_ok=True)
 
         return path
 
