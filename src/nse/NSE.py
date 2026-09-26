@@ -1487,20 +1487,31 @@ class NSE:
     ) -> Path:
         """
         Download the document from the specified URL and return the saved file path.
-        If the downloaded file is a zip file, extracts its contents to the specified folder.
+        If the downloaded file is a ``.zip`` or ``.gz`` archive, extracts its
+        contents to the specified folder and returns the extracted file path.
 
-        :param url: URL of the document to download e.g. `https://archives.nseindia.com/annual_reports/AR_ULTRACEMCO_2010_2011_08082011052526.zip`
+        :param url: URL of the document to download e.g.
+            ``https://archives.nseindia.com/annual_reports/AR_ULTRACEMCO_2010_2011_08082011052526.zip``
         :type url: str
-        :param folder: Folder path to save file. If not specified, uses download_folder from class initialization.
+        :param folder: Folder path to save file. If not specified, uses
+            ``download_folder`` from class initialization.
         :type folder: pathlib.Path or str or None
-        :param extract_files: A list of filenames to be extracted. If None, the first file in zipfile will be extracted.
+        :param extract_files: A list of filenames to be extracted from a zip
+            archive. If ``None``, the first file in the zip will be extracted. Must
+            be non-empty if provided. Ignored for ``.gz`` archives.
         :type extract_files: List[str] or None
 
-        :raise ValueError: If folder is not a directory
-        :raise FileNotFoundError: If download failed or file corrupted
-        :raise RuntimeError: If file extraction fails
+        :raise ValueError: If ``folder`` is not a directory, or if
+            ``extract_files`` is provided as an empty list.
+        :raise FileNotFoundError: If the download did not produce a file.
+        :raise zipfile.BadZipFile: If the downloaded zip is not a valid archive.
+        :raise KeyError: If a name in ``extract_files`` is not present in the zip.
+        :raise OSError: If file I/O fails during download or extraction.
 
-        :return: Path to saved file (or extracted file if zip). If extract_files is specified, the last filepath in the list is returned.
+        :return: Path to the extracted file if the download was a ``.zip`` or
+            ``.gz`` archive, otherwise the path to the saved file. For zip archives
+            with ``extract_files`` specified, the last filepath in the list is
+            returned.
         :rtype: pathlib.Path
         """
         folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
@@ -1510,13 +1521,11 @@ class NSE:
             file.unlink()
             raise FileNotFoundError(f"Failed to download file: {file.name}")
 
+        suffix = file.suffix.lower()
+
         # Check if downloaded file is a zip file
-        if file.suffix.lower() == ".zip":
-            try:
-                return self._unzip(file, folder, extract_files)
-            except Exception as e:
-                file.unlink()
-                raise RuntimeError(f"Failed to extract zip file: {str(e)}")
+        if suffix == ".zip" or suffix == ".gz":
+            return utils.consume_archive(file, folder, extract_files)
 
         return file
 
