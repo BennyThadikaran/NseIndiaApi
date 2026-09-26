@@ -42,9 +42,6 @@ def prepare_path(path: Union[str, Path], isFolder: bool = False):
        symlinks are fully followed. A broken symlink is therefore indistinguishable
        from a non-existent path, and its target directory will be created when
        ``isFolder`` is ``True``.
-
-    .. note::
-       This is a static method.
     """
     path = path if isinstance(path, Path) else Path(path)
     path = path.expanduser().resolve()
@@ -105,9 +102,6 @@ def consume_archive(
     .. note::
        If extraction fails partway through, files already written to ``folder``
        are **not** rolled back, and the original archive is left in place.
-
-    .. note::
-       This is a static method.
     """
     if extract_files is not None and len(extract_files) == 0:
         raise ValueError("extract_files must be non-empty")

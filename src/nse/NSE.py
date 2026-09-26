@@ -92,11 +92,6 @@ class NSE:
 
         return False
 
-
-
-
-        .. note::
-
     def exit(self):
         """Close the ``requests`` session.
 
