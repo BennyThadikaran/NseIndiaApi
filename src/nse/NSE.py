@@ -134,19 +134,33 @@ class NSE:
     def _split_date_range(
         from_date: date, to_date: date, max_chunk_size: int = 365
     ) -> List[Tuple[date, date]]:
-        """Splits a date range into non-overlapping chunks with each chunk having size at specified by
-        the max_chunk_size parameter
+        """Split a date range into non-overlapping, inclusive chunks.
 
-        :param from_date: The starting date of the range
+        Each chunk spans at most ``max_chunk_size`` days (inclusive of both
+        endpoints). The next chunk begins one day after the previous chunk's end.
+
+        :param from_date: The starting date of the range (inclusive).
         :type from_date: datetime.date
-        :param to_date: The ending date of the range
+        :param to_date: The ending date of the range (inclusive).
         :type to_date: datetime.date
-        :param max_chunk_size: The max size of each chunk into which the range is split
+        :param max_chunk_size: Default ``365``. Maximum number of days in each
+            chunk, counted inclusively (``max_chunk_size=1`` yields one-day
+            chunks). Must be positive.
         :type max_chunk_size: int
-        :raise ValueError: if ``from_date`` is greater than ``to_date``
-        :return: A sorted list of tuples. Each element of the list is a range (`start_date`, `end_date`)
+        :return: A list of ``(start_date, end_date)`` tuples, ordered chronologically.
+            Each tuple is inclusive of both endpoints and consecutive tuples do not
+            overlap.
         :rtype: List[Tuple[datetime.date, datetime.date]]
+
+        :raises ValueError: If ``max_chunk_size`` is less than or equal to ``0``.
+
+        .. note::
+           If ``from_date > to_date``, an **empty list** is returned. No exception
+           is raised.
         """
+        if max_chunk_size <= 0:
+            raise ValueError("max_chunk_size must be positive")
+
         chunks = []
         current_start = from_date
 
