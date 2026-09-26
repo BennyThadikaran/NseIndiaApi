@@ -2,7 +2,6 @@ import logging
 from abc import ABC, abstractmethod
 from http.cookiejar import MozillaCookieJar
 from pathlib import Path
-from typing import Callable, Optional
 
 import httpx
 
@@ -68,11 +67,7 @@ class FileCookieStore(CookieStore):
         described above.
     """
 
-    def __init__(
-        self,
-        path: Path,
-        fetcher: Callable[[], httpx.Cookies],
-    ) -> None:
+    def __init__(self, path: Path) -> None:
         """Initialize the file-backed cookie store.
 
         :param path: Location of the Mozilla-format cookie file. Parent
@@ -83,7 +78,6 @@ class FileCookieStore(CookieStore):
         :type fetcher: Callable[[], httpx.Cookies]
         """
         self.path = path
-        self._fetcher = fetcher
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
     def load(self) -> httpx.Cookies:
@@ -97,18 +91,17 @@ class FileCookieStore(CookieStore):
         :returns: The loaded or freshly fetched cookies.
         :rtype: httpx.Cookies
         """
-        if self.path.exists():
-            jar = MozillaCookieJar(self.path)
+        if not self.path.exists():
+            return httpx.Cookies()
 
-            jar.load(ignore_discard=True, ignore_expires=False)
+        jar = MozillaCookieJar(self.path)
 
-            if any(jar):
-                return httpx.Cookies(jar)
+        jar.load(ignore_discard=True, ignore_expires=False)
 
-        cookies = self._fetcher()
-        self.save(cookies)
+        if any(jar):
+            return httpx.Cookies(jar)
 
-        return cookies
+        return httpx.Cookies()
 
     def save(self, cookies: httpx.Cookies) -> None:
         """Write cookies to the Mozilla-format file on disk.
@@ -151,19 +144,15 @@ class MemoryCookieStore(CookieStore):
     :class:`FileCookieStore`.
     """
 
-    def __init__(
-        self,
-        fetcher: Callable[[], httpx.Cookies],
-    ) -> None:
-        """Initialize the in-memory cookie store.
+    def __init__(self) -> None:
+        """Initialize an empty in-memory cookie store.
 
         :param fetcher: Callable invoked to obtain a fresh set of cookies
             the first time :meth:`load` is called (i.e. while the store
             is empty).
         :type fetcher: Callable[[], httpx.Cookies]
         """
-        self._fetcher = fetcher
-        self._cookies: Optional[httpx.Cookies] = None
+        self._cookies = httpx.Cookies()
 
     def load(self) -> httpx.Cookies:
         """Return the cached cookies, fetching them if not yet loaded.
@@ -174,9 +163,6 @@ class MemoryCookieStore(CookieStore):
 
         :returns: The cached or freshly fetched cookies.
         :rtype: httpx.Cookies
-        """
-        if self._cookies is None:
-            self._cookies = self._fetcher()
 
         return self._cookies
 
@@ -199,4 +185,4 @@ class MemoryCookieStore(CookieStore):
         :returns: Nothing.
         :rtype: None
         """
-        self._cookies = None
+        self._cookies.clear()
