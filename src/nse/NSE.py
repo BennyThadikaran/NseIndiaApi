@@ -95,55 +95,7 @@ class NSE:
 
 
 
-    @staticmethod
-    def _split_date_range(
-        from_date: date, to_date: date, max_chunk_size: int = 365
-    ) -> List[Tuple[date, date]]:
-        """Split a date range into non-overlapping, inclusive chunks.
-
-        Each chunk spans at most ``max_chunk_size`` days (inclusive of both
-        endpoints). The next chunk begins one day after the previous chunk's end.
-
-        :param from_date: The starting date of the range (inclusive).
-        :type from_date: datetime.date
-        :param to_date: The ending date of the range (inclusive).
-        :type to_date: datetime.date
-        :param max_chunk_size: Default ``365``. Maximum number of days in each
-            chunk, counted inclusively (``max_chunk_size=1`` yields one-day
-            chunks). Must be positive.
-        :type max_chunk_size: int
-        :return: A list of ``(start_date, end_date)`` tuples, ordered chronologically.
-            Each tuple is inclusive of both endpoints and consecutive tuples do not
-            overlap.
-        :rtype: List[Tuple[datetime.date, datetime.date]]
-
-        :raises ValueError: If ``max_chunk_size`` is less than or equal to ``0``.
-
         .. note::
-           If ``from_date > to_date``, an **empty list** is returned. No exception
-           is raised.
-        """
-        if max_chunk_size <= 0:
-            raise ValueError("max_chunk_size must be positive")
-
-        chunks = []
-        current_start = from_date
-
-        while current_start <= to_date:
-            # Calculate the end of the current chunk.
-            # We use max_size - 1 because the range is inclusive.
-            current_end = current_start + timedelta(days=max_chunk_size - 1)
-
-            # Don't go past the final date.
-            if current_end > to_date:
-                current_end = to_date
-
-            chunks.append((current_start, current_end))
-
-            # Start next chunk the day after the current end.
-            current_start = current_end + timedelta(days=1)
-
-        return chunks
 
     def exit(self):
         """Close the ``requests`` session.
@@ -1641,7 +1593,7 @@ class NSE:
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
 
-        date_chunks = NSE._split_date_range(from_date, to_date, 100)
+        date_chunks = utils.split_date_range(from_date, to_date, 100)
 
         data = []
 
@@ -1705,7 +1657,7 @@ class NSE:
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
 
-        date_chunks = NSE._split_date_range(from_date, to_date)
+        date_chunks = utils.split_date_range(from_date, to_date)
 
         data = []
 
@@ -1802,7 +1754,7 @@ class NSE:
             if strike_price:
                 params["strikePrice"] = strike_price
 
-        date_chunks = NSE._split_date_range(from_date, to_date)
+        date_chunks = utils.split_date_range(from_date, to_date)
 
         data = []
 
@@ -1881,7 +1833,7 @@ class NSE:
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
 
-        date_chunks = NSE._split_date_range(from_date, to_date)
+        date_chunks = utils.split_date_range(from_date, to_date)
 
         data = []
 
