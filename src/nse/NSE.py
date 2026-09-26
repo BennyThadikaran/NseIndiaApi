@@ -1,10 +1,7 @@
-import gzip
 import json
-import shutil
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
-from zipfile import ZipFile
 
 import utils
 from pyrate_limiter import Limiter
@@ -97,36 +94,6 @@ class NSE:
 
 
 
-    @staticmethod
-    def _unzip(file: Path, folder: Path, extract_files: Optional[List[str]] = None):
-        if extract_files is not None and len(extract_files) == 0:
-            raise ValueError("extract_files must be non-empty")
-
-        suffix = file.suffix.lower()
-
-        if suffix == ".zip":
-            with ZipFile(file) as zip:
-                if extract_files is not None:
-                    zip.extractall(path=folder, members=extract_files)
-
-                    # return the last filepath
-                    filepath = folder / extract_files[-1]
-                else:
-                    filepath = Path(zip.extract(member=zip.namelist()[0], path=folder))
-        elif suffix == ".gz":
-            filepath = folder / file.stem
-
-            with gzip.open(file, "rb") as f_in, open(filepath, "wb") as f_out:
-                shutil.copyfileobj(f_in, f_out)
-        else:
-            raise ValueError("Unknown file format")
-
-        try:
-            file.unlink(missing_ok=True)
-        except OSError:
-            logger.exception(f"Extracted to {filepath} but could not delete {file}")
-
-        return filepath
 
     @staticmethod
     def _split_date_range(
@@ -268,7 +235,7 @@ class NSE:
             file.unlink()
             raise FileNotFoundError(f"Failed to download file: {file.name}")
 
-        return NSE._unzip(file, file.parent)
+        return utils.consume_archive(file, file.parent)
 
     def deliveryBhavcopy(
         self, date: datetime, folder: Union[str, Path, None] = None
@@ -355,7 +322,7 @@ class NSE:
             file.unlink()
             raise FileNotFoundError(f"Failed to download file: {file.name}")
 
-        return NSE._unzip(file, folder=file.parent)
+        return utils.consume_archive(file, folder=file.parent)
 
     def priceband_report(
         self, date: datetime, folder: Union[str, Path, None] = None
@@ -451,7 +418,7 @@ class NSE:
             file.unlink()
             raise FileNotFoundError(f"Failed to download file: {file.name}")
 
-        return self._unzip(file, folder=file.parent)
+        return utils.consume_archive(file, folder=file.parent)
 
     def actions(
         self,
