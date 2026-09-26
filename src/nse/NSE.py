@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 from zipfile import ZipFile
 
+import utils
 from pyrate_limiter import Limiter
 
 from .cookie_store import CookieStore
@@ -73,7 +74,7 @@ class NSE:
             "Referer": "https://www.nseindia.com/get-quotes/equity?symbol=HDFCBANK",
         }
 
-        self.dir = NSE._getPath(download_folder, isFolder=True)
+        self.dir = utils.prepare_path(download_folder, isFolder=True)
 
         self._transport = Transport(
             folder=self.dir,
@@ -94,18 +95,7 @@ class NSE:
 
         return False
 
-    @staticmethod
-    def _getPath(path: Union[str, Path], isFolder: bool = False):
-        path = path if isinstance(path, Path) else Path(path)
-        path = path.expanduser().resolve()
 
-        if isFolder:
-            if path.exists() and not path.is_dir():
-                raise NotADirectoryError(f"{path}: must be a folder")
-
-            path.mkdir(parents=True, exist_ok=True)
-
-        return path
 
     @staticmethod
     def _unzip(file: Path, folder: Path, extract_files: Optional[List[str]] = None):
@@ -258,7 +248,7 @@ class NSE:
         :return: Path to saved file
         :rtype: pathlib.Path
         """
-        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
 
         if date.date() < self.UDIFF_SWITCH_DATE:
             date_str = date.strftime("%d%b%Y").upper()
@@ -295,7 +285,7 @@ class NSE:
         :return: Path to saved file
         :rtype: pathlib.Path
         """
-        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
 
         url = "{}/products/content/sec_bhavdata_full_{}.csv".format(
             self.archive_url, date.strftime("%d%m%Y")
@@ -325,7 +315,7 @@ class NSE:
         :return: Path to saved file
         :rtype: pathlib.Path
         """
-        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/indices/ind_close_all_{date:%d%m%Y}.csv"
 
@@ -355,7 +345,7 @@ class NSE:
         """
         dt_str = date.strftime("%Y%m%d")
 
-        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/fo/BhavCopy_NSE_FO_0_0_0_{dt_str}_F_0000.csv.zip"
 
@@ -385,7 +375,7 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%Y")
 
-        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/equities/sec_list_{dt_str}.csv"
 
@@ -419,7 +409,7 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%y")
 
-        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/archives/equities/bhavcopy/pr/PR{dt_str}.zip"
 
@@ -451,7 +441,7 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%Y")
 
-        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/cm/NSE_CM_security_{dt_str}.csv.gz"
 
@@ -1594,7 +1584,7 @@ class NSE:
         :return: Path to saved file (or extracted file if zip). If extract_files is specified, the last filepath in the list is returned.
         :rtype: pathlib.Path
         """
-        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
         file = self._transport.download(url, folder)
 
         if not file.is_file():
