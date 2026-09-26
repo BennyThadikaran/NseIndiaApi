@@ -109,17 +109,21 @@ class NSE:
 
     @staticmethod
     def _unzip(file: Path, folder: Path, extract_files: Optional[List[str]] = None):
-        if file.suffix == ".zip":
+        if extract_files is not None and len(extract_files) == 0:
+            raise ValueError("extract_files must be non-empty")
+
+        suffix = file.suffix.lower()
+
+        if suffix == ".zip":
             with ZipFile(file) as zip:
-                if extract_files:
+                if extract_files is not None:
                     zip.extractall(path=folder, members=extract_files)
 
                     # return the last filepath
                     filepath = folder / extract_files[-1]
                 else:
-                    filepath = zip.extract(member=zip.namelist()[0], path=folder)
-
-        elif file.suffix == ".gz":
+                    filepath = Path(zip.extract(member=zip.namelist()[0], path=folder))
+        elif suffix == ".gz":
             filepath = folder / file.stem
 
             with gzip.open(file, "rb") as f_in, open(filepath, "wb") as f_out:
@@ -127,8 +131,12 @@ class NSE:
         else:
             raise ValueError("Unknown file format")
 
-        file.unlink()
-        return Path(filepath)
+        try:
+            file.unlink(missing_ok=True)
+        except OSError:
+            logger.exception(f"Extracted to {filepath} but could not delete {file}")
+
+        return filepath
 
     @staticmethod
     def _split_date_range(
