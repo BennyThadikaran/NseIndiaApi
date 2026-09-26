@@ -15,11 +15,12 @@ class TestNseFinancialResults(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.nse = NSE(download_folder=DIR, server=False)
+        cls.nse = NSE(download_folder=DIR, use_http2=False)
 
     @classmethod
     def tearDownClass(cls):
         cls.nse.exit()
+        cls.nse._transport.cookie_store.clear()
 
     def _mock_req_json(self, payload):
         mock = MagicMock()

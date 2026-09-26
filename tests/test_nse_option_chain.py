@@ -10,12 +10,13 @@ from context import NSE
 class TestNSEOptionChain(unittest.TestCase):
     def setUp(self):
         DIR = Path(__file__).parent
-        self.nse = NSE(DIR, server=False)
+        self.nse = NSE(DIR, use_http2=False)
         self.cache_file = DIR / "opt-expiry.json"
 
     def tearDown(self):
         self.nse.exit()
         self.cache_file.unlink(missing_ok=True)
+        self.nse._transport.cookie_store.clear()
 
     def _mock_req(self, responses) -> MagicMock:
         """Helper to mock _NSE__req returning different .json() values

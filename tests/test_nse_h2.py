@@ -6,17 +6,18 @@ from context import NSE
 
 
 class TestNseApiH2(unittest.TestCase):
-    """Test nse class with http2 using httpx library"""
+    """Test nse class with http v2"""
 
     @classmethod
     def setUpClass(cls):
         DIR = Path(__file__).parent
-        cls.nse = NSE(DIR, server=True)
-        print("\nRunning tests using httpx library.\n")
+        cls.nse = NSE(DIR, use_http2=True)
+        print("\nRunning tests using http v2.\n")
 
     @classmethod
     def tearDownClass(cls):
         cls.nse.exit()
+        cls.nse._transport.cookie_store.clear()
 
     def test_status(self):
         response = self.nse.status()

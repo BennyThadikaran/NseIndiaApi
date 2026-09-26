@@ -5,20 +5,21 @@ from context import NSE, get_last_working_date
 
 
 class TestNseApiReportsH2(unittest.TestCase):
-    """Test NSE class report methods with http2 using httpx library"""
+    """Test NSE class report methods with http v2"""
 
     @classmethod
     def setUpClass(cls):
         DIR = Path(__file__).parent
-        cls.nse = NSE(DIR, server=True)
+        cls.nse = NSE(DIR, use_http2=True)
         cls.date = get_last_working_date()
         print(
-            f"\nRunning tests for NSE reports using httpx library and date: {cls.date:%d %b %Y, %H:%M}.\n"
+            f"\nRunning tests for NSE reports for date: {cls.date:%d %b %Y, %H:%M}.\n"
         )
 
     @classmethod
     def tearDownClass(cls):
         cls.nse.exit()
+        cls.nse._transport.cookie_store.clear()
 
     def test_equityBhavcopy(self):
         file = self.nse.equityBhavcopy(date=self.date)
