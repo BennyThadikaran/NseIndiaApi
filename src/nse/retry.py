@@ -31,8 +31,8 @@ class RetryConfig:
         if self.total < 0:
             raise ValueError(f"{name}: total must be non-negative")
 
-        if self.max_backoff_wait < 0:
-            raise ValueError(f"{name}: max_backoff_wait must be non-negative")
+        if self.max_backoff_wait <= 0:
+            raise ValueError(f"{name}: max_backoff_wait must be greater than 0")
 
         if self.backoff_factor < 0:
             raise ValueError(f"{name}: backoff_factor must be non-negative")
