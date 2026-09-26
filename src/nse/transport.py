@@ -26,7 +26,7 @@ class Transport:
         retry_config: RetryConfig | None = None,
         use_http2: bool = False,
         timeout: int = 15,
-        cookie_filename: str = "cookies_httpx.txt",
+        cookie_filename: Optional[str] = None,
     ) -> None:
 
         self.timeout = timeout
@@ -34,6 +34,9 @@ class Transport:
         self.throttle = throttle or Limiter(Rate(3, Duration.SECOND))
 
         self.retry_config = retry_config or RetryConfig()
+
+        if cookie_filename is None:
+            cookie_filename = "cookies.txt"
 
         self.cookie_store = cookie_store or FileCookieStore(
             path=folder / cookie_filename

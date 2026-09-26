@@ -9,6 +9,7 @@ from zipfile import ZipFile
 from pyrate_limiter import Limiter
 
 from .cookie_store import CookieStore
+from .retry import RetryConfig
 from .transport import Transport
 
 
@@ -57,8 +58,9 @@ class NSE:
         use_http2: bool = False,
         cookie_store: Optional[CookieStore] = None,
         throttle: Optional[Limiter] = None,
+        retry_config: Optional[RetryConfig] = None,
         timeout: int = 15,
-        cookie_filename: str = "cookies_httpx.txt",
+        cookie_filename: Optional[str] = None,
     ):
         """Initialise NSE"""
         uAgent = "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/118.0"
@@ -79,6 +81,7 @@ class NSE:
             use_http2=use_http2,
             cookie_store=cookie_store,
             throttle=throttle,
+            retry_config=retry_config,
             timeout=timeout,
             cookie_filename=cookie_filename,
         )
