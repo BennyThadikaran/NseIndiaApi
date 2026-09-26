@@ -36,8 +36,7 @@ class Transport:
         self.retry_config = retry_config or RetryConfig()
 
         self.cookie_store = cookie_store or FileCookieStore(
-            path=folder / cookie_filename,
-            fetcher=self._fetch_cookies,
+            path=folder / cookie_filename
         )
 
         self.use_http2 = use_http2
@@ -51,7 +50,14 @@ class Transport:
             http2=self.use_http2,
             timeout=self.timeout,
         )
-        self._session.cookies.update(self.cookie_store.load())
+
+        cookies = self.cookie_store.load()
+
+        if not cookies.jar:
+            cookies = self._fetch_cookies()
+            self.cookie_store.save(cookies)
+
+        self._session.cookies.update(cookies)
 
     def _restart_session(self) -> None:
         try:
