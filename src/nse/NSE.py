@@ -4,9 +4,9 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
-import utils
 from pyrate_limiter import Limiter
 
+from . import utils
 from .cookie_store import CookieStore
 from .retry import RetryConfig
 from .transport import Transport
