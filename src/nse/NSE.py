@@ -1,3 +1,4 @@
+import logging
 import tempfile
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -9,6 +10,8 @@ from pyrate_limiter import Limiter
 from .cookie_store import CookieStore
 from .retry import RetryConfig
 from .transport import Transport
+
+logger = logging.getLogger(__name__)
 
 
 class NSE:
@@ -1060,6 +1063,10 @@ class NSE:
             try:
                 dct[sym.strip().decode()] = int(lot.strip().decode())
             except ValueError:
+                logger.warning(
+                    "NSE.fnoLots: Unable to determine lotsize for `%s`",
+                    sym.strip().decode(),
+                )
                 continue
 
         return dct
