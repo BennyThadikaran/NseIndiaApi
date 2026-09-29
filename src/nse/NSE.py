@@ -1060,13 +1060,15 @@ class NSE:
         for line in res.strip().split(b"\n"):
             _, sym, _, lot, *_ = line.split(b",")
 
+            decoded_sym = sym.strip().decode()
             try:
-                dct[sym.strip().decode()] = int(lot.strip().decode())
+                dct[decoded_sym] = int(lot.strip().decode())
             except ValueError:
-                logger.warning(
-                    "NSE.fnoLots: Unable to determine lotsize for `%s`",
-                    sym.strip().decode(),
-                )
+                if decoded_sym.lower() != "symbol":
+                    logger.warning(
+                        "NSE.fnoLots: Unable to determine lotsize for `%s`",
+                        sym.strip().decode(),
+                    )
                 continue
 
         return dct
