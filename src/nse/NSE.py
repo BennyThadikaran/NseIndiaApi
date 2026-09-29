@@ -1244,8 +1244,14 @@ class NSE:
         Rows where the lot size column is empty or cannot be parsed as an
         integer are skipped.
 
-        The lot size is taken from the first available expiry column for
-        each symbol.
+        .. note::
+            A symbol with an empty lot size is omitted from the returned dictionary.
+            This indicates that the symbol has been removed, or is scheduled to be
+            removed, from the FnO segment.
+
+        .. note::
+            The lot size is extracted from the next-month expiry column rather than
+            the current-month expiry column.
 
         :return: A dictionary mapping symbol codes to lot sizes.
         :rtype: dict[str, int]
@@ -1259,14 +1265,22 @@ class NSE:
         for line in res.strip().split(b"\n"):
             _, sym, _, lot, *_ = line.split(b",")
 
+            lot_size = lot.strip().decode()
+
+            if not lot_size:
+                # empty string indicating scrip is removed or
+                # will no longer be part of FnO
+                continue
+
             decoded_sym = sym.strip().decode()
             try:
                 dct[decoded_sym] = int(lot.strip().decode())
             except ValueError:
                 if decoded_sym.lower() != "symbol":
                     logger.warning(
-                        "NSE.fnoLots: Unable to determine lotsize for `%s`",
+                        "NSE.fnoLots: Unable to determine lotsize for `%s` with value %s",
                         sym.strip().decode(),
+                        lot_size,
                     )
                 continue
 
