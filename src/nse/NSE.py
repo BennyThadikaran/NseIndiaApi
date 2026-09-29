@@ -185,10 +185,6 @@ class NSE:
 
         file = self._transport.download(url, folder)
 
-        if not file.is_file():
-            file.unlink()
-            raise FileNotFoundError(f"Failed to download file: {file.name}")
-
         return utils.consume_archive(file, file.parent)
 
     def deliveryBhavcopy(
@@ -214,10 +210,6 @@ class NSE:
 
         file = self._transport.download(url, folder)
 
-        if not file.is_file():
-            file.unlink()
-            raise FileNotFoundError(f"Failed to download file: {file.name}")
-
         return file
 
     def indicesBhavcopy(
@@ -241,10 +233,6 @@ class NSE:
         url = f"{self.archive_url}/content/indices/ind_close_all_{date:%d%m%Y}.csv"
 
         file = self._transport.download(url, folder)
-
-        if not file.is_file():
-            file.unlink()
-            raise FileNotFoundError(f"Failed to download file: {file.name}")
 
         return file
 
@@ -272,10 +260,6 @@ class NSE:
 
         file = self._transport.download(url, folder)
 
-        if not file.is_file():
-            file.unlink()
-            raise FileNotFoundError(f"Failed to download file: {file.name}")
-
         return utils.consume_archive(file, folder=file.parent)
 
     def priceband_report(
@@ -301,10 +285,6 @@ class NSE:
         url = f"{self.archive_url}/content/equities/sec_list_{dt_str}.csv"
 
         file = self._transport.download(url, folder)
-
-        if not file.is_file():
-            file.unlink()
-            raise FileNotFoundError(f"Failed to download file: {file.name}")
 
         return file
 
@@ -336,10 +316,6 @@ class NSE:
 
         file = self._transport.download(url, folder)
 
-        if not file.is_file():
-            file.unlink()
-            raise FileNotFoundError(f"Failed to download file: {file.name}")
-
         return file
 
     def cm_mii_security_report(
@@ -367,10 +343,6 @@ class NSE:
         url = f"{self.archive_url}/content/cm/NSE_CM_security_{dt_str}.csv.gz"
 
         file = self._transport.download(url, folder)
-
-        if not file.is_file():
-            file.unlink()
-            raise FileNotFoundError(f"Failed to download file: {file.name}")
 
         return utils.consume_archive(file, folder=file.parent)
 
@@ -1532,10 +1504,6 @@ class NSE:
         """
         folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
         file = self._transport.download(url, folder)
-
-        if not file.is_file():
-            file.unlink()
-            raise FileNotFoundError(f"Failed to download file: {file.name}")
 
         suffix = file.suffix.lower()
 
