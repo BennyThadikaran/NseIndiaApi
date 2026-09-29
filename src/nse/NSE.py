@@ -518,9 +518,7 @@ class NSE:
         """
         fmt = "%d-%m-%Y"
 
-        params = {
-            "index": segment,
-        }
+        params = dict(index=segment)
 
         if symbol:
             params["symbol"] = symbol
@@ -530,10 +528,10 @@ class NSE:
                 raise ValueError("'from_date' cannot be greater than 'to_date'")
 
             params.update(
-                {
-                    "from_date": from_date.strftime(fmt),
-                    "to_date": to_date.strftime(fmt),
-                }
+                dict(
+                    from_date=from_date.strftime(fmt),
+                    to_date=to_date.strftime(fmt),
+                )
             )
 
         url = f"{self.base_url}/corporates-corporateActions"
@@ -590,10 +588,10 @@ class NSE:
                 raise ValueError("'from_date' cannot be greater than 'to_date'")
 
             params.update(
-                {
-                    "from_date": from_date.strftime(fmt),
-                    "to_date": to_date.strftime(fmt),
-                }
+                dict(
+                    from_date=from_date.strftime(fmt),
+                    to_date=to_date.strftime(fmt),
+                )
             )
 
         url = f"{self.base_url}/corporate-announcements"
@@ -649,10 +647,10 @@ class NSE:
                 raise ValueError("'from_date' cannot be greater than 'to_date'")
 
             params.update(
-                {
-                    "from_date": from_date.strftime(fmt),
-                    "to_date": to_date.strftime(fmt),
-                }
+                dict(
+                    from_date=from_date.strftime(fmt),
+                    to_date=to_date.strftime(fmt),
+                )
             )
 
         url = f"{self.base_url}/corporate-board-meetings"
@@ -887,12 +885,12 @@ class NSE:
         :return: Price quote and other stock information.
         :rtype: dict
         """
-        params = {
-            "functionName": "getSymbolData",
-            "marketType": market_type.upper(),
-            "series": series.upper(),
-            "symbol": symbol.upper(),
-        }
+        params = dict(
+            functionName="getSymbolData",
+            marketType=market_type.upper(),
+            series=series.upper(),
+            symbol=symbol.upper(),
+        )
 
         result = self._transport.request(self.next_api_url, params=params).json()
         return result["equityResponse"][0]
@@ -2219,11 +2217,11 @@ class NSE:
         :return: A dictionary containing detailed symbol data.
         :rtype: dict
         """
-        params = {
-            "functionName": "getSymbolData",
-            "marketType": marketType,
-            "series": series.upper(),
-            "symbol": symbol.upper(),
-        }
+        params = dict(
+            functionName="getSymbolData",
+            marketType=marketType,
+            series=series.upper(),
+            symbol=symbol.upper(),
+        )
 
         return self._transport.request(self.next_api_url, params=params).json()
