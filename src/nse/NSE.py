@@ -1,4 +1,4 @@
-import json
+import tempfile
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
@@ -83,6 +83,10 @@ class NSE:
             timeout=timeout,
             cookie_filename=cookie_filename,
         )
+
+        # Used by NSE.optionChain(), create the hidden directory once.
+        self.opt_cache_dir = self.dir / ".opt-expiry-cache"
+        self.opt_cache_dir.mkdir(exist_ok=True)
 
     def __enter__(self):
         return self
@@ -1107,23 +1111,18 @@ class NSE:
         symbol_key = symbol.lower()
         params = dict(symbol=symbol.upper())
 
-        if not expiry_date:
-            cache = {}
-            cache_file = self.dir / "opt-expiry.json"
+        if expiry_date is None:
+            cache_file = self.opt_cache_dir / f"{symbol_key}.txt"
 
-            if cache_file.exists():
-                try:
-                    cache = json.loads(cache_file.read_bytes())
-                except (json.JSONDecodeError, OSError):
-                    cache = {}
+            # Avoid file exists checks to avoid TOCTOU race conditions
+            # in multi process environments.
+            try:
+                expiry_date = datetime.fromisoformat(cache_file.read_text().strip())
+            except (ValueError, OSError):
+                # FileNotFoundError, invalid date format etc.
+                expiry_date = None
 
-            if symbol_key in cache:
-                expiry_date = datetime.fromisoformat(cache[symbol_key])
-
-                if date.today() > expiry_date.date():
-                    expiry_date = None
-
-            if not expiry_date:
+            if expiry_date is None or date.today() > expiry_date.date():
                 opt_info = self._transport.request(
                     f"{self.base_url}/option-chain-contract-info", params=params
                 ).json()
@@ -1138,16 +1137,29 @@ class NSE:
 
                 expiry_date = datetime.strptime(opt_info["expiryDates"][0], "%d-%b-%Y")
 
-                cache[symbol_key] = expiry_date.isoformat()
+                # Atomic file writes, prevent file corruption from
+                # concurrent file writes to same file
+                with tempfile.NamedTemporaryFile(
+                    mode="w",
+                    dir=cache_file.parent,
+                    delete=False,
+                    prefix=f".{symbol_key}-",
+                    suffix=".tmp",
+                ) as f:
+                    f.write(expiry_date.isoformat())
+                    tmp_path = Path(f.name)
 
-                cache_file.write_text(json.dumps(cache))
+                try:
+                    tmp_path.replace(cache_file)
+                except BaseException:
+                    tmp_path.unlink(missing_ok=True)
+                    raise
 
         url = f"{self.base_url}/option-chain-v3"
 
         params["type"] = "Indices" if symbol_key in self._optionIndex else "Equity"
 
-        if expiry_date:
-            params["expiry"] = expiry_date.strftime("%d-%b-%Y")
+        params["expiry"] = expiry_date.strftime("%d-%b-%Y")
 
         data = self._transport.request(url, params=params).json()
 
