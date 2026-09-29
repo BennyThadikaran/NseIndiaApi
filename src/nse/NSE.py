@@ -1280,7 +1280,7 @@ class NSE:
         :return: Option chain filtered by ``expiryDate``
         :rtype: dict[str, str | float | int]
         """
-        data = self.optionChain(symbol)
+        data = self.optionChain(symbol, expiry_date=expiryDate)
 
         chain = {}
         oc = {}
