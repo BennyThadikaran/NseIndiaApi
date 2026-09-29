@@ -326,7 +326,7 @@ class Transport:
                     for chunk in r.iter_bytes(chunk_size=1000000):
                         f.write(chunk)
                 tmp.replace(fpath)
-            except Exception:
+            except BaseException:
                 tmp.unlink(missing_ok=True)
                 raise
 
