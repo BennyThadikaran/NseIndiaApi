@@ -1,4 +1,4 @@
-import json
+import shutil
 import unittest
 from datetime import datetime
 from pathlib import Path
@@ -11,11 +11,12 @@ class TestNSEOptionChain(unittest.TestCase):
     def setUp(self):
         DIR = Path(__file__).parent
         self.nse = NSE(DIR, use_http2=False)
-        self.cache_file = DIR / "opt-expiry.json"
+        self.cache_dir = DIR / ".opt-expiry-cache"
+        self.cache_file = self.cache_dir / "nifty.txt"
 
     def tearDown(self):
         self.nse.exit()
-        self.cache_file.unlink(missing_ok=True)
+        shutil.rmtree(self.cache_dir, ignore_errors=True)
         self.nse._transport.cookie_store.clear()
 
     def _mock_req(self, responses) -> MagicMock:
@@ -31,9 +32,8 @@ class TestNSEOptionChain(unittest.TestCase):
 
     def test_uses_cached_expiry_when_valid(self):
         expiry = datetime(2099, 1, 1)
-        cache = dict(nifty=expiry.isoformat())
 
-        self.cache_file.write_text(json.dumps(cache))
+        self.cache_file.write_text(expiry.isoformat())
 
         mock = self._mock_req([dict(data="OK")])
 
@@ -44,8 +44,8 @@ class TestNSEOptionChain(unittest.TestCase):
 
     def test_expired_cached_expiry_is_ignored(self):
         expiry = datetime(2000, 1, 1)
-        cache = {"nifty": expiry.isoformat()}
-        self.cache_file.write_text(json.dumps(cache))
+
+        self.cache_file.write_text(expiry.isoformat())
 
         responses = [
             {"expiryDates": ["01-Jan-2099"]},
@@ -78,8 +78,8 @@ class TestNSEOptionChain(unittest.TestCase):
     def test_writes_expiry_cache_file(self):
         self._mock_req(
             [
-                {"expiryDates": ["01-Jan-2099"]},
-                {},
+                dict(expiryDates=["01-Jan-2099"]),
+                dict(),
             ]
         )
 
@@ -87,8 +87,8 @@ class TestNSEOptionChain(unittest.TestCase):
 
         self.assertTrue(self.cache_file.exists())
 
-        data = json.loads(self.cache_file.read_text())
-        self.assertIn("nifty", data)
+        data = self.cache_file.read_text().strip()
+        self.assertEqual("2099-01-01T00:00:00", data)
 
     def test_equity_type_for_non_index_symbol(self):
         responses = [
@@ -124,7 +124,7 @@ class TestNSEOptionChain(unittest.TestCase):
         mock.assert_called_once()
 
     def test_corrupt_cache_file_is_ignored(self):
-        self.cache_file.write_text("invalid json")
+        self.cache_file.write_text("invalid")
 
         responses = [
             {"expiryDates": ["01-Jan-2099"]},
