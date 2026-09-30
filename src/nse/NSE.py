@@ -2,7 +2,7 @@ import logging
 import tempfile
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Tuple, Union
+from typing import Any, Dict, List, Literal, Optional, Tuple, TypedDict, Union
 
 from pyrate_limiter import Limiter
 
@@ -12,6 +12,39 @@ from .retry import RetryConfig
 from .transport import Transport
 
 logger = logging.getLogger(__name__)
+
+
+class OptionLeg(TypedDict):
+    """A single leg (PE or CE) of an option chain strike row."""
+
+    last: float
+    oi: int
+    chg: float
+    iv: float
+
+
+class StrikeRow(TypedDict):
+    """One strike price row in the compiled option chain."""
+
+    pe: OptionLeg
+    ce: OptionLeg
+    pcr: Optional[float]
+
+
+class CompiledOptionChain(TypedDict):
+    """Result of :meth:`NSE.compile_option_chain`."""
+
+    expiry: str
+    timestamp: str
+    underlying: float
+    atm: float
+    max_pain: float
+    max_coi: int
+    max_poi: int
+    coi_total: int
+    poi_total: int
+    pcr: Optional[float]
+    chain: Dict[str, StrikeRow]
 
 
 class NSE:
@@ -1268,7 +1301,7 @@ class NSE:
 
         return dct
 
-    def optionChain(
+    def option_chain(
         self,
         symbol: Union[Literal["banknifty", "nifty", "finnifty", "niftyit"], str],
         expiry_date: Optional[datetime] = None,
@@ -1302,7 +1335,7 @@ class NSE:
            values to skip the cache entirely.
 
         Reference sample response:
-        https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/optionChain.json
+        https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/option_chain.json
 
         :param symbol: FnO stock symbol or index futures identifier. For index
             futures, must be one of ``banknifty``, ``nifty``, ``finnifty``,
@@ -1369,7 +1402,7 @@ class NSE:
 
         url = f"{self.base_url}/option-chain-v3"
 
-        params["type"] = "Indices" if symbol_key in self._optionIndex else "Equity"
+        params["type"] = "Indices" if symbol_key in self._option_index else "Equity"
 
         params["expiry"] = expiry_date.strftime("%d-%b-%Y")
 
@@ -1491,31 +1524,35 @@ class NSE:
 
         return sorted(data, key=lambda x: datetime.strptime(x, "%d-%b-%Y"))
 
-    def compileOptionChain(
+    def compile_option_chain(
         self,
         symbol: Union[str, Literal["banknifty", "nifty", "finnifty", "niftyit"]],
-        expiryDate: datetime,
-    ) -> Dict[str, Union[str, float, int]]:
+        expiry_date: datetime,
+    ) -> CompiledOptionChain:
         """
-        Filter raw option chain by ``expiryDate`` and calculate various statistics required for analysis.
-        This makes it easy to build an option chain for analysis using a simple loop.
+        Filter raw option chain by ``expiry_date`` and calculate various statistics
+        required for analysis. This makes it easy to build an option chain for
+        analysis using a simple loop.
 
         Statistics include:
-            - Max Pain,
-            - Strike price with max Call and Put Open Interest,
-            - Total Call and Put Open Interest
-            - Total PCR ratio
-            - PCR for every strike price
-            - Every strike price has Last price, Open Interest, Change, Implied Volatility for both Call and Put
 
-        Other included values: At the Money (ATM) strike price, Underlying strike price, Expiry date.
+        - Max pain
+        - Strike price with max Call and Put Open Interest
+        - Total Call and Put Open Interest
+        - Total PCR ratio
+        - PCR for every strike price
+        - Every strike price has Last price, Open Interest, Change, Implied
+          Volatility for both Call and Put
+
+        Other included values: At the Money (ATM) strike price, Underlying strike
+        price, Expiry date.
 
         The ATM strike is derived by computing the strike interval from the first
         two entries in ``data["filtered"]["data"]`` and rounding the underlying
         value to the nearest multiple of that interval.
 
         Only entries in ``data["records"]["data"]`` whose ``expiryDates`` field
-        matches ``expiryDate`` (formatted as ``"%d-%b-%Y"``) are included. For
+        matches ``expiry_date`` (formatted as ``"%d-%b-%Y"``) are included. For
         each retained strike:
 
         - If a ``PE`` entry is present, its ``openInterest``, ``lastPrice``,
@@ -1527,104 +1564,99 @@ class NSE:
         - The per-strike PCR is ``round(pe_oi / ce_oi, 2)`` when ``ce_oi`` is
           non-zero, otherwise ``None``.
 
-        The ``maxCoi`` and ``maxPoi`` strikes reported in the result default to
-        ``0`` when no CE or PE data is found. Likewise, ``coiTotal`` and
-        ``poiTotal`` remain ``0`` in that case, and ``pcr`` (overall) is ``None``
-        when ``totalCoi`` is ``0``.
+        The ``max_coi`` and ``max_poi`` strikes reported in the result default to
+        ``0`` when no CE or PE data is found. Likewise, ``coi_total`` and
+        ``poi_total`` remain ``0`` in that case, and ``pcr`` (overall) is ``None``
+        when ``coi_total`` is ``0``.
 
-        ``maxpain`` is delegated to :meth:`maxpain` and receives the raw response
-        plus ``expiryDate``.
+        Max pain is delegated to :meth:`max_pain` and receives the raw response
+        plus ``expiry_date``.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/compileOptionChain.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/compile_option_chain.json>`__
 
-        :param symbol: FnO stock or Index futures symbol code. If Index futures must be one of ``banknifty``, ``nifty``, ``finnifty``, ``niftyit``.
+        :param symbol: FnO stock or Index futures symbol code. If Index futures
+            must be one of ``banknifty``, ``nifty``, ``finnifty``, ``niftyit``.
         :type symbol: str
-        :param expiryDate: Option chain Expiry date
-        :type expiryDate: datetime.datetime
-        :return: Option chain filtered by ``expiryDate``. Keys include ``expiry``,
-            ``timestamp``, ``underlying``, ``atm``, ``maxpain``, ``maxCoi``,
-            ``maxPoi``, ``coiTotal``, ``poiTotal``, ``pcr`` and ``chain`` (a
+        :param expiry_date: Option chain expiry date.
+        :type expiry_date: datetime.datetime
+        :return: Option chain filtered by ``expiry_date``. Keys include ``expiry``,
+            ``timestamp``, ``underlying``, ``atm``, ``max_pain``, ``max_coi``,
+            ``max_poi``, ``coi_total``, ``poi_total``, ``pcr`` and ``chain`` (a
             mapping of strike price strings to ``{"pe": {...}, "ce": {...},
             "pcr": ...}``).
-        :rtype: dict[str, str | float | int]
+        :rtype: CompiledOptionChain
         """
-        data = self.optionChain(symbol, expiry_date=expiryDate)
+        data = self.option_chain(symbol, expiry_date=expiry_date)
 
-        chain = {}
-        oc = {}
+        chain: Dict[str, StrikeRow] = {}
 
-        expiryDateStr = expiryDate.strftime("%d-%b-%Y")
+        expiry_date_str = expiry_date.strftime("%d-%b-%Y")
 
-        oc["expiry"] = expiryDateStr
-        oc["timestamp"] = data["records"]["timestamp"]
-        strike1 = data["filtered"]["data"][0]["strikePrice"]
-        strike2 = data["filtered"]["data"][1]["strikePrice"]
-        multiple = strike1 - strike2
+        strike_1 = data["filtered"]["data"][0]["strikePrice"]
+        strike_2 = data["filtered"]["data"][1]["strikePrice"]
+        multiple = strike_1 - strike_2
 
         underlying = data["records"]["underlyingValue"]
 
-        oc["underlying"] = underlying
-        oc["atm"] = multiple * round(underlying / multiple)
+        max_coi = max_poi = total_coi = total_poi = max_coi_strike = max_poi_strike = 0
 
-        maxCoi = maxPoi = totalCoi = totalPoi = maxCoiStrike = maxPoiStrike = 0
+        data_fields = ("openInterest", "lastPrice", "chg", "impliedVolatility")
 
-        dataFields = ("openInterest", "lastPrice", "chg", "impliedVolatility")
-
-        for idx in data["records"]["data"]:
-            if idx["expiryDates"] != expiryDateStr:
+        for row in data["records"]["data"]:
+            if row["expiryDates"] != expiry_date_str:
                 continue
 
-            strike = str(idx["strikePrice"])
+            strike = str(row["strikePrice"])
 
             if strike not in chain:
-                chain[strike] = dict(pe={}, ce={})
+                chain[strike] = StrikeRow(
+                    pe=OptionLeg(last=0, oi=0, chg=0, iv=0),
+                    ce=OptionLeg(last=0, oi=0, chg=0, iv=0),
+                    pcr=None,
+                )
 
             poi = coi = 0
 
-            if "PE" in idx:
-                poi, last, chg, iv = map(idx["PE"].get, dataFields)
+            if "PE" in row:
+                poi, last, chg, iv = map(row["PE"].get, data_fields)
 
-                chain[strike]["pe"].update(dict(last=last, oi=poi, chg=chg, iv=iv))
+                chain[strike]["pe"] = OptionLeg(last=last, oi=poi, chg=chg, iv=iv)
 
-                totalPoi += poi
+                total_poi += poi
 
-                if poi > maxPoi:
-                    maxPoi = poi
-                    maxPoiStrike = int(strike)
-            else:
-                chain[strike]["pe"] = dict(last=0, oi=0, chg=0, iv=0)
+                if poi > max_poi:
+                    max_poi = poi
+                    max_poi_strike = int(strike)
 
-            if "CE" in idx:
-                coi, last, chg, iv = map(idx["CE"].get, dataFields)
+            if "CE" in row:
+                coi, last, chg, iv = map(row["CE"].get, data_fields)
 
-                chain[strike]["ce"].update(dict(last=last, oi=coi, chg=chg, iv=iv))
+                chain[strike]["ce"] = OptionLeg(last=last, oi=coi, chg=chg, iv=iv)
 
-                totalCoi += coi
+                total_coi += coi
 
-                if coi > maxCoi:
-                    maxCoi = coi
-                    maxCoiStrike = int(strike)
-            else:
-                chain[strike]["ce"] = dict(last=0, oi=0, chg=0, iv=0)
+                if coi > max_coi:
+                    max_coi = coi
+                    max_coi_strike = int(strike)
 
             if coi == 0:
                 chain[strike]["pcr"] = None
             else:
                 chain[strike]["pcr"] = round(poi / coi, 2)
 
-        oc.update(
-            dict(
-                maxpain=self.maxpain(data, expiryDate),
-                maxCoi=maxCoiStrike,
-                maxPoi=maxPoiStrike,
-                coiTotal=totalCoi,
-                poiTotal=totalPoi,
-                pcr=None if totalCoi == 0 else round(totalPoi / totalCoi, 2),
-                chain=chain,
-            )
+        return CompiledOptionChain(
+            expiry=expiry_date_str,
+            timestamp=data["records"]["timestamp"],
+            underlying=underlying,
+            atm=multiple * round(underlying / multiple),
+            max_pain=self.max_pain(data, expiry_date),
+            max_coi=max_coi_strike,
+            max_poi=max_poi_strike,
+            coi_total=total_coi,
+            poi_total=total_poi,
+            pcr=None if total_coi == 0 else round(total_poi / total_coi, 2),
+            chain=chain,
         )
-
-        return oc
 
     def advanceDecline(self, index: str = "NIFTY 50") -> Dict:
         """Fetch advance-decline data for an NSE index.
