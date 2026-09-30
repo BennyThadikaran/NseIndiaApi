@@ -22,7 +22,7 @@ class TestNseApiReportsH1(unittest.TestCase):
         cls.nse._transport.cookie_store.clear()
 
     def test_equityBhavcopy(self):
-        file = self.nse.equityBhavcopy(date=self.date)
+        file = self.nse.equity_bhavcopy(date=self.date)
 
         exists = file.exists()
         file.unlink(missing_ok=True)
@@ -31,7 +31,7 @@ class TestNseApiReportsH1(unittest.TestCase):
         self.assertTrue(file.suffix == ".csv")
 
     def test_deliveryBhavcopy(self):
-        file = self.nse.deliveryBhavcopy(date=self.date)
+        file = self.nse.delivery_bhavcopy(date=self.date)
 
         exists = file.exists()
         file.unlink(missing_ok=True)
@@ -40,7 +40,7 @@ class TestNseApiReportsH1(unittest.TestCase):
         self.assertTrue(file.suffix == ".csv")
 
     def test_indicesBhavcopy(self):
-        file = self.nse.indicesBhavcopy(date=self.date)
+        file = self.nse.indices_bhavcopy(date=self.date)
 
         exists = file.exists()
         file.unlink(missing_ok=True)
@@ -58,7 +58,7 @@ class TestNseApiReportsH1(unittest.TestCase):
         self.assertTrue(file.suffix == ".zip")
 
     def test_fnoBhavcopy(self):
-        file = self.nse.fnoBhavcopy(date=self.date)
+        file = self.nse.fno_bhavcopy(date=self.date)
 
         exists = file.exists()
         file.unlink(missing_ok=True)

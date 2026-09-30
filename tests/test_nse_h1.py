@@ -31,25 +31,25 @@ class TestNseApiH1(unittest.TestCase):
         self.assertIsInstance(response, dict)
         self.assertTrue("CM" in response)
 
-    def test_blockdeals(self):
-        response = self.nse.blockDeals()
+    def test_block_deals(self):
+        response = self.nse.block_deals()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("timestamp" in response)
 
-    def test_bulkdeals(self):
+    def test_bulk_deals(self):
         today = datetime.now()
 
-        response = self.nse.bulkdeals(
-            option_type="bulk_deals", fromdate=today - timedelta(3), todate=today
+        response = self.nse.bulk_deals(
+            option_type="bulk_deals", from_date=today - timedelta(3), to_date=today
         )
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
         self.assertTrue("BD_DT_DATE" in response[0])
 
-    def test_equityMetaInfo(self):
-        response = self.nse.equityMetaInfo("reliance")
+    def test_equity_meta_info(self):
+        response = self.nse.equity_meta_info("reliance")
 
         self.assertIsInstance(response, dict)
         self.assertTrue("symbol" in response)
@@ -61,7 +61,7 @@ class TestNseApiH1(unittest.TestCase):
         self.assertTrue("priceInfo" in response)
 
     def test_live_volume_gainers(self):
-        response = self.nse.liveVolumeGainers()
+        response = self.nse.live_volume_gainers()
 
         self.assertIsInstance(response, dict)
         self.assertIsInstance(response["data"], list)
@@ -104,43 +104,43 @@ class TestNseApiH1(unittest.TestCase):
         self.assertEqual(response[0]["pChange"], -9)
         self.assertEqual(response[-1]["pChange"], -7)
 
-    def test_listEquityStocksByIndex(self):
-        response = self.nse.listEquityStocksByIndex(index="NIFTY 50")
+    def test_list_equity_stocks_by_index(self):
+        response = self.nse.list_equity_stocks_by_index(index="nifty 50")
 
         self.assertIsInstance(response, dict)
         self.assertTrue("data" in response)
         self.assertTrue("pChange" in response["data"][0])
 
-    def test_listIndices(self):
-        response = self.nse.listIndices()
+    def test_list_indices(self):
+        response = self.nse.list_indices()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("data" in response)
         self.assertIsInstance(response["data"], list)
 
-    def test_listSme(self):
-        response = self.nse.listSme()
+    def test_list_sme(self):
+        response = self.nse.list_sme()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("data" in response)
         self.assertTrue("pChange" in response["data"][0])
 
-    def test_listEtf(self):
-        response = self.nse.listEtf()
+    def test_list_etf(self):
+        response = self.nse.list_etf()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("data" in response)
         self.assertTrue("symbol" in response["data"][0])
 
-    def test_listSgb(self):
-        response = self.nse.listSgb()
+    def test_list_sgb(self):
+        response = self.nse.list_sgb()
 
         self.assertIsInstance(response, dict)
         self.assertTrue("data" in response)
         self.assertTrue("symbol" in response["data"][0])
 
-    def test_listCurrentIPO(self):
-        response = self.nse.listCurrentIPO()
+    def test_list_current_ipo(self):
+        response = self.nse.list_current_ipo()
 
         self.assertIsInstance(response, list)
 
@@ -148,8 +148,8 @@ class TestNseApiH1(unittest.TestCase):
             self.assertIsInstance(response[0], dict)
             self.assertTrue("symbol" in response[0])
 
-    def test_listUpcomingIPO(self):
-        response = self.nse.listUpcomingIPO()
+    def test_list_upcoming_ipo(self):
+        response = self.nse.list_upcoming_ipo()
 
         self.assertIsInstance(response, list)
 
@@ -157,8 +157,8 @@ class TestNseApiH1(unittest.TestCase):
             self.assertIsInstance(response[0], dict)
             self.assertTrue("symbol" in response[0])
 
-    def test_listPastIPO(self):
-        response = self.nse.listPastIPO()
+    def test_list_past_ipo(self):
+        response = self.nse.list_past_ipo()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
@@ -188,26 +188,26 @@ class TestNseApiH1(unittest.TestCase):
         self.assertIsInstance(response[0], dict)
         self.assertTrue("symbol" in response[0])
 
-    def test_boardMeetings(self):
-        response = self.nse.boardMeetings()
+    def test_board_meetings(self):
+        response = self.nse.board_meetings()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
         self.assertTrue("bm_symbol" in response[0])
 
-    def test_getFuturesExpiry(self):
-        response = self.nse.getFuturesExpiry()
+    def test_get_futures_expiry(self):
+        response = self.nse.get_futures_expiry()
 
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], str)
 
-    def test_fnoLots(self):
-        response = self.nse.fnoLots()
+    def test_fno_lots(self):
+        response = self.nse.fno_lots()
 
         self.assertIsInstance(response, dict)
 
-    def test_optionChain(self):
-        response = self.nse.optionChain(symbol="nifty")
+    def test_option_chain(self):
+        response = self.nse.option_chain(symbol="nifty")
 
         self.assertIsInstance(response, dict)
         self.assertTrue("records" in response)
@@ -239,8 +239,8 @@ class TestNseApiH1(unittest.TestCase):
         self.assertIsInstance(response, dict)
         self.assertTrue("IndexList" in response)
 
-    def test_getDetailedScripData(self):
-        response = self.nse.getDetailedScripData(symbol="ETERNAL", series="EQ")
+    def test_get_detailed_scrip_data(self):
+        response = self.nse.get_detailed_scrip_data(symbol="eternal", series="eq")
 
         self.assertIsInstance(response, dict)
         self.assertTrue("equityResponse" in response)

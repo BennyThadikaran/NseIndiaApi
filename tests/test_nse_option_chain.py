@@ -37,7 +37,7 @@ class TestNSEOptionChain(unittest.TestCase):
 
         mock = self._mock_req([dict(data="OK")])
 
-        result = self.nse.optionChain("nifty")
+        result = self.nse.option_chain("nifty")
 
         self.assertEqual(result, dict(data="OK"))
         mock.assert_called_once()
@@ -54,7 +54,7 @@ class TestNSEOptionChain(unittest.TestCase):
 
         mock = self._mock_req(responses)
 
-        result = self.nse.optionChain("nifty")
+        result = self.nse.option_chain("nifty")
 
         self.assertEqual(result, {"data": "ok"})
         self.assertEqual(mock.call_count, 2)
@@ -63,7 +63,7 @@ class TestNSEOptionChain(unittest.TestCase):
         self._mock_req([{}])
 
         with self.assertRaises(ValueError) as ctx:
-            self.nse.optionChain("nifty")
+            self.nse.option_chain("nifty")
 
         self.assertIn("expiryDates", str(ctx.exception))
 
@@ -71,7 +71,7 @@ class TestNSEOptionChain(unittest.TestCase):
         self._mock_req([{"expiryDates": []}])
 
         with self.assertRaises(ValueError) as ctx:
-            self.nse.optionChain("nifty")
+            self.nse.option_chain("nifty")
 
         self.assertIn("No expiry dates", str(ctx.exception))
 
@@ -83,7 +83,7 @@ class TestNSEOptionChain(unittest.TestCase):
             ]
         )
 
-        self.nse.optionChain("nifty")
+        self.nse.option_chain("nifty")
 
         self.assertTrue(self.cache_file.exists())
 
@@ -97,7 +97,7 @@ class TestNSEOptionChain(unittest.TestCase):
         ]
         mock = self._mock_req(responses)
 
-        self.nse.optionChain("reliance")
+        self.nse.option_chain("reliance")
 
         _, kwargs = mock.call_args
         self.assertEqual(kwargs["params"]["type"], "Equity")
@@ -109,7 +109,7 @@ class TestNSEOptionChain(unittest.TestCase):
         ]
         mock = self._mock_req(responses)
 
-        self.nse.optionChain("nifty")
+        self.nse.option_chain("nifty")
 
         _, kwargs = mock.call_args
         self.assertEqual(kwargs["params"]["type"], "Indices")
@@ -118,7 +118,7 @@ class TestNSEOptionChain(unittest.TestCase):
         expiry = datetime(2099, 1, 1)
         mock = self._mock_req([{"data": "ok"}])
 
-        result = self.nse.optionChain("nifty", expiry_date=expiry)
+        result = self.nse.option_chain("nifty", expiry_date=expiry)
 
         self.assertEqual(result, {"data": "ok"})
         mock.assert_called_once()
@@ -132,7 +132,7 @@ class TestNSEOptionChain(unittest.TestCase):
         ]
         mock = self._mock_req(responses)
 
-        result = self.nse.optionChain("nifty")
+        result = self.nse.option_chain("nifty")
 
         self.assertEqual(result, {"data": "ok"})
         self.assertEqual(mock.call_count, 2)
