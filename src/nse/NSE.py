@@ -1424,7 +1424,7 @@ class NSE:
         return data
 
     @staticmethod
-    def max_pain(option_chain: Dict, expiryDate: datetime) -> float:
+    def max_pain(option_chain: Dict, expiry_date: datetime) -> float:
         """Return the max pain strike price.
 
         Uses prefix sums to pre-compute values and avoid nested loops, giving
@@ -1440,14 +1440,14 @@ class NSE:
 
         :param option_chain: Output of :meth:`option_chain`.
         :type option_chain: dict
-        :param expiryDate: Options expiry date.
-        :type expiryDate: datetime.datetime
+        :param expiry_date: Options expiry date.
+        :type expiry_date: datetime.datetime
 
         :return: Max pain strike price.
         :rtype: float
         """
         data = option_chain["records"]["data"]
-        expiry = expiryDate.strftime("%d-%b-%Y")
+        expiry = expiry_date.strftime("%d-%b-%Y")
 
         # filter strikes by expiry date and gather strikes and OI into lists
         ce_oi = []
