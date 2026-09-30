@@ -907,8 +907,8 @@ class NSE:
     def quote(
         self,
         symbol: str,
-        series: str = "EQ",
-        market_type: str = "N",
+        series: str = "eq",
+        market_type: str = "n",
     ) -> Dict:
         """Return price quotes and other data for an equity symbol.
 
@@ -1671,7 +1671,7 @@ class NSE:
             chain=chain,
         )
 
-    def advance_decline(self, index: str = "NIFTY 50") -> Dict:
+    def advance_decline(self, index: str = "nifty 50") -> Dict:
         """Fetch advance-decline data for an NSE index.
 
         .. versionadded:: 3.0.0
@@ -1826,8 +1826,8 @@ class NSE:
         from_date: Optional[date] = None,
         to_date: Optional[date] = None,
         series: Literal[
-            "AE", "AF", "BE", "BL", "EQ", "IL", "RL", "W3", "GB", "GS"
-        ] = "EQ",
+            "ae", "af", "be", "bl", "eq", "il", "rl", "w3", "gb", "gs"
+        ] = "eq",
     ) -> List[Dict]:
         """Retrieve historical daily price and volume data for an equity symbol.
 
@@ -1861,8 +1861,8 @@ class NSE:
             today's date.
         :type to_date: datetime.date or None
         :param series: Equity series for which historical data is requested.
-            Must be one of ``AE``, ``AF``, ``BE``, ``BL``, ``EQ``, ``IL``,
-            ``RL``, ``W3``, ``GB``, ``GS``. Default ``EQ``.
+            Must be one of ``ae``, ``af``, ``be``, ``bl``, ``eq``, ``il``,
+            ``rl``, ``w3``, ``gb``, ``gs``. Default ``eq``.
         :type series: str
 
         :raises TypeError: If ``from_date`` or ``to_date`` is not an instance
@@ -1978,12 +1978,12 @@ class NSE:
         self,
         symbol: str,
         instrument: Literal[
-            "FUTIDX", "FUTSTK", "OPTIDX", "OPTSTK", "FUTIVX"
-        ] = "FUTIDX",
+            "futidx", "futstk", "optidx", "optstk", "futivx"
+        ] = "futidx",
         from_date: Optional[date] = None,
         to_date: Optional[date] = None,
         expiry: Optional[date] = None,
-        option_type: Optional[Literal["CE", "PE"]] = None,
+        option_type: Optional[Literal["ce", "pe"]] = None,
         strike_price: Optional[float] = None,
     ) -> List[dict]:
         """Download historical futures and options data within a date range.
@@ -2001,8 +2001,8 @@ class NSE:
 
         :param symbol: Symbol name.
         :type symbol: str
-        :param instrument: Instrument name. One of ``FUTIDX``, ``FUTSTK``,
-            ``OPTIDX``, ``OPTSTK``, ``FUTIVX``. Default ``FUTIDX``.
+        :param instrument: Instrument name. one of ``futidx``, ``futstk``,
+            ``optidx``, ``optstk``, ``futivx``. Default ``futidx``.
         :type instrument: str
         :param from_date: Start date from which to fetch data. If ``None``,
             defaults to 30 days before ``to_date``.
@@ -2015,8 +2015,8 @@ class NSE:
             derived from this date.
         :type expiry: datetime.date or None
         :param option_type: Optional filter for option type. Required when
-            ``instrument`` is ``OPTIDX`` or ``OPTSTK``. Must be ``CE`` or
-            ``PE``.
+            ``instrument`` is ``optidx`` or ``optstk``. Must be ``ce`` or
+            ``pe``.
         :type option_type: str or None
         :param strike_price: Optional strike price filter.
         :type strike_price: float or None
@@ -2024,7 +2024,7 @@ class NSE:
         :raises TypeError: If ``from_date``, ``to_date``, or ``expiry`` is
             not an instance of :class:`datetime.date`.
         :raises ValueError: If ``from_date`` is greater than ``to_date``.
-        :raises ValueError: If ``instrument`` is ``OPTIDX`` or ``OPTSTK`` and
+        :raises ValueError: If ``instrument`` is ``optidx`` or ``optstk`` and
             ``option_type`` is not specified.
 
         :return: A list of rows, each row a dictionary with column names
@@ -2059,13 +2059,13 @@ class NSE:
             params["expiryDate"] = expiry.strftime("%d-%b-%Y")
             params["year"] = expiry.year
 
-        if instrument in ("OPTIDX", "OPTSTK"):
+        if instrument in ("optidx", "optstk"):
             if not option_type:
                 raise ValueError(
                     "`option_type` param is required for Stock or Index options."
                 )
             else:
-                params["optionType"] = option_type
+                params["optionType"] = option_type.upper()
 
             if strike_price:
                 params["strikePrice"] = strike_price
@@ -2194,18 +2194,18 @@ class NSE:
     def fetch_daily_reports_file_metadata(
         self,
         segment: Literal[
-            "CM",
-            "INDEX",
-            "SLBS",
-            "SME",
-            "FO",
-            "COM",
-            "CD",
-            "NBF",
-            "WDM",
-            "CBM",
-            "TRI-PARTY",
-        ] = "CM",
+            "cm",
+            "index",
+            "slbs",
+            "sme",
+            "fo",
+            "com",
+            "cd",
+            "nbf",
+            "wdm",
+            "cbm",
+            "tri-party",
+        ] = "cm",
     ) -> Dict:
         """Return file metadata for daily reports in a given segment.
 
@@ -2214,8 +2214,8 @@ class NSE:
         and updated before attempting a download.
 
         :param segment: The market segment to retrieve metadata for. One of
-            ``CM``, ``INDEX``, ``SLBS``, ``SME``, ``FO``, ``COM``, ``CD``,
-            ``NBF``, ``WDM``, ``CBM``, ``TRI-PARTY``. Default ``CM``.
+            ``cm``, ``index``, ``slbs``, ``sme``, ``fo``, ``com``, ``cd``,
+            ``nbf``, ``wdm``, ``cbm``, ``tri-party``. Default ``cm``.
         :type segment: str
 
         :return: A dictionary containing metadata about the daily report files
@@ -2223,14 +2223,14 @@ class NSE:
         :rtype: dict
         """
         return self._transport.request(
-            f"{self.base_url}/daily-reports", params=dict(key=segment)
+            f"{self.base_url}/daily-reports", params=dict(key=segment.upper())
         ).json()
 
     def get_detailed_scrip_data(
         self,
         symbol: str,
-        series: Literal["EQ", "BE", "BZ", "SM", "ST", "SZ"] = "EQ",
-        market_type: str = "N",
+        series: Literal["eq", "be", "bz", "sm", "st", "sz"] = "eq",
+        market_type: str = "n",
     ) -> Dict:
         """Retrieve detailed symbol data for an equity or SME symbol.
 
@@ -2260,7 +2260,7 @@ class NSE:
         """
         params = dict(
             functionName="getSymbolData",
-            marketType=market_type,
+            marketType=market_type.upper(),
             series=series.upper(),
             symbol=symbol.upper(),
         )
