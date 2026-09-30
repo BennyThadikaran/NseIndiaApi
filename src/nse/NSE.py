@@ -1585,8 +1585,6 @@ class NSE:
         Max pain is delegated to :meth:`max_pain` and receives the raw response
         plus ``expiry_date``.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/compile_option_chain.json>`__
-
         :param symbol: FnO stock or Index futures symbol code. If Index futures
             must be one of ``banknifty``, ``nifty``, ``finnifty``, ``niftyit``.
         :type symbol: str
