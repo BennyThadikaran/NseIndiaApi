@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class OHLCV(TypedDict):
+    """Result of :meth:`NSE.equity_quote`."""
+
     date: str
     open: float
     high: float
