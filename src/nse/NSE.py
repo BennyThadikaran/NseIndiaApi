@@ -979,15 +979,6 @@ class NSE:
             key=lambda dct: dct["pChange"],
         )[:count]
 
-    def listFnoStocks(self):
-        """
-        .. deprecated:: 1.0.9
-            Removed in version 1.0.9,
-
-        Use `nse.listEquityStocksByIndex(index='SECURITIES IN F&O')`
-        """
-        pass
-
     def listEquityStocksByIndex(self, index="nifty 50") -> dict:
         """List equity stocks by their index name. Defaults to ``nifty 50``.
 
@@ -1028,15 +1019,6 @@ class NSE:
         url = f"{self.base_url}/allIndices"
 
         return self._transport.request(url).json()
-
-    def listIndexStocks(self, index):
-        """
-        .. deprecated:: 1.0.9
-            Removed in version 1.0.9.
-
-        Use `nse.listEquityStocksByIndex`
-        """
-        pass
 
     def listEtf(self) -> dict:
         """List all ETF stocks.
