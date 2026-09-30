@@ -116,7 +116,7 @@ class NSE:
     FNO_IT = "niftyit"
     UDIFF_SWITCH_DATE = datetime(2024, 7, 8).date()
 
-    _optionIndex = ("banknifty", "nifty", "finnifty", "niftyit")
+    _option_index = ("banknifty", "nifty", "finnifty", "niftyit")
     base_url = "https://www.nseindia.com/api"
     next_api_url = f"{base_url}/NextApi/apiClient/GetQuoteApi"
     archive_url = "https://nsearchives.nseindia.com"
@@ -185,7 +185,7 @@ class NSE:
             "Referer": "https://www.nseindia.com/get-quotes/equity?symbol=HDFCBANK",
         }
 
-        self.dir = utils.prepare_path(download_folder, isFolder=True)
+        self.dir = utils.prepare_path(download_folder, is_folder=True)
 
         self._transport = Transport(
             folder=self.dir,
@@ -198,7 +198,7 @@ class NSE:
             cookie_filename=cookie_filename,
         )
 
-        # Used by NSE.optionChain(), create the hidden directory once.
+        # Used by NSE.option_chain(), create the hidden directory once.
         self.opt_cache_dir = self.dir / ".opt-expiry-cache"
         self.opt_cache_dir.mkdir(exist_ok=True)
 
@@ -273,8 +273,10 @@ class NSE:
             params=dict(q=query),
         ).json()
 
-    def equityBhavcopy(
-        self, date: datetime, folder: Union[str, Path, None] = None
+    def equity_bhavcopy(
+        self,
+        date: datetime,
+        folder: Union[str, Path, None] = None,
     ) -> Path:
         """Download the daily Equity bhavcopy report for ``date`` and return
         the saved file path.
@@ -304,7 +306,7 @@ class NSE:
         :return: Path to the extracted CSV file.
         :rtype: pathlib.Path
         """
-        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         if date.date() < self.UDIFF_SWITCH_DATE:
             date_str = date.strftime("%d%b%Y").upper()
@@ -322,8 +324,10 @@ class NSE:
 
         return utils.consume_archive(file, file.parent)
 
-    def deliveryBhavcopy(
-        self, date: datetime, folder: Union[str, Path, None] = None
+    def delivery_bhavcopy(
+        self,
+        date: datetime,
+        folder: Union[str, Path, None] = None,
     ) -> Path:
         """Download the daily Equity delivery report for ``date`` and return
         the saved file path.
@@ -343,7 +347,7 @@ class NSE:
         :return: Path to the saved CSV file.
         :rtype: pathlib.Path
         """
-        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = "{}/products/content/sec_bhavdata_full_{}.csv".format(
             self.archive_url, date.strftime("%d%m%Y")
@@ -353,7 +357,7 @@ class NSE:
 
         return file
 
-    def indicesBhavcopy(
+    def indices_bhavcopy(
         self,
         date: datetime,
         folder: Union[str, Path, None] = None,
@@ -376,7 +380,7 @@ class NSE:
         :return: Path to the saved CSV file.
         :rtype: pathlib.Path
         """
-        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/indices/ind_close_all_{date:%d%m%Y}.csv"
 
@@ -384,7 +388,7 @@ class NSE:
 
         return file
 
-    def fnoBhavcopy(
+    def fno_bhavcopy(
         self,
         date: datetime,
         folder: Union[str, Path, None] = None,
@@ -410,7 +414,7 @@ class NSE:
         """
         dt_str = date.strftime("%Y%m%d")
 
-        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/fo/BhavCopy_NSE_FO_0_0_0_{dt_str}_F_0000.csv.zip"
 
@@ -443,7 +447,7 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%Y")
 
-        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/equities/sec_list_{dt_str}.csv"
 
@@ -479,7 +483,7 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%y")
 
-        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = f"{self.archive_url}/archives/equities/bhavcopy/pr/PR{dt_str}.zip"
 
@@ -488,7 +492,9 @@ class NSE:
         return file
 
     def cm_mii_security_report(
-        self, date: datetime, folder: Union[str, Path, None] = None
+        self,
+        date: datetime,
+        folder: Union[str, Path, None] = None,
     ) -> Path:
         """Download the daily CM MII security file report for ``date`` and
         return the saved and extracted file path.
@@ -511,7 +517,7 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%Y")
 
-        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/cm/NSE_CM_security_{dt_str}.csv.gz"
 
@@ -631,7 +637,7 @@ class NSE:
 
         return self._transport.request(url, params=params).json()
 
-    def boardMeetings(
+    def board_meetings(
         self,
         index: Literal["equities", "sme"] = "equities",
         symbol: Optional[str] = None,
@@ -646,7 +652,7 @@ class NSE:
         securities are returned. If ``from_date`` and ``to_date`` are both
         specified, only meetings within the date range are returned.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/boardMeetings.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/board_meetings.json>`__
 
         :param index: One of ``equities`` or ``sme``. Default ``equities``.
         :type index: str
@@ -864,7 +870,7 @@ class NSE:
             params=dict(index=index, symbol=symbol.upper()),
         ).json()
 
-    def equityMetaInfo(self, symbol) -> Dict:
+    def equity_meta_info(self, symbol) -> Dict:
         """Return meta info for an equity symbol.
 
         Returns a dictionary containing the symbol, company name, ISIN, market
@@ -876,7 +882,7 @@ class NSE:
         The ``series`` and ``marketType`` values returned here can be passed
         directly to :meth:`quote`.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/equityMetaInfo.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/equity_meta_info.json>`__
 
         :param symbol: Equity symbol code.
         :type symbol: str
@@ -902,7 +908,7 @@ class NSE:
         information, and the last update timestamp.
 
         The ``series`` and ``market_type`` values can be obtained from
-        :meth:`equityMetaInfo`.
+        :meth:`equity_meta_info`.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/quote.json>`__
 
@@ -928,13 +934,13 @@ class NSE:
         result = self._transport.request(self.next_api_url, params=params).json()
         return result["equityResponse"][0]
 
-    def equityQuote(self, symbol) -> Dict[str, Union[str, float]]:
+    def equity_quote(self, symbol) -> Dict[str, Union[str, float]]:
         """Extract date and OCHLV data from :meth:`quote` for ``symbol``.
 
         A convenience wrapper over :meth:`quote` that returns only the fields
         typically needed for a daily OHLCV bar.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/equityQuote.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/equity_quote.json>`__
 
         :param symbol: Equity symbol code.
         :type symbol: str
@@ -954,10 +960,10 @@ class NSE:
             volume=q["tradeInfo"]["totalTradedVolume"],
         )
 
-    def liveVolumeGainers(self) -> dict:
+    def live_volume_gainers(self) -> dict:
         """Get live volume gainers.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/liveVolumeGainers.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/live_volume_gainers.json>`__
 
         :return: A dictionary. The ``data`` key contains a list of stocks with
             volume surge metrics, price performance, and turnover data.
@@ -1012,12 +1018,12 @@ class NSE:
             key=lambda dct: dct["pChange"],
         )[:count]
 
-    def listEquityStocksByIndex(self, index="nifty 50") -> dict:
+    def list_equity_stocks_by_index(self, index="nifty 50") -> dict:
         """List equity stocks by their index name. Defaults to ``nifty 50``.
 
         :ref:`See list of acceptable values for index argument. <listEquityStocksByIndex>`
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listEquityStocksByIndex.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/list_equity_stocks_by_index.json>`__
 
         Reference Page:
             https://www.nseindia.com/market-data/live-equity-market?symbol=NIFTY%2050
@@ -1039,10 +1045,10 @@ class NSE:
             f"{self.base_url}/{endpoint}", params=dict(index=index.upper())
         ).json()
 
-    def listIndices(self) -> dict:
+    def list_indices(self) -> dict:
         """List all indices.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listIndices.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/list_indices.json>`__
 
         :return: A dictionary. The ``data`` key is a list of all Indices
             represented by a dictionary with the symbol code and other
@@ -1053,10 +1059,10 @@ class NSE:
 
         return self._transport.request(url).json()
 
-    def listEtf(self) -> dict:
+    def list_etf(self) -> dict:
         """List all ETF stocks.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listEtf.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/list_etf.json>`__
 
         :return: A dictionary. The ``data`` key is a list of all ETFs
             represented by a dictionary with the symbol code and other
@@ -1065,10 +1071,10 @@ class NSE:
         """
         return self._transport.request(f"{self.base_url}/etf").json()
 
-    def listSme(self) -> dict:
+    def list_sme(self) -> dict:
         """List all SME stocks.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listSme.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/list_sme.json>`__
 
         :return: A dictionary. The ``data`` key is a list of all SMEs
             represented by a dictionary with the symbol code and other
@@ -1077,10 +1083,10 @@ class NSE:
         """
         return self._transport.request(f"{self.base_url}/live-analysis-emerge").json()
 
-    def listSgb(self) -> dict:
+    def list_sgb(self) -> dict:
         """List all Sovereign Gold Bonds.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listSgb.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/list_sgb.json>`__
 
         :return: A dictionary. The ``data`` key is a list of all SGBs
             represented by a dictionary with the symbol code and other
@@ -1089,20 +1095,20 @@ class NSE:
         """
         return self._transport.request(f"{self.base_url}/sovereign-gold-bonds").json()
 
-    def listCurrentIPO(self) -> List[Dict]:
+    def list_current_ipo(self) -> List[Dict]:
         """List current IPOs.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listCurrentIPO.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/list_current_ipo.json>`__
 
         :return: List of current IPOs.
         :rtype: list[dict]
         """
         return self._transport.request(f"{self.base_url}/ipo-current-issue").json()
 
-    def listUpcomingIPO(self) -> List[Dict]:
+    def list_upcoming_ipo(self) -> List[Dict]:
         """List upcoming IPOs.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listUpcomingIPO.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/list_upcoming_ipo.json>`__
 
         :return: List of upcoming IPOs.
         :rtype: list[dict]
@@ -1111,7 +1117,7 @@ class NSE:
             f"{self.base_url}/all-upcoming-issues?category=ipo"
         ).json()
 
-    def listPastIPO(
+    def list_past_ipo(
         self,
         from_date: Optional[datetime] = None,
         to_date: Optional[datetime] = None,
@@ -1122,7 +1128,7 @@ class NSE:
         ``from_date`` is not provided, it defaults to 90 days before
         ``to_date``.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/listPastIPO.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/list_past_ipo.json>`__
 
         :param from_date: Optional start date. Defaults to 90 days before
             ``to_date``.
@@ -1240,10 +1246,10 @@ class NSE:
             f"{self.base_url}/circulars", params=params
         ).json()
 
-    def blockDeals(self) -> Dict:
+    def block_deals(self) -> Dict:
         """Return block deals.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/blockDeals.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/block_deals.json>`__
 
         :return: Block deals. The ``data`` key is a list of all block deals
             (empty list if there are none).
@@ -1251,7 +1257,7 @@ class NSE:
         """
         return self._transport.request(f"{self.base_url}/block-deal").json()
 
-    def fnoLots(self) -> Dict[str, int]:
+    def fno_lots(self) -> Dict[str, int]:
         """Return the lot size of FnO stocks.
 
         Downloads NSE's fo_mktlots.csv and parses it into a symbol → lot
@@ -1411,7 +1417,7 @@ class NSE:
         return data
 
     @staticmethod
-    def maxpain(optionChain: Dict, expiryDate: datetime) -> float:
+    def max_pain(option_chain: Dict, expiryDate: datetime) -> float:
         """Return the max pain strike price.
 
         Uses prefix sums to pre-compute values and avoid nested loops, giving
@@ -1425,15 +1431,15 @@ class NSE:
            itself. If the ordering is ever broken, the computed max pain will
            be incorrect.
 
-        :param optionChain: Output of :meth:`optionChain`.
-        :type optionChain: dict
+        :param option_chain: Output of :meth:`option_chain`.
+        :type option_chain: dict
         :param expiryDate: Options expiry date.
         :type expiryDate: datetime.datetime
 
         :return: Max pain strike price.
         :rtype: float
         """
-        data = optionChain["records"]["data"]
+        data = option_chain["records"]["data"]
         expiry = expiryDate.strftime("%d-%b-%Y")
 
         # filter strikes by expiry date and gather strikes and OI into lists
@@ -1490,7 +1496,7 @@ class NSE:
 
         return max_pain_strike
 
-    def getFuturesExpiry(
+    def get_futures_expiry(
         self, index: Literal["nifty", "banknifty", "finnifty"] = "nifty"
     ) -> List[str]:
         """Return the current, next, and far month expiry dates for an index.
@@ -1658,7 +1664,7 @@ class NSE:
             chain=chain,
         )
 
-    def advanceDecline(self, index: str = "NIFTY 50") -> Dict:
+    def advance_decline(self, index: str = "NIFTY 50") -> Dict:
         """Fetch advance-decline data for an NSE index.
 
         .. versionadded:: 3.0.0
@@ -1666,7 +1672,7 @@ class NSE:
         Reintroduced using the new NSE API endpoint. Deprecated in v1.0.9
         because the original NSE endpoint was no longer active.
 
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/advanceDecline.json>`__
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/advance_decline.json>`__
 
         Example::
 
@@ -1705,11 +1711,11 @@ class NSE:
 
         return data
 
-    def bulkdeals(
+    def bulk_deals(
         self,
         option_type: Literal["block_deals", "bulk_deals", "short_selling"],
-        fromdate: datetime,
-        todate: datetime,
+        from_date: datetime,
+        to_date: datetime,
     ) -> List[Dict]:
         """Retrieve bulk, block, or short-selling deal data for a date range.
 
@@ -1718,17 +1724,17 @@ class NSE:
 
         Sample responses:
 
-        - Bulk deals: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-bulk_deals.json
-        - Block deals: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-block_deals.json
-        - Short selling: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulkdeals-short_selling.json
+        - Bulk deals: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulk_deals-bulk_deals.json
+        - Block deals: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulk_deals-block_deals.json
+        - Short selling: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulk_deals-short_selling.json
 
         :param option_type: Type of deal report to fetch. Must be one of
             ``"bulk_deals"``, ``"block_deals"``, or ``"short_selling"``.
         :type option_type: str
-        :param fromdate: Start date of the report (inclusive).
-        :type fromdate: datetime.datetime
-        :param todate: End date of the report (inclusive).
-        :type todate: datetime.datetime
+        :param from_date: Start date of the report (inclusive).
+        :type from_date: datetime.datetime
+        :param to_date: End date of the report (inclusive).
+        :type to_date: datetime.datetime
 
         :raises ValueError: If ``fromdate`` is later than ``todate``.
         :raises ValueError: If the date range exceeds one year.
@@ -1739,16 +1745,16 @@ class NSE:
             requested report type.
         :rtype: list[dict]
         """
-        if fromdate > todate:
+        if from_date > to_date:
             raise ValueError("fromdate must be earlier than or equal to todate.")
 
-        if (todate - fromdate).days > 365:
+        if (to_date - from_date).days > 365:
             raise ValueError("The date range cannot exceed one year.")
 
         params = {
             "optionType": option_type,
-            "from": fromdate.strftime("%d-%m-%Y"),
-            "to": todate.strftime("%d-%m-%Y"),
+            "from": from_date.strftime("%d-%m-%Y"),
+            "to": to_date.strftime("%d-%m-%Y"),
         }
 
         url = f"{self.base_url}/historicalOR/bulk-block-short-deals"
@@ -1757,7 +1763,7 @@ class NSE:
 
         if "data" not in data or len(data["data"]) < 1:
             raise RuntimeError(
-                f"No {option_type} data available from {fromdate:%d-%m-%Y} to {todate:%d-%m-%Y}."
+                f"No {option_type} data available from {from_date:%d-%m-%Y} to {to_date:%d-%m-%Y}."
             )
 
         return data["data"]
@@ -1796,7 +1802,7 @@ class NSE:
             returned.
         :rtype: pathlib.Path
         """
-        folder = utils.prepare_path(folder, isFolder=True) if folder else self.dir
+        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
         file = self._transport.download(url, folder)
 
         suffix = file.suffix.lower()
@@ -2213,11 +2219,11 @@ class NSE:
             f"{self.base_url}/daily-reports", params=dict(key=segment)
         ).json()
 
-    def getDetailedScripData(
+    def get_detailed_scrip_data(
         self,
         symbol: str,
         series: Literal["EQ", "BE", "BZ", "SM", "ST", "SZ"] = "EQ",
-        marketType: str = "N",
+        market_type: str = "N",
     ) -> Dict:
         """Retrieve detailed symbol data for an equity or SME symbol.
 
@@ -2229,7 +2235,7 @@ class NSE:
             https://www.nseindia.com/get-quotes/equity?symbol=ETERNAL
 
         Sample response:
-            https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/getDetailedScripData.json
+            https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/get_detailed_scrip_data.json
 
         :param symbol: Exchange-traded symbol for which data is requested
             (e.g. ``ETERNAL``, ``HDFCBANK``).
@@ -2238,16 +2244,16 @@ class NSE:
             ``BZ``, ``SM``, ``ST``, or ``SZ``. Default ``EQ``.
             `Reference <https://www.nseindia.com/market-data/legend-of-series>`_
         :type series: str
-        :param marketType: Market type for which data is requested. Default
+        :param market_type: Market type for which data is requested. Default
             ``N``.
-        :type marketType: str
+        :type market_type: str
 
         :return: A dictionary containing detailed symbol data.
         :rtype: dict
         """
         params = dict(
             functionName="getSymbolData",
-            marketType=marketType,
+            marketType=market_type,
             series=series.upper(),
             symbol=symbol.upper(),
         )
