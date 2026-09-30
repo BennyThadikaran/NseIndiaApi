@@ -14,6 +14,15 @@ from .transport import Transport
 logger = logging.getLogger(__name__)
 
 
+class OHLCV(TypedDict):
+    date: str
+    open: float
+    high: float
+    low: float
+    close: float
+    volume: int
+
+
 class OptionLeg(TypedDict):
     """A single leg (PE or CE) of an option chain strike row."""
 
@@ -934,24 +943,22 @@ class NSE:
         result = self._transport.request(self.next_api_url, params=params).json()
         return result["equityResponse"][0]
 
-    def equity_quote(self, symbol) -> Dict[str, Union[str, float]]:
-        """Extract date and OCHLV data from :meth:`quote` for ``symbol``.
+    def equity_quote(self, symbol) -> OHLCV:
+        """Extract date and OHLCV data from :meth:`quote` for ``symbol``.
 
-        A convenience wrapper over :meth:`quote` that returns only the fields
-        typically needed for a daily OHLCV bar.
-
-        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/equity_quote.json>`__
+        A convenience wrapper over :meth:`quote` that returns the fields typically
+        needed for a daily OHLCV bar.
 
         :param symbol: Equity symbol code.
         :type symbol: str
 
-        :return: Date and OCHLV data with keys ``date``, ``open``, ``high``,
-            ``low``, ``close``, ``volume``.
-        :rtype: dict[str, str or float]
+        :return: OHLCV data containing ``date``, ``open``, ``high``, ``low``,
+            ``close``, and ``volume``.
+        :rtype: OHLCV
         """
         q = self.quote(symbol)
 
-        return dict(
+        return OHLCV(
             date=q["lastUpdateTime"],
             open=q["metaData"]["open"],
             high=q["metaData"]["dayHigh"],
