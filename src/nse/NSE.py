@@ -990,8 +990,8 @@ class NSE:
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/gainers.json>`__
 
-        :param data: Output of one of :meth:`listSme` or
-            :meth:`listEquityStocksByIndex`.
+        :param data: Output of one of :meth:`list_sme` or
+            :meth:`list_equity_stocks_by_index`.
         :type data: dict
         :param count: Optional. Limit the number of results returned.
         :type count: int or None
@@ -1013,8 +1013,8 @@ class NSE:
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/losers.json>`__
 
-        :param data: Output of one of :meth:`listSme` or
-            :meth:`listEquityStocksByIndex`.
+        :param data: Output of one of :meth:`list_sme` or
+            :meth:`list_equity_stocks_by_index`.
         :type data: dict
         :param count: Optional. Limit the number of results returned.
         :type count: int or None
