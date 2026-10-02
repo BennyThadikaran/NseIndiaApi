@@ -49,6 +49,8 @@ Contents
 
    usage
    api
+   utils
+   concurrency
 
 .. toctree::
    :caption: Acceptable values
