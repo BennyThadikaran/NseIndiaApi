@@ -51,6 +51,7 @@ Contents
    api
    utils
    concurrency
+   migration
 
 .. toctree::
    :caption: Acceptable values
