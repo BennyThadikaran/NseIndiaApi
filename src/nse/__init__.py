@@ -1,4 +1,3 @@
-from . import utils
 from .cookie_store import CookieStore, FileCookieStore, MemoryCookieStore
 from .NSE import NSE
 from .retry import RetryConfig
@@ -9,5 +8,4 @@ __all__ = [
     "FileCookieStore",
     "MemoryCookieStore",
     "RetryConfig",
-    "utils",
 ]

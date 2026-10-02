@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Literal, Optional, Tuple, TypedDict, Union
 
 from pyrate_limiter import Limiter
 
-from . import utils
+from . import _utils
 from .cookie_store import CookieStore
 from .retry import RetryConfig
 from .transport import Transport
@@ -196,7 +196,7 @@ class NSE:
             "Referer": "https://www.nseindia.com/get-quotes/equity?symbol=HDFCBANK",
         }
 
-        self.dir = utils.prepare_path(download_folder, is_folder=True)
+        self.dir = _utils.prepare_path(download_folder, is_folder=True)
 
         self._transport = Transport(
             folder=self.dir,
@@ -317,7 +317,7 @@ class NSE:
         :return: Path to the extracted CSV file.
         :rtype: pathlib.Path
         """
-        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
+        folder = _utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         if date.date() < self.UDIFF_SWITCH_DATE:
             date_str = date.strftime("%d%b%Y").upper()
@@ -333,7 +333,7 @@ class NSE:
 
         file = self._transport.download(url, folder)
 
-        return utils.consume_archive(file, file.parent)
+        return _utils.consume_archive(file, file.parent)
 
     def delivery_bhavcopy(
         self,
@@ -358,7 +358,7 @@ class NSE:
         :return: Path to the saved CSV file.
         :rtype: pathlib.Path
         """
-        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
+        folder = _utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = "{}/products/content/sec_bhavdata_full_{}.csv".format(
             self.archive_url, date.strftime("%d%m%Y")
@@ -391,7 +391,7 @@ class NSE:
         :return: Path to the saved CSV file.
         :rtype: pathlib.Path
         """
-        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
+        folder = _utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/indices/ind_close_all_{date:%d%m%Y}.csv"
 
@@ -425,13 +425,13 @@ class NSE:
         """
         dt_str = date.strftime("%Y%m%d")
 
-        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
+        folder = _utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/fo/BhavCopy_NSE_FO_0_0_0_{dt_str}_F_0000.csv.zip"
 
         file = self._transport.download(url, folder)
 
-        return utils.consume_archive(file, folder=file.parent)
+        return _utils.consume_archive(file, folder=file.parent)
 
     def priceband_report(
         self,
@@ -458,7 +458,7 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%Y")
 
-        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
+        folder = _utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/equities/sec_list_{dt_str}.csv"
 
@@ -494,7 +494,7 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%y")
 
-        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
+        folder = _utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = f"{self.archive_url}/archives/equities/bhavcopy/pr/PR{dt_str}.zip"
 
@@ -528,13 +528,13 @@ class NSE:
         """
         dt_str = date.strftime("%d%m%Y")
 
-        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
+        folder = _utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
         url = f"{self.archive_url}/content/cm/NSE_CM_security_{dt_str}.csv.gz"
 
         file = self._transport.download(url, folder)
 
-        return utils.consume_archive(file, folder=file.parent)
+        return _utils.consume_archive(file, folder=file.parent)
 
     def actions(
         self,
@@ -1809,14 +1809,14 @@ class NSE:
             returned.
         :rtype: pathlib.Path
         """
-        folder = utils.prepare_path(folder, is_folder=True) if folder else self.dir
+        folder = _utils.prepare_path(folder, is_folder=True) if folder else self.dir
         file = self._transport.download(url, folder)
 
         suffix = file.suffix.lower()
 
         # Check if downloaded file is a zip file
         if suffix == ".zip" or suffix == ".gz":
-            return utils.consume_archive(file, folder, extract_files)
+            return _utils.consume_archive(file, folder, extract_files)
 
         return file
 
@@ -1889,7 +1889,7 @@ class NSE:
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
 
-        date_chunks = utils.split_date_range(from_date, to_date, 100)
+        date_chunks = _utils.split_date_range(from_date, to_date, 100)
 
         data = []
 
@@ -1959,7 +1959,7 @@ class NSE:
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
 
-        date_chunks = utils.split_date_range(from_date, to_date)
+        date_chunks = _utils.split_date_range(from_date, to_date)
 
         data = []
 
@@ -2070,7 +2070,7 @@ class NSE:
             if strike_price:
                 params["strikePrice"] = strike_price
 
-        date_chunks = utils.split_date_range(from_date, to_date)
+        date_chunks = _utils.split_date_range(from_date, to_date)
 
         data = []
 
@@ -2143,7 +2143,7 @@ class NSE:
         if to_date < from_date:
             raise ValueError("The from date must occur before the to date")
 
-        date_chunks = utils.split_date_range(from_date, to_date)
+        date_chunks = _utils.split_date_range(from_date, to_date)
 
         data = []
 
