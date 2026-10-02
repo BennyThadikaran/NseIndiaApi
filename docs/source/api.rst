@@ -1,7 +1,13 @@
+===
 API
 ===
 
+NSE class
+=========
+
+
 .. autoclass:: nse.NSE
+   :special-members: __init__
 
 General Methods
 ---------------
@@ -14,30 +20,30 @@ General Methods
 
 .. automethod:: nse.NSE.holidays
 
-.. automethod:: nse.NSE.blockDeals
+.. automethod:: nse.NSE.block_deals
 
-.. automethod:: nse.NSE.bulkdeals
+.. automethod:: nse.NSE.bulk_deals
 
 Stocks Quotes and Market info
-------------------------------
+-----------------------------
 
-.. automethod:: nse.NSE.equityMetaInfo
+.. automethod:: nse.NSE.equity_meta_info
 
 .. automethod:: nse.NSE.shareholding
 
 .. automethod:: nse.NSE.quote
 
-.. automethod:: nse.NSE.equityQuote
+.. automethod:: nse.NSE.equity_quote
 
-.. automethod:: nse.NSE.getDetailedScripData
+.. automethod:: nse.NSE.get_detailed_scrip_data
 
-.. automethod:: nse.NSE.liveVolumeGainers
+.. automethod:: nse.NSE.live_volume_gainers
 
 .. automethod:: nse.NSE.gainers
 
 .. automethod:: nse.NSE.losers
 
-.. automethod:: nse.NSE.advanceDecline
+.. automethod:: nse.NSE.advance_decline
 
 .. automethod:: nse.NSE.fetch_index_names
 
@@ -54,28 +60,24 @@ Stocks Quotes and Market info
 List Stocks
 -----------
 
-.. automethod:: nse.NSE.listFnoStocks
+.. automethod:: nse.NSE.list_equity_stocks_by_index
 
-.. automethod:: nse.NSE.listEquityStocksByIndex
+.. automethod:: nse.NSE.list_indices
 
-.. automethod:: nse.NSE.listIndices
+.. automethod:: nse.NSE.list_etf
 
-.. automethod:: nse.NSE.listIndexStocks
+.. automethod:: nse.NSE.list_sme
 
-.. automethod:: nse.NSE.listEtf
-
-.. automethod:: nse.NSE.listSme
-
-.. automethod:: nse.NSE.listSgb
+.. automethod:: nse.NSE.list_sgb
 
 List IPOs
 ---------
 
-.. automethod:: nse.NSE.listCurrentIPO
+.. automethod:: nse.NSE.list_current_ipo
 
-.. automethod:: nse.NSE.listUpcomingIPO
+.. automethod:: nse.NSE.list_upcoming_ipo
 
-.. automethod:: nse.NSE.listPastIPO
+.. automethod:: nse.NSE.list_past_ipo
 
 NSE Circulars
 -------------
@@ -93,11 +95,11 @@ Zip files are automatically extracted and saved to file.
 
 .. automethod:: nse.NSE.fetch_daily_reports_file_metadata
 
-.. automethod:: nse.NSE.equityBhavcopy
+.. automethod:: nse.NSE.equity_bhavcopy
 
-.. automethod:: nse.NSE.deliveryBhavcopy
+.. automethod:: nse.NSE.delivery_bhavcopy
 
-.. automethod:: nse.NSE.indicesBhavcopy
+.. automethod:: nse.NSE.indices_bhavcopy
 
 .. automethod:: nse.NSE.pr_bhavcopy
 
@@ -125,7 +127,7 @@ Zip files are automatically extracted and saved to file.
         with zip.open(f"HL{dt:%d%m%Y}.csv") as f:
             df = pd.read_csv(f, index_col="Symbol")
 
-.. automethod:: nse.NSE.fnoBhavcopy
+.. automethod:: nse.NSE.fno_bhavcopy
 
 .. automethod:: nse.NSE.priceband_report
 
@@ -172,7 +174,7 @@ Corporate Announcements and Actions
 
 .. automethod:: nse.NSE.announcements
 
-.. automethod:: nse.NSE.boardMeetings
+.. automethod:: nse.NSE.board_meetings
 
 .. automethod:: nse.NSE.annual_reports
 
@@ -183,12 +185,56 @@ Corporate Announcements and Actions
 Futures and Options (FnO)
 -------------------------
 
-.. automethod:: nse.NSE.getFuturesExpiry
+.. automethod:: nse.NSE.get_futures_expiry
 
-.. automethod:: nse.NSE.fnoLots
+.. automethod:: nse.NSE.fno_lots
 
-.. automethod:: nse.NSE.optionChain
+.. automethod:: nse.NSE.option_chain
 
-.. automethod:: nse.NSE.compileOptionChain
+.. automethod:: nse.NSE.compile_option_chain
 
-.. automethod:: nse.NSE.maxpain
+.. automethod:: nse.NSE.max_pain
+
+Retry Configuration
+===================
+
+.. autoclass:: nse.RetryConfig
+
+Type Reference
+==============
+
+The library exposes some :class:`~typing.TypedDict` classes that describe
+the shape of structured return values. They are primarily useful for type
+checkers and editor autocomplete; at runtime they behave like ordinary
+:class:`dict` objects.
+
+
+OHLCV
+-----
+
+Result of :meth:`NSE.equity_quote`.
+
+.. autoclass:: nse.NSE.OHLCV
+   :members:
+   :undoc-members:
+
+CompiledOptionChain
+-------------------
+
+.. autoclass:: nse.NSE.CompiledOptionChain
+   :members:
+   :undoc-members:
+
+StrikeRow
+---------
+
+.. autoclass:: nse.NSE.StrikeRow
+   :members:
+   :undoc-members:
+
+OptionLeg
+---------
+
+.. autoclass:: nse.NSE.OptionLeg
+   :members:
+   :undoc-members:

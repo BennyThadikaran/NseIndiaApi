@@ -1,8 +1,10 @@
-=====================================================
-Acceptable values for nse.fetch_historical_index_data
-=====================================================
+===============================
+nse.fetch_historical_index_data
+===============================
 
-.. _fetch_historical_index_data:
+See :meth:`nse.NSE.fetch_historical_index_data` for more information.
+
+Below values can be passed to ``index`` parameter.
 
 Indices Eligible In Derivatives
 -------------------------------

@@ -49,5 +49,9 @@ Contents
 
    usage
    api
+
+.. toctree::
+   :caption: Acceptable values
+
    listEquityStocksByIndex
    fetch_historical_index_data

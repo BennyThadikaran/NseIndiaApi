@@ -1,10 +1,12 @@
-=================================================
-Acceptable values for nse.listEquityStocksByIndex
-=================================================
+===============================
+nse.list_equity_stocks_by_index
+===============================
 
-.. _listEquityStocksByIndex: 
+.. _listEquityStocksByIndex:
 
-These are values that can be passed to `index` argument.
+See :meth:`nse.NSE.list_equity_stocks_by_index` for more information.
+
+Following values can be passed to ``index`` parameter.
 
 - nifty 50
 - nifty bank
