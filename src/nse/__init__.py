@@ -1,6 +1,7 @@
 from .cookie_store import CookieStore, FileCookieStore, MemoryCookieStore
 from .NSE import NSE
-from .retry import RetryConfig
+from .retry import RetryableStatusError, RetryConfig
+from .transport import NSEFileUnavailableError
 
 __all__ = [
     "NSE",
@@ -8,4 +9,6 @@ __all__ = [
     "FileCookieStore",
     "MemoryCookieStore",
     "RetryConfig",
+    "RetryableStatusError",
+    "NSEFileUnavailableError",
 ]
