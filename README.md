@@ -15,6 +15,20 @@ cookie handling, rate limits, and retries under flaky network conditions.
 
 If you ❤️ my work so far, please 🌟 this repo.
 
+## Installation
+
+```bash
+pip install nse
+```
+
+For http2 support
+
+```bash
+pip install "nse[http2]"
+```
+
+See the documentation for installation, configuration, and usage examples.
+
 ---
 
 ## 👽 Documentation
