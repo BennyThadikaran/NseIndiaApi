@@ -27,6 +27,12 @@ class TestNseApiH2(unittest.TestCase):
         self.assertIsInstance(response, list)
         self.assertIsInstance(response[0], dict)
 
+    def test_lookup(self):
+        response = self.nse.lookup(query="hdfcbank")
+
+        self.assertIsInstance(response, dict)
+        self.assertIsInstance(response["data"], list)
+
     def test_holidays(self):
         response = self.nse.holidays()
 
