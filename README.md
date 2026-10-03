@@ -79,15 +79,22 @@ Tune everything at initialization: custom `Limiter` for throttling, custom `Retr
 ## Quick Start
 
 ```python
+from datetime import date, datetime
 from nse import NSE
-from datetime import date
 
 with NSE(download_folder=".") as nse:
     # Live quote
     print(nse.equity_quote("HDFCBANK"))
 
+    # current, next and far month expiry
+    expiry_dates = nse.get_futures_expiry(index="nifty")
+
+    expiry = datetime.strptime(expiry_dates[0], "%d-%b-%Y")
+    print(expiry)
+
     # Compiled option chain with max pain, PCR, ATM
-    chain = nse.compile_option_chain("nifty")
+    chain = nse.compile_option_chain("nifty", expiry_date=expiry)
+
     print(chain["max_pain"], chain["pcr"], chain["atm"])
 
     # Historical data with automatic chunking

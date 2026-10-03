@@ -86,33 +86,34 @@ Fetching a Live Quote
 
 .. code-block:: python
 
-   from nse import NSE
+  from nse import NSE
 
-   with NSE(download_folder=".") as nse:
-       q = nse.quote("hdfcbank")
+  with NSE(download_folder=".") as nse:
+      q = nse.quote("hdfcbank")
 
-       print(q["priceInfo"]["lastPrice"])
-       print(q["priceInfo"]["change"])
-       print(q["metadata"]["companyName"])
+      print(q["orderBook"]["lastPrice"])
+      print(q["metaData"]["pChange"])
+      print(q["metaData"]["companyName"])
 
 If you only need the daily OHLCV bar, use the convenience wrapper:
 
 .. code-block:: python
 
-   with NSE(download_folder=".") as nse:
-       bar = nse.equity_quote("hdfcbank")
-       print(bar)
-       # {'date': '...', 'open': ..., 'high': ..., 'low': ..., 'close': ..., 'volume': ...}
+  with NSE(download_folder=".") as nse:
+      bar = nse.equity_quote("hdfcbank")
+      print(bar)
+      # {'date': '...', 'open': ..., 'high': ..., 'low': ..., 'close': ..., 'volume': ...}
 
 Looking Up a Symbol
 ~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
-   with NSE(download_folder=".") as nse:
-       result = nse.lookup("hdfcbank")
-       print(result["symbols"][0]["symbol"])        # HDFCBANK
-       print(result["symbols"][0]["symbol_info"])   # HDFC Bank Limited
+  with NSE(download_folder=".") as nse:
+      result = nse.lookup("HDFCBANK")
+
+      print(result["data"][0]["symbol"])  # HDFCBANK
+      print(result["data"][0]["companyName"])  # HDFC Bank Limited
 
 Option Chain
 ~~~~~~~~~~~~
@@ -121,11 +122,11 @@ The ``option_chain`` method returns the raw NSE response. If you don't pass an `
 
 .. code-block:: python
 
-   from nse import NSE
+  from nse import NSE
 
-   with NSE(download_folder=".") as nse:
-       chain = nse.option_chain("nifty")
-       print(chain["records"]["underlyingValue"])
+  with NSE(download_folder=".") as nse:
+      chain = nse.option_chain("nifty")
+      print(chain["records"]["underlyingValue"])
 
 Building a Readable Option Chain
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -134,25 +135,25 @@ The raw NSE response is verbose and hard to work with for analysis. ``compile_op
 
 .. code-block:: python
 
-   from datetime import datetime
-   from nse import NSE
+  from datetime import datetime
+  from nse import NSE
 
-   with NSE(download_folder=".") as nse:
-       # Resolve the nearest expiry, then parse it into a datetime
-       expiry_str = nse.get_futures_expiry("nifty")[0]   # e.g. "26-Oct-2026"
-       expiry_date = datetime.strptime(expiry_str, "%d-%b-%Y")
+  with NSE(download_folder=".") as nse:
+      # Resolve the nearest expiry, then parse it into a datetime
+      expiry_str = nse.get_futures_expiry("nifty")[0]  # e.g. "26-Oct-2026"
+      expiry_date = datetime.strptime(expiry_str, "%d-%b-%Y")
 
-       chain = nse.compile_option_chain("nifty", expiry_date=expiry_date)
+      chain = nse.compile_option_chain("nifty", expiry_date=expiry_date)
 
-       print(f"Underlying:  {chain['underlying']}")
-       print(f"ATM strike:  {chain['atm']}")
-       print(f"Expiry:      {chain['expiry']}")
-       print(f"Max Pain:    {chain['max_pain']}")
-       print(f"PCR:         {chain['pcr']}")
-       print(f"Max COI:     {chain['max_coi']}  (strike with highest Call OI)")
-       print(f"Max POI:     {chain['max_poi']}  (strike with highest Put OI)")
-       print(f"Total CE OI: {chain['coi_total']}")
-       print(f"Total PE OI: {chain['poi_total']}")
+      print(f"Underlying:  {chain['underlying']}")
+      print(f"ATM strike:  {chain['atm']}")
+      print(f"Expiry:      {chain['expiry']}")
+      print(f"Max Pain:    {chain['max_pain']}")
+      print(f"PCR:         {chain['pcr']}")
+      print(f"Max COI:     {chain['max_coi']}  (strike with highest Call OI)")
+      print(f"Max POI:     {chain['max_poi']}  (strike with highest Put OI)")
+      print(f"Total CE OI: {chain['coi_total']}")
+      print(f"Total PE OI: {chain['poi_total']}")
 
 Each strike in ``chain["chain"]`` is keyed by the strike price (as a string) and holds a ``pe`` leg, a ``ce`` leg, and the per-strike PCR:
 
@@ -172,42 +173,43 @@ Because the structure is ordered by strike, you can format it exactly like an op
 
 .. code-block:: python
 
-   from datetime import datetime
-   from nse import NSE
+  from datetime import datetime
+  from nse import NSE
 
-   with NSE(download_folder=".") as nse:
-       expiry_str = nse.get_futures_expiry("nifty")[0]
-       expiry_date = datetime.strptime(expiry_str, "%d-%b-%Y")
-       chain = nse.compile_option_chain("nifty", expiry_date=expiry_date)
+  with NSE(download_folder=".") as nse:
+      expiry_str = nse.get_futures_expiry("nifty")[0]
+      expiry_date = datetime.strptime(expiry_str, "%d-%b-%Y")
 
-       header = (
-           f"{'CE OI':>10} {'CE Chg':>10} {'CE LTP':>10} {'CE IV':>8}  "
-           f"{'STRIKE':>8}  "
-           f"{'PE IV':>8} {'PE LTP':>10} {'PE Chg':>10} {'PE OI':>10}"
-       )
-       print(header)
-       print("-" * len(header))
+      chain = nse.compile_option_chain("nifty", expiry_date=expiry_date)
 
-       # Only show strikes near ATM to keep output readable
-       atm = chain["atm"]
-       window = 500
+      header = (
+          f"{'CE OI':>10} {'CE Chg':>10} {'CE LTP':>10} {'CE IV':>10}"
+          f"{'STRIKE':>10}"
+          f"{'PE IV':>8} {'PE LTP':>10} {'PE Chg':>10} {'PE OI':>10}"
+      )
+      print(header)
+      print("-" * len(header))
 
-       for strike_str, row in chain["chain"].items():
-           strike = int(strike_str)
-           if abs(strike - atm) > window:
-               continue
+      # Only show strikes near ATM to keep output readable
+      atm = chain["atm"]
+      window = 500
 
-           ce, pe = row["ce"], row["pe"]
+      for strike_str, row in chain["chain"].items():
+          strike = int(strike_str)
+          if abs(strike - atm) > window:
+              continue
 
-           # Highlight the ATM strike
-           marker = "  << ATM" if strike == atm else ""
+          ce, pe = row["ce"], row["pe"]
 
-           print(
-               f"{ce['oi']:>10,} {ce['chg']:>+10.2f} {ce['last']:>10.2f} {ce['iv']:>8.2f}  "
-               f"{strike:>8,}  "
-               f"{pe['iv']:>8.2f} {pe['last']:>10.2f} {pe['chg']:>+10.2f} {pe['oi']:>10,}"
-               f"{marker}"
-           )
+          # Highlight the ATM strike
+          marker = "  << ATM" if strike == atm else ""
+
+          print(
+              f"{ce['oi']:>10,} {ce['chg']:>+10.2f} {ce['last']:>10.2f} {ce['iv']:>10.2f}"
+              f"{strike:>10,}"
+              f"{pe['iv']:>8.2f} {pe['last']:>10.2f} {pe['chg']:>+10.2f} {pe['oi']:>10,}"
+              f"{marker}"
+          )
 
 The ``chain`` dict preserves insertion order, and NSE returns strikes sorted ascending — so iterating gives you a top-to-bottom table ordered from lowest to highest strike.
 
@@ -229,18 +231,18 @@ Historical methods automatically chunk large date ranges and return results in c
 
 .. code-block:: python
 
-   from datetime import date
-   from nse import NSE
+  from datetime import date
+  from nse import NSE
 
-   with NSE(download_folder=".") as nse:
-       data = nse.fetch_equity_historical_data(
-           symbol="reliance",
-           from_date=date(2024, 1, 1),
-           to_date=date(2024, 6, 30),
-       )
+  with NSE(download_folder=".") as nse:
+      data = nse.fetch_equity_historical_data(
+          symbol="reliance",
+          from_date=date(2024, 1, 1),
+          to_date=date(2024, 6, 30),
+      )
 
-       for row in data[:5]:
-           print(row["mTIMESTAMP"], row["closePrice"])
+      for row in data[:5]:
+          print(row["mtimestamp"], row["chClosingPrice"])
 
 The same pattern works for FnO and index history:
 
@@ -294,7 +296,7 @@ If the report isn't published for the requested date (weekend, holiday, or futur
 
 .. code-block:: python
 
-   from nse.transport import NSEFileUnavailableError
+   from nse import NSE, NSEFileUnavailableError
 
    try:
        nse.equity_bhavcopy(datetime(2024, 6, 29))  # a Saturday
@@ -458,8 +460,7 @@ Notice that all of these — except ``NSEFileUnavailableError`` — are subclass
 .. code-block:: python
 
    from datetime import datetime
-   from nse import NSE
-   from nse.transport import NSEFileUnavailableError
+   from nse import NSE, NSEFileUnavailableError
    from httpx import HTTPError
 
    with NSE(download_folder=".") as nse:

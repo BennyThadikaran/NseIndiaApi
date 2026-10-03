@@ -532,8 +532,7 @@ The equivalent 5.0.0 code is::
 
     from httpx import HTTPError
 
-    from nse import NSE
-    from nse.transport import NSEFileUnavailableError
+    from nse import NSE, NSEFileUnavailableError
 
     nse = NSE(
         download_folder="./reports",
