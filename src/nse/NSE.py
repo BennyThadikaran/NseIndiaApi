@@ -31,6 +31,7 @@ class OptionLeg(TypedDict):
     last: float
     oi: int
     chg: float
+    pct_chg: float
     iv: float
 
 
@@ -1573,7 +1574,7 @@ class NSE:
         - Total Call and Put Open Interest
         - Total PCR ratio
         - PCR for every strike price
-        - Every strike price has Last price, Open Interest, Change, Implied
+        - Every strike price has Last price, Open Interest, Change, Percent Change, Implied
           Volatility for both Call and Put
 
         Other included values: At the Money (ATM) strike price, Underlying strike
@@ -1588,11 +1589,11 @@ class NSE:
         each retained strike:
 
         - If a ``PE`` entry is present, its ``openInterest``, ``lastPrice``,
-          ``chg`` and ``impliedVolatility`` are recorded; otherwise the PE side
-          is populated with zeros.
+          ``change``, ``pChange`` and ``impliedVolatility`` are recorded; otherwise
+          the PE side is populated with zeros.
         - If a ``CE`` entry is present, its ``openInterest``, ``lastPrice``,
-          ``chg`` and ``impliedVolatility`` are recorded; otherwise the CE side
-          is populated with zeros.
+          ``change``, ``pChange`` and ``impliedVolatility`` are recorded; otherwise
+          the CE side is populated with zeros.
         - The per-strike PCR is ``round(pe_oi / ce_oi, 2)`` when ``ce_oi`` is
           non-zero, otherwise ``None``.
 
@@ -1630,7 +1631,13 @@ class NSE:
 
         max_coi = max_poi = total_coi = total_poi = max_coi_strike = max_poi_strike = 0
 
-        data_fields = ("openInterest", "lastPrice", "chg", "impliedVolatility")
+        data_fields = (
+            "openInterest",
+            "lastPrice",
+            "change",
+            "pChange",
+            "impliedVolatility",
+        )
 
         for row in data["records"]["data"]:
             if row["expiryDates"] != expiry_date_str:
@@ -1640,17 +1647,19 @@ class NSE:
 
             if strike not in chain:
                 chain[strike] = StrikeRow(
-                    pe=OptionLeg(last=0, oi=0, chg=0, iv=0),
-                    ce=OptionLeg(last=0, oi=0, chg=0, iv=0),
+                    pe=OptionLeg(last=0, oi=0, chg=0, pct_chg=0, iv=0),
+                    ce=OptionLeg(last=0, oi=0, chg=0, pct_chg=0, iv=0),
                     pcr=None,
                 )
 
             poi = coi = 0
 
             if "PE" in row:
-                poi, last, chg, iv = map(row["PE"].get, data_fields)
+                poi, last, chg, pct_chg, iv = map(row["PE"].get, data_fields)
 
-                chain[strike]["pe"] = OptionLeg(last=last, oi=poi, chg=chg, iv=iv)
+                chain[strike]["pe"] = OptionLeg(
+                    last=last, oi=poi, chg=chg, pct_chg=pct_chg, iv=iv
+                )
 
                 total_poi += poi
 
@@ -1659,9 +1668,11 @@ class NSE:
                     max_poi_strike = int(strike)
 
             if "CE" in row:
-                coi, last, chg, iv = map(row["CE"].get, data_fields)
+                coi, last, chg, pct_chg, iv = map(row["CE"].get, data_fields)
 
-                chain[strike]["ce"] = OptionLeg(last=last, oi=coi, chg=chg, iv=iv)
+                chain[strike]["ce"] = OptionLeg(
+                    last=last, oi=coi, chg=chg, pct_chg=pct_chg, iv=iv
+                )
 
                 total_coi += coi
 
