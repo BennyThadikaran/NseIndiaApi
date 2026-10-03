@@ -305,7 +305,7 @@ failure types.
 5.0.0::
 
     from httpx import HTTPError
-    from nse.transport import NSEFileUnavailableError
+    from nse import NSE, NSEFileUnavailableError
 
     try:
         nse.equity_bhavcopy(date)
