@@ -129,7 +129,11 @@ class NSE:
 
     _option_index = ("banknifty", "nifty", "finnifty", "niftyit")
     base_url = "https://www.nseindia.com/api"
-    next_api_url = f"{base_url}/NextApi/apiClient/GetQuoteApi"
+    next_api_base_url = f"{base_url}/NextApi"
+
+    next_api_quote_url = f"{next_api_base_url}/apiClient/GetQuoteApi"
+    next_api_global_search_url = f"{next_api_base_url}/globalSearch"
+
     archive_url = "https://nsearchives.nseindia.com"
 
     def __init__(
@@ -255,14 +259,19 @@ class NSE:
             "marketState"
         ]
 
-    def lookup(self, query: str) -> dict:
-        """Look up a stock symbol by company name, or a company name by symbol.
+    def lookup(
+        self,
+        query: str,
+        segment: Literal["all", "equity", "derivatives", "etf", "others"] = "equity",
+    ) -> dict:
+        """Look up stocks, derivatives, ETFs, or other instruments by company name or symbol.
 
-        Returns a dictionary with the ``symbols`` key containing a list of
-        matching results. The first item is usually an exact match, assuming
-        the exact company name or full symbol was searched.
+        Returns a dictionary with the ``data`` key containing a list of matching
+        results. Each item in the list includes details such as the company name,
+        stock symbol, segment, series, last traded price, change, percentage
+        change, and URLs for the quote page.
 
-        If the ``symbols`` list is empty, no symbols matched the query.
+        If the ``data`` list is empty, no matches were found for the query.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/lookup.json>`__
 
@@ -271,17 +280,25 @@ class NSE:
             with NSE("") as nse:
                 result = nse.lookup(query="hdfcbank")
 
-                print(result['symbols'][0]['symbol_info']) # company name - HDFC Bank Limited
-                print(result['symbols'][0]['symbol']) # stock symbol - HDFCBANK
+                print(result['data'][0]['companyName'])  # HDFC Bank Limited
+                print(result['data'][0]['symbol'])       # HDFCBANK
+                print(result['data'][0]['segment'])      # in equity
+                print(result['data'][0]['series'])       # EQ
 
         :param query: Company name or stock symbol to search for.
         :type query: str
-        :return: A dictionary of results from the query search.
+        :param segment: Market segment to search within. One of ``"all"``,
+            ``"equity"``, ``"derivatives"``, ``"etf"``, or ``"others"``.
+            The ``"others"`` segment includes instruments such as ``debt``.
+            Defaults to ``"equity"``.
+        :type segment: Literal["all", "equity", "derivatives", "etf", "others"]
+        :return: A dictionary containing a ``data`` key with a list of matching
+            results.
         :rtype: dict
         """
         return self._transport.request(
-            f"{self.base_url}/search/autocomplete",
-            params=dict(q=query),
+            f"{self.next_api_global_search_url}/{segment}",
+            params=dict(symbol=query),
         ).json()
 
     def equity_bhavcopy(
@@ -902,7 +919,7 @@ class NSE:
         :rtype: dict
         """
         return self._transport.request(
-            self.next_api_url,
+            self.next_api_quote_url,
             params=dict(functionName="getMetaData", symbol=symbol.upper()),
         ).json()
 
@@ -942,7 +959,7 @@ class NSE:
             symbol=symbol.upper(),
         )
 
-        result = self._transport.request(self.next_api_url, params=params).json()
+        result = self._transport.request(self.next_api_quote_url, params=params).json()
         return result["equityResponse"][0]
 
     def equity_quote(self, symbol) -> OHLCV:
@@ -1896,7 +1913,7 @@ class NSE:
         for chunk in date_chunks:
             data += reversed(
                 self._transport.request(
-                    url=self.next_api_url,
+                    url=self.next_api_quote_url,
                     params=dict(
                         functionName="getHistoricalTradeData",
                         symbol=symbol,
@@ -2265,4 +2282,4 @@ class NSE:
             symbol=symbol.upper(),
         )
 
-        return self._transport.request(self.next_api_url, params=params).json()
+        return self._transport.request(self.next_api_quote_url, params=params).json()
