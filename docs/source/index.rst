@@ -6,41 +6,13 @@
 Welcome to NSE's documentation!
 ===============================
 
-**NSE** is an Unofficial Python Api for NSE India stock exchange
+**NSE** is an unofficial lightweight Python client for the National Stock Exchange of India. Built for traders, analysts,
+and quant developers who need reliable programmatic access to NSE data without having to worry about
+cookie handling, rate limits, and retries under flaky network conditions.
 
 Python version: >= 3.8
 
-All network requests through NSE are rate limited or throttled to 3 requests per second. This allows making large number of requests without overloading the server or getting blocked.
-
 GitHub Source: `BennyThadikaran/NseIndiaApi <https://github.com/BennyThadikaran/NseIndiaApi>`_
-
-To install on local machine or PC:
-----------------------------------
-
-.. code:: console
-
-  $ pip install nse[local]
-
-This will additionally install the ``requests`` library.
-
-.. code-block:: python
-
-  # server parameter set to False
-  nse = NSE(download_folder='', server=False)
-
-To install on server like AWS or other cloud services.
-------------------------------------------------------
-
-.. code:: console
-
-  $ pip install nse[server]
-
-This will additionally install ``httpx`` library with http2 support.
-
-.. code-block:: python
-
-  # Make sure to set server parameter to True.
-  nse = NSE(download_folder='', server=True)
 
 Contents
 --------
