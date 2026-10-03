@@ -1,3 +1,4 @@
+import shutil
 import unittest
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -18,6 +19,7 @@ class TestNseApiH1(unittest.TestCase):
     def tearDownClass(cls):
         cls.nse.exit()
         cls.nse._transport.cookie_store.clear()
+        shutil.rmtree(cls.nse.opt_cache_dir)
 
     def test_status(self):
         response = self.nse.status()
