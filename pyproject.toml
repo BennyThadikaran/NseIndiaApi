@@ -30,7 +30,11 @@ classifiers = [
   "Topic :: Software Development :: Libraries",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-dependencies = [ "httpx~=0.28.1", "pyrate-limiter~=4.5.0" ]
+dependencies = [
+  "httpx~=0.28.1",
+  "pyrate-limiter==3.9; python_version<'3.10'",
+  "pyrate-limiter~=4.5.0; python_version>='3.10'",
+]
 optional-dependencies.dev = [ "furo~=2023.9.10", "sphinx~=7.4.7" ]
 optional-dependencies.http2 = [ "httpx[http2]~=0.28.1" ]
 urls."Bug Tracker" = "https://github.com/BennyThadikaran/NseIndiaApi/issues"

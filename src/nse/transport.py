@@ -1,4 +1,5 @@
 import logging
+from importlib.metadata import version
 from pathlib import Path
 from typing import Any, Dict, Optional
 from urllib.parse import urlsplit
@@ -87,7 +88,14 @@ class Transport:
 
         self.timeout = timeout
 
-        self.throttle = throttle or Limiter(Rate(3, Duration.SECOND))
+        if version("pyrate_limiter") == "3.9.0":
+            self.throttle = throttle or Limiter(
+                Rate(3, Duration.SECOND),
+                raise_when_fail=False,
+                max_delay=2000,
+            )
+        else:
+            self.throttle = throttle or Limiter(Rate(3, Duration.SECOND))
 
         self.retry_config = retry_config or RetryConfig()
 
