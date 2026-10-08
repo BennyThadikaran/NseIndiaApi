@@ -79,7 +79,7 @@ class Transport:
         headers: Dict[str, Any],
         cookie_store: Optional[CookieStore] = None,
         throttle: Optional[Limiter] = None,
-        retry_config: RetryConfig | None = None,
+        retry_config: Optional[RetryConfig] = None,
         use_http2: bool = False,
         timeout: int = 15,
         cookie_filename: Optional[str] = None,
