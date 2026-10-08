@@ -1,7 +1,7 @@
 import gzip
 import logging
 import shutil
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 from zipfile import ZipFile
@@ -183,3 +183,42 @@ def split_date_range(
         current_start = current_end + timedelta(days=1)
 
     return chunks
+
+
+def process_dates(
+    start_date: Optional[date],
+    end_date: Optional[date],
+    lookback_days: int = 30,
+) -> Tuple[date, date]:
+    """Normalize and validate a date range.
+
+    ``datetime`` values are converted to their date component. If ``end_date``
+    is not provided, today's date is used. If ``start_date`` is not provided,
+    it defaults to ``lookback_days`` before ``end_date``.
+
+    :param start_date: Start date of the range. If a ``datetime`` is provided,
+        only the date component is used.
+    :param end_date: End date of the range. If a ``datetime`` is provided,
+        only the date component is used. Defaults to today.
+    :param lookback_days: Number of days before ``end_date`` to use as the
+        default ``start_date``.
+    :return: A tuple containing the normalized start and end dates.
+    :raises ValueError: If ``start_date`` is later than ``end_date``.
+    :rtype: tuple[datetime.date, datetime.date]
+    """
+    if isinstance(start_date, datetime):
+        start_date = start_date.date()
+
+    if isinstance(end_date, datetime):
+        end_date = end_date.date()
+
+    if end_date is None:
+        end_date = date.today()
+
+    if start_date is None:
+        start_date = end_date - timedelta(days=lookback_days)
+
+    if end_date < start_date:
+        raise ValueError("start_date cannot be later than end_date")
+
+    return start_date, end_date

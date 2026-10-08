@@ -1,6 +1,6 @@
 import logging
 import tempfile
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, TypedDict, Union
 
@@ -12,6 +12,8 @@ from .retry import RetryConfig
 from .transport import Transport
 
 logger = logging.getLogger(__name__)
+
+DATE_FORMAT = "%d-%m-%Y"
 
 
 class OHLCV(TypedDict):
@@ -126,7 +128,7 @@ class NSE:
     FNO_NIFTY = "nifty"
     FNO_FINNIFTY = "finnifty"
     FNO_IT = "niftyit"
-    UDIFF_SWITCH_DATE = datetime(2024, 7, 8).date()
+    UDIFF_SWITCH_DATE = date(2024, 7, 8)
 
     _option_index = ("banknifty", "nifty", "finnifty", "niftyit")
     base_url = "https://www.nseindia.com/api"
@@ -304,7 +306,7 @@ class NSE:
 
     def equity_bhavcopy(
         self,
-        date: datetime,
+        date: date,
         folder: Union[str, Path, None] = None,
     ) -> Path:
         """Download the daily Equity bhavcopy report for ``date`` and return
@@ -321,7 +323,7 @@ class NSE:
         archive deleted; the returned path points to the extracted CSV.
 
         :param date: Date of the bhavcopy to download.
-        :type date: datetime.datetime
+        :type date: datetime.date
         :param folder: Optional folder to save the file in. If not specified,
             the ``download_folder`` from initialization is used.
         :type folder: pathlib.Path or str or None
@@ -337,7 +339,10 @@ class NSE:
         """
         folder = _utils.prepare_path(folder, is_folder=True) if folder else self.dir
 
-        if date.date() < self.UDIFF_SWITCH_DATE:
+        if isinstance(date, datetime):
+            date = date.date()
+
+        if date < self.UDIFF_SWITCH_DATE:
             date_str = date.strftime("%d%b%Y").upper()
             month = date_str[2:5]
 
@@ -355,7 +360,7 @@ class NSE:
 
     def delivery_bhavcopy(
         self,
-        date: datetime,
+        date: date,
         folder: Union[str, Path, None] = None,
     ) -> Path:
         """Download the daily Equity delivery report for ``date`` and return
@@ -364,7 +369,7 @@ class NSE:
         The delivered file is a plain CSV (no archive extraction is needed).
 
         :param date: Date of the delivery bhavcopy to download.
-        :type date: datetime.datetime
+        :type date: datetime.date
         :param folder: Optional folder to save the file in. If not specified,
             the ``download_folder`` from initialization is used.
         :type folder: pathlib.Path or str or None
@@ -388,7 +393,7 @@ class NSE:
 
     def indices_bhavcopy(
         self,
-        date: datetime,
+        date: date,
         folder: Union[str, Path, None] = None,
     ) -> Path:
         """Download the daily Equity Indices report for ``date`` and return
@@ -397,7 +402,7 @@ class NSE:
         The delivered file is a plain CSV (no archive extraction is needed).
 
         :param date: Date of the Indices bhavcopy to download.
-        :type date: datetime.datetime
+        :type date: datetime.date
         :param folder: Optional folder to save the file in. If not specified,
             the ``download_folder`` from initialization is used.
         :type folder: pathlib.Path or str or None
@@ -419,7 +424,7 @@ class NSE:
 
     def fno_bhavcopy(
         self,
-        date: datetime,
+        date: date,
         folder: Union[str, Path, None] = None,
     ) -> Path:
         """Download the daily UDIFF-format FnO bhavcopy report for ``date``
@@ -429,7 +434,7 @@ class NSE:
         archive deleted; the returned path points to the extracted CSV.
 
         :param date: Date of the FnO bhavcopy to download.
-        :type date: datetime.datetime
+        :type date: datetime.date
         :param folder: Optional folder to save the file in. If not specified,
             the ``download_folder`` from initialization is used.
         :type folder: pathlib.Path or str or None
@@ -453,7 +458,7 @@ class NSE:
 
     def priceband_report(
         self,
-        date: datetime,
+        date: date,
         folder: Union[str, Path, None] = None,
     ) -> Path:
         """Download the daily priceband report for ``date`` and return the
@@ -462,7 +467,7 @@ class NSE:
         The delivered file is a plain CSV (no archive extraction is needed).
 
         :param date: Report date to download.
-        :type date: datetime.datetime
+        :type date: datetime.date
         :param folder: Optional folder to save the file in. If not specified,
             the ``download_folder`` from initialization is used.
         :type folder: pathlib.Path or str or None
@@ -486,7 +491,7 @@ class NSE:
 
     def pr_bhavcopy(
         self,
-        date: datetime,
+        date: date,
         folder: Union[str, Path, None] = None,
     ) -> Path:
         """Download the daily PR Bhavcopy zip report for ``date`` and return
@@ -498,7 +503,7 @@ class NSE:
         **not** extracted.
 
         :param date: Report date to download.
-        :type date: datetime.datetime
+        :type date: datetime.date
         :param folder: Optional folder to save the file in. If not specified,
             the ``download_folder`` from initialization is used.
         :type folder: pathlib.Path or str or None
@@ -522,7 +527,7 @@ class NSE:
 
     def cm_mii_security_report(
         self,
-        date: datetime,
+        date: date,
         folder: Union[str, Path, None] = None,
     ) -> Path:
         """Download the daily CM MII security file report for ``date`` and
@@ -532,7 +537,7 @@ class NSE:
         archive deleted; the returned path points to the resulting CSV.
 
         :param date: Report date to download.
-        :type date: datetime.datetime
+        :type date: datetime.date
         :param folder: Optional folder to save the file in. If not specified,
             the ``download_folder`` from initialization is used.
         :type folder: pathlib.Path or str or None
@@ -558,12 +563,13 @@ class NSE:
         self,
         segment: Literal["equities", "sme", "debt", "mf"] = "equities",
         symbol: Optional[str] = None,
-        from_date: Optional[datetime] = None,
-        to_date: Optional[datetime] = None,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
     ) -> List[Dict]:
         """Get all forthcoming corporate actions.
 
         If ``symbol`` is specified, only actions for that symbol are returned.
+
         If ``from_date`` and ``to_date`` are both specified, only actions
         within the date range are returned.
 
@@ -575,30 +581,27 @@ class NSE:
         :param symbol: Optional stock symbol to filter actions.
         :type symbol: str or None
         :param from_date: Optional start date of the range.
-        :type from_date: datetime.datetime or None
+        :type from_date: datetime.date or None
         :param to_date: Optional end date of the range.
-        :type to_date: datetime.datetime or None
+        :type to_date: datetime.date or None
 
         :raises ValueError: If ``from_date`` is greater than ``to_date``.
 
         :return: A list of corporate actions.
         :rtype: list[dict]
         """
-        fmt = "%d-%m-%Y"
-
         params = dict(index=segment)
 
         if symbol:
             params["symbol"] = symbol
 
         if from_date and to_date:
-            if from_date > to_date:
-                raise ValueError("'from_date' cannot be greater than 'to_date'")
+            start_date, end_date = _utils.process_dates(from_date, to_date)
 
             params.update(
                 dict(
-                    from_date=from_date.strftime(fmt),
-                    to_date=to_date.strftime(fmt),
+                    from_date=start_date.strftime(DATE_FORMAT),
+                    to_date=end_date.strftime(DATE_FORMAT),
                 )
             )
 
@@ -611,8 +614,8 @@ class NSE:
         index: Literal["equities", "sme", "debt", "mf", "invitsreits"] = "equities",
         symbol: Optional[str] = None,
         fno=False,
-        from_date: Optional[datetime] = None,
-        to_date: Optional[datetime] = None,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
     ) -> List[Dict]:
         """Get all corporate announcements.
 
@@ -632,17 +635,15 @@ class NSE:
             ``False``.
         :type fno: bool
         :param from_date: Optional start date of the range.
-        :type from_date: datetime.datetime or None
+        :type from_date: datetime.date or None
         :param to_date: Optional end date of the range.
-        :type to_date: datetime.datetime or None
+        :type to_date: datetime.date or None
 
         :raises ValueError: If ``from_date`` is greater than ``to_date``.
 
         :return: A list of corporate announcements.
         :rtype: list[dict]
         """
-        fmt = "%d-%m-%Y"
-
         params: Dict[str, Any] = {"index": index}
 
         if symbol:
@@ -652,13 +653,12 @@ class NSE:
             params["fo_sec"] = True
 
         if from_date and to_date:
-            if from_date > to_date:
-                raise ValueError("'from_date' cannot be greater than 'to_date'")
+            start_date, end_date = _utils.process_dates(from_date, to_date)
 
             params.update(
                 dict(
-                    from_date=from_date.strftime(fmt),
-                    to_date=to_date.strftime(fmt),
+                    from_date=start_date.strftime(DATE_FORMAT),
+                    to_date=end_date.strftime(DATE_FORMAT),
                 )
             )
 
@@ -671,8 +671,8 @@ class NSE:
         index: Literal["equities", "sme"] = "equities",
         symbol: Optional[str] = None,
         fno: bool = False,
-        from_date: Optional[datetime] = None,
-        to_date: Optional[datetime] = None,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
     ) -> List[Dict]:
         """Get all forthcoming board meetings.
 
@@ -691,17 +691,15 @@ class NSE:
             ``False``.
         :type fno: bool
         :param from_date: Optional start date of the range.
-        :type from_date: datetime.datetime or None
+        :type from_date: datetime.date or None
         :param to_date: Optional end date of the range.
-        :type to_date: datetime.datetime or None
+        :type to_date: datetime.date or None
 
         :raises ValueError: If ``from_date`` is greater than ``to_date``.
 
         :return: A list of corporate board meetings.
         :rtype: list[dict]
         """
-        fmt = "%d-%m-%Y"
-
         params: Dict[str, Any] = {"index": index}
 
         if symbol:
@@ -711,13 +709,12 @@ class NSE:
             params["fo_sec"] = True
 
         if from_date and to_date:
-            if from_date > to_date:
-                raise ValueError("'from_date' cannot be greater than 'to_date'")
+            start_date, end_date = _utils.process_dates(from_date, to_date)
 
             params.update(
                 dict(
-                    from_date=from_date.strftime(fmt),
-                    to_date=to_date.strftime(fmt),
+                    from_date=start_date.strftime(DATE_FORMAT),
+                    to_date=end_date.strftime(DATE_FORMAT),
                 )
             )
 
@@ -767,8 +764,8 @@ class NSE:
         segment: Literal["equities", "sme", "debt", "mf"] = "equities",
         period: Literal["quarterly", "annual", "half-yearly"] = "quarterly",
         symbol: Optional[str] = None,
-        from_date: Optional[datetime] = None,
-        to_date: Optional[datetime] = None,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
     ) -> List[Dict]:
         """Get corporate financial-results filings (metadata) for a date range.
 
@@ -796,17 +793,15 @@ class NSE:
         :type symbol: str or None
         :param from_date: Optional start of the broadcast-date window
             (inclusive).
-        :type from_date: datetime.datetime or None
+        :type from_date: datetime.date or None
         :param to_date: Optional end of the broadcast-date window (inclusive).
-        :type to_date: datetime.datetime or None
+        :type to_date: datetime.date or None
 
         :raises ValueError: If ``from_date`` is greater than ``to_date``.
 
         :return: A list of financial-results filing records.
         :rtype: list[dict]
         """
-        fmt = "%d-%m-%Y"
-
         params: Dict[str, Any] = dict(
             index=segment,
             period=period,
@@ -816,13 +811,12 @@ class NSE:
             params["symbol"] = symbol.upper()
 
         if from_date and to_date:
-            if from_date > to_date:
-                raise ValueError("'from_date' cannot be greater than 'to_date'")
+            start_date, end_date = _utils.process_dates(from_date, to_date)
 
             params.update(
                 dict(
-                    from_date=from_date.strftime(fmt),
-                    to_date=to_date.strftime(fmt),
+                    from_date=start_date.strftime(DATE_FORMAT),
+                    to_date=end_date.strftime(DATE_FORMAT),
                 )
             )
 
@@ -1146,8 +1140,8 @@ class NSE:
 
     def list_past_ipo(
         self,
-        from_date: Optional[datetime] = None,
-        to_date: Optional[datetime] = None,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
     ) -> List[Dict]:
         """List past IPOs within a date range.
 
@@ -1159,27 +1153,22 @@ class NSE:
 
         :param from_date: Optional start date. Defaults to 90 days before
             ``to_date``.
-        :type from_date: datetime.datetime or None
+        :type from_date: datetime.date or None
         :param to_date: Optional end date. Defaults to the current date.
-        :type to_date: datetime.datetime or None
+        :type to_date: datetime.date or None
 
         :raises ValueError: If ``to_date`` is earlier than ``from_date``.
 
         :return: List of past IPOs.
         :rtype: list[dict]
         """
-        if to_date is None:
-            to_date = datetime.now()
-
-        if from_date is None:
-            from_date = to_date - timedelta(90)
-
-        if to_date < from_date:
-            raise ValueError("Argument `to_date` cannot be less than `from_date`")
+        start_date, end_date = _utils.process_dates(
+            from_date, to_date, lookback_days=90
+        )
 
         params = dict(
-            from_date=from_date.strftime("%d-%m-%Y"),
-            to_date=to_date.strftime("%d-%m-%Y"),
+            from_date=start_date.strftime(DATE_FORMAT),
+            to_date=end_date.strftime(DATE_FORMAT),
         )
 
         return self._transport.request(
@@ -1191,8 +1180,8 @@ class NSE:
         self,
         subject: Optional[str] = None,
         dept_code: Optional[str] = None,
-        from_date: Optional[datetime] = None,
-        to_date: Optional[datetime] = None,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
     ) -> dict:
         """Return exchange circulars and communications by department.
 
@@ -1210,9 +1199,9 @@ class NSE:
         :type dept_code: str or None
         :param from_date: Optional start date. Defaults to 7 days before
             ``to_date``.
-        :type from_date: datetime.datetime or None
+        :type from_date: datetime.date or None
         :param to_date: Optional end date. Defaults to the current date.
-        :type to_date: datetime.datetime or None
+        :type to_date: datetime.date or None
 
         :raises ValueError: If ``to_date`` is earlier than ``from_date``.
 
@@ -1249,18 +1238,11 @@ class NSE:
         :return: A dictionary of circulars for the requested filters.
         :rtype: dict
         """
-        if to_date is None:
-            to_date = datetime.now()
-
-        if from_date is None:
-            from_date = to_date - timedelta(7)
-
-        if to_date < from_date:
-            raise ValueError("Argument `to_date` cannot be less than `from_date`")
+        start_date, end_date = _utils.process_dates(from_date, to_date, lookback_days=7)
 
         params = dict(
-            from_date=from_date.strftime("%d-%m-%Y"),
-            to_date=to_date.strftime("%d-%m-%Y"),
+            from_date=start_date.strftime(DATE_FORMAT),
+            to_date=end_date.strftime(DATE_FORMAT),
         )
 
         if subject:
@@ -1337,7 +1319,7 @@ class NSE:
     def option_chain(
         self,
         symbol: Union[Literal["banknifty", "nifty", "finnifty", "niftyit"], str],
-        expiry_date: Optional[datetime] = None,
+        expiry_date: Optional[date] = None,
     ) -> Dict:
         """Fetch the raw (unprocessed) option chain data for an index or F&O
         stock.
@@ -1376,7 +1358,7 @@ class NSE:
         :type symbol: str
         :param expiry_date: Expiry date of the instrument. If ``None``, the
             nearest valid expiry is automatically resolved and cached.
-        :type expiry_date: datetime.datetime or None
+        :type expiry_date: datetime.date or None
 
         :raises ValueError: If the NSE response does not contain the
             ``expiryDates`` field.
@@ -1395,12 +1377,12 @@ class NSE:
             # Avoid file exists checks to avoid TOCTOU race conditions
             # in multi process environments.
             try:
-                expiry_date = datetime.fromisoformat(cache_file.read_text().strip())
+                expiry_date = date.fromisoformat(cache_file.read_text().strip())
             except (ValueError, OSError):
                 # FileNotFoundError, invalid date format etc.
                 expiry_date = None
 
-            if expiry_date is None or date.today() > expiry_date.date():
+            if expiry_date is None or date.today() > expiry_date:
                 opt_info = self._transport.request(
                     f"{self.base_url}/option-chain-contract-info", params=params
                 ).json()
@@ -1444,7 +1426,7 @@ class NSE:
         return data
 
     @staticmethod
-    def max_pain(option_chain: Dict, expiry_date: datetime) -> float:
+    def max_pain(option_chain: Dict, expiry_date: date) -> float:
         """Return the max pain strike price.
 
         Uses prefix sums to pre-compute values and avoid nested loops, giving
@@ -1461,7 +1443,7 @@ class NSE:
         :param option_chain: Output of :meth:`option_chain`.
         :type option_chain: dict
         :param expiry_date: Options expiry date.
-        :type expiry_date: datetime.datetime
+        :type expiry_date: datetime.date
 
         :return: Max pain strike price.
         :rtype: float
@@ -1560,7 +1542,7 @@ class NSE:
     def compile_option_chain(
         self,
         symbol: Union[str, Literal["banknifty", "nifty", "finnifty", "niftyit"]],
-        expiry_date: datetime,
+        expiry_date: date,
     ) -> CompiledOptionChain:
         """
         Filter raw option chain by ``expiry_date`` and calculate various statistics
@@ -1609,7 +1591,7 @@ class NSE:
             must be one of ``banknifty``, ``nifty``, ``finnifty``, ``niftyit``.
         :type symbol: str
         :param expiry_date: Option chain expiry date.
-        :type expiry_date: datetime.datetime
+        :type expiry_date: datetime.date
         :return: Option chain filtered by ``expiry_date``. Keys include ``expiry``,
             ``timestamp``, ``underlying``, ``atm``, ``max_pain``, ``max_coi``,
             ``max_poi``, ``coi_total``, ``poi_total``, ``pcr`` and ``chain`` (a
@@ -1749,8 +1731,8 @@ class NSE:
     def bulk_deals(
         self,
         option_type: Literal["block_deals", "bulk_deals", "short_selling"],
-        from_date: datetime,
-        to_date: datetime,
+        from_date: date,
+        to_date: date,
     ) -> List[Dict]:
         """Retrieve bulk, block, or short-selling deal data for a date range.
 
@@ -1767,9 +1749,9 @@ class NSE:
             ``"bulk_deals"``, ``"block_deals"``, or ``"short_selling"``.
         :type option_type: str
         :param from_date: Start date of the report (inclusive).
-        :type from_date: datetime.datetime
+        :type from_date: datetime.date
         :param to_date: End date of the report (inclusive).
-        :type to_date: datetime.datetime
+        :type to_date: datetime.date
 
         :raises ValueError: If ``fromdate`` is later than ``todate``.
         :raises ValueError: If the date range exceeds one year.
@@ -1780,16 +1762,15 @@ class NSE:
             requested report type.
         :rtype: list[dict]
         """
-        if from_date > to_date:
-            raise ValueError("fromdate must be earlier than or equal to todate.")
-
         if (to_date - from_date).days > 365:
             raise ValueError("The date range cannot exceed one year.")
 
+        start_date, end_date = _utils.process_dates(from_date, to_date)
+
         params = {
             "optionType": option_type,
-            "from": from_date.strftime("%d-%m-%Y"),
-            "to": to_date.strftime("%d-%m-%Y"),
+            "from": start_date.strftime(DATE_FORMAT),
+            "to": end_date.strftime(DATE_FORMAT),
         }
 
         url = f"{self.base_url}/historicalOR/bulk-block-short-deals"
@@ -1902,22 +1883,9 @@ class NSE:
             **oldest to newest**.
         :rtype: list[dict]
         """
-        if from_date and not isinstance(from_date, date):
-            raise TypeError("Starting date must be an object of type datetime.date")
+        start_date, end_date = _utils.process_dates(from_date, to_date)
 
-        if to_date and not isinstance(to_date, date):
-            raise TypeError("Ending date must be an object of type datetime.date")
-
-        if not to_date:
-            to_date = date.today()
-
-        if not from_date:
-            from_date = to_date - timedelta(30)
-
-        if to_date < from_date:
-            raise ValueError("The from date must occur before the to date")
-
-        date_chunks = _utils.split_date_range(from_date, to_date, 100)
+        date_chunks = _utils.split_date_range(start_date, end_date, 100)
 
         data = []
 
@@ -1929,8 +1897,8 @@ class NSE:
                         functionName="getHistoricalTradeData",
                         symbol=symbol,
                         series=series.upper(),
-                        fromDate=chunk[0].strftime("%d-%m-%Y"),
-                        toDate=chunk[1].strftime("%d-%m-%Y"),
+                        fromDate=chunk[0].strftime(DATE_FORMAT),
+                        toDate=chunk[1].strftime(DATE_FORMAT),
                     ),
                 ).json()
             )
@@ -1972,22 +1940,9 @@ class NSE:
             (newest-first).
         :rtype: list[dict]
         """
-        if from_date and not isinstance(from_date, date):
-            raise TypeError("Starting date must be an object of type datetime.date")
+        start_date, end_date = _utils.process_dates(from_date, to_date)
 
-        if to_date and not isinstance(to_date, date):
-            raise TypeError("Ending date must be an object of type datetime.date")
-
-        if not to_date:
-            to_date = date.today()
-
-        if not from_date:
-            from_date = to_date - timedelta(30)
-
-        if to_date < from_date:
-            raise ValueError("The from date must occur before the to date")
-
-        date_chunks = _utils.split_date_range(from_date, to_date)
+        date_chunks = _utils.split_date_range(start_date, end_date)
 
         data = []
 
@@ -1995,8 +1950,8 @@ class NSE:
             data += self._transport.request(
                 url=f"{self.base_url}/historicalOR/vixhistory",
                 params={
-                    "from": chunk[0].strftime("%d-%m-%Y"),
-                    "to": chunk[1].strftime("%d-%m-%Y"),
+                    "from": chunk[0].strftime(DATE_FORMAT),
+                    "to": chunk[1].strftime(DATE_FORMAT),
                 },
             ).json()["data"]
 
@@ -2060,20 +2015,7 @@ class NSE:
             **oldest to newest**.
         :rtype: list[dict]
         """
-        if from_date and not isinstance(from_date, date):
-            raise TypeError("Starting date must be an object of type datetime.date")
-
-        if to_date and not isinstance(to_date, date):
-            raise TypeError("Ending date must be an object of type datetime.date")
-
-        if not to_date:
-            to_date = date.today()
-
-        if not from_date:
-            from_date = to_date - timedelta(30)
-
-        if to_date < from_date:
-            raise ValueError("The from date must occur before the to date")
+        start_date, end_date = _utils.process_dates(from_date, to_date)
 
         params: Dict[str, Any] = {
             "instrumentType": instrument.upper(),
@@ -2098,13 +2040,13 @@ class NSE:
             if strike_price:
                 params["strikePrice"] = strike_price
 
-        date_chunks = _utils.split_date_range(from_date, to_date)
+        date_chunks = _utils.split_date_range(start_date, end_date)
 
         data = []
 
         for chunk in date_chunks:
-            params["from"] = chunk[0].strftime("%d-%m-%Y")
-            params["to"] = chunk[1].strftime("%d-%m-%Y")
+            params["from"] = chunk[0].strftime(DATE_FORMAT)
+            params["to"] = chunk[1].strftime(DATE_FORMAT)
 
             data += self._transport.request(
                 url=f"{self.base_url}/historicalOR/foCPV",
@@ -2156,22 +2098,9 @@ class NSE:
             **oldest to newest**.
         :rtype: list[dict]
         """
-        if from_date and not isinstance(from_date, date):
-            raise TypeError("Starting date must be an object of type datetime.date")
+        start_date, end_date = _utils.process_dates(from_date, to_date)
 
-        if to_date and not isinstance(to_date, date):
-            raise TypeError("Ending date must be an object of type datetime.date")
-
-        if not to_date:
-            to_date = date.today()
-
-        if not from_date:
-            from_date = to_date - timedelta(30)
-
-        if to_date < from_date:
-            raise ValueError("The from date must occur before the to date")
-
-        date_chunks = _utils.split_date_range(from_date, to_date)
+        date_chunks = _utils.split_date_range(start_date, end_date)
 
         data = []
 
@@ -2180,8 +2109,8 @@ class NSE:
                 url=f"{self.base_url}/historicalOR/indicesHistory",
                 params={
                     "indexType": index.upper(),
-                    "from": chunk[0].strftime("%d-%m-%Y"),
-                    "to": chunk[1].strftime("%d-%m-%Y"),
+                    "from": chunk[0].strftime(DATE_FORMAT),
+                    "to": chunk[1].strftime(DATE_FORMAT),
                 },
             ).json()["data"]
 
