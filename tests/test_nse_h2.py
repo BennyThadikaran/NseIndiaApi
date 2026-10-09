@@ -182,6 +182,14 @@ class TestNseApiH2(unittest.TestCase):
         response = self.nse.circulars(subject="holidays")
         self.assertIsInstance(response, dict)
 
+    def test_press_releases(self):
+        response = self.nse.press_releases()
+
+        self.assertIsInstance(response, list)
+
+        if len(response):
+            self.assertIsInstance(response[0], dict)
+
     def test_actions(self):
         response = self.nse.actions()
 

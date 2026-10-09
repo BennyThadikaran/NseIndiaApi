@@ -1,0 +1,36 @@
+[
+  {
+    "content": {
+      "title": "NSE Listing",
+      "body": "Press Release dated October 08, 2026",
+      "field_a": "",
+      "field_date": "08-Oct-2026",
+      "field_file_attachement": {
+        "url": "https://nsearchives.nseindia.com//web/pressrelease/2026-10/PR_LIST_08102926_20261008193731.pdf",
+        "desc": ""
+      },
+      "field_category_press": [
+        {
+          "content": {
+            "name": "NSE Listing",
+            "description": null,
+            "field_key": "nse-listing"
+          },
+          "type": "press_releases_categories",
+          "changed": "08-Oct-2026"
+        }
+      ],
+      "field_seo": "",
+      "field_seo_itemprop": "",
+      "field_seo_og": "",
+      "field_seo_twitter": "",
+      "field_type": "NSE Listing",
+      "field_unique_url": null,
+      "field_file_attachement_size_bytes": "233784"
+    },
+    "id": 76748,
+    "changed": "08-Oct-2026",
+    "type": "press_releases"
+  }
+]
+

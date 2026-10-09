@@ -1255,6 +1255,39 @@ class NSE:
             f"{self.base_url}/circulars", params=params
         ).json()
 
+    def press_releases(
+        self,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
+    ) -> Dict:
+        """Return NSE press releases published within a date range.
+
+        If no dates are supplied, the range defaults to the last 30 days
+        ending today (see ``_utils.process_dates``).
+
+        `Source page <https://www.nseindia.com/resources/exchange-communication-press-releases>`__
+
+        `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/press_releases.json>`__
+
+        :param from_date: Start date of the range. Defaults to 30 days before ``to_date``.
+        :type from_date: datetime.date | None
+        :param to_date: End date of the range. Defaults to today.
+        :type to_date: datetime.date | None
+        :return: Parsed JSON response containing the press releases for the
+            requested period.
+        :rtype: dict
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
+        """
+        start_date, end_date = _utils.process_dates(from_date, to_date)
+
+        return self._transport.request(
+            f"{self.base_url}/press-release-cms20",
+            params=dict(
+                fromDate=start_date.strftime(DATE_FORMAT),
+                toDate=end_date.strftime(DATE_FORMAT),
+            ),
+        ).json()
+
     def block_deals(self) -> Dict:
         """Return block deals.
 
