@@ -595,7 +595,7 @@ class NSE:
         if symbol:
             params["symbol"] = symbol
 
-        if from_date and to_date:
+        if from_date or to_date:
             start_date, end_date = _utils.process_dates(from_date, to_date)
 
             params.update(
@@ -652,7 +652,7 @@ class NSE:
         if fno:
             params["fo_sec"] = True
 
-        if from_date and to_date:
+        if from_date or to_date:
             start_date, end_date = _utils.process_dates(from_date, to_date)
 
             params.update(
@@ -708,7 +708,7 @@ class NSE:
         if fno:
             params["fo_sec"] = True
 
-        if from_date and to_date:
+        if from_date or to_date:
             start_date, end_date = _utils.process_dates(from_date, to_date)
 
             params.update(
@@ -810,7 +810,7 @@ class NSE:
         if symbol:
             params["symbol"] = symbol.upper()
 
-        if from_date and to_date:
+        if from_date or to_date:
             start_date, end_date = _utils.process_dates(from_date, to_date)
 
             params.update(
