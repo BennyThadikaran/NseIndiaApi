@@ -1,6 +1,6 @@
 import shutil
 import unittest
-from datetime import datetime
+from datetime import date
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -31,7 +31,7 @@ class TestNSEOptionChain(unittest.TestCase):
         return mock
 
     def test_uses_cached_expiry_when_valid(self):
-        expiry = datetime(2099, 1, 1)
+        expiry = date(2099, 1, 1)
 
         self.cache_file.write_text(expiry.isoformat())
 
@@ -43,7 +43,7 @@ class TestNSEOptionChain(unittest.TestCase):
         mock.assert_called_once()
 
     def test_expired_cached_expiry_is_ignored(self):
-        expiry = datetime(2000, 1, 1)
+        expiry = date(2000, 1, 1)
 
         self.cache_file.write_text(expiry.isoformat())
 
@@ -115,7 +115,7 @@ class TestNSEOptionChain(unittest.TestCase):
         self.assertEqual(kwargs["params"]["type"], "Indices")
 
     def test_explicit_expiry_date_skips_cache_and_contract_info(self):
-        expiry = datetime(2099, 1, 1)
+        expiry = date(2099, 1, 1)
         mock = self._mock_req([{"data": "ok"}])
 
         result = self.nse.option_chain("nifty", expiry_date=expiry)
