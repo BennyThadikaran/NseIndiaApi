@@ -791,7 +791,7 @@ class NSE:
         """Get corporate financial-results filings (metadata) for a date range.
 
         Returns one row per filing with broadcast/filing dates, the quarter
-        covered (``fromDate`` / ``toDate``), ``relatingTo`` (e.g. "Third
+        covered (``from_date`` / ``to_date``), ``relatingTo`` (e.g. "Third
         Quarter"), consolidated/audited flags, and an optional XBRL link.
         Revenue and EPS figures are **not** included here — use
         :meth:`results_comparison` for the numeric P&L summary per symbol.
