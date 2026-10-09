@@ -2056,9 +2056,6 @@ class NSE:
         }
 
         if expiry:
-            if not isinstance(expiry, date):
-                raise TypeError("`expiry` must be an object of type datetime.date")
-
             params["expiryDate"] = expiry.strftime("%d-%b-%Y")
             params["year"] = expiry.year
 
