@@ -1404,6 +1404,9 @@ class NSE:
         symbol_key = symbol.lower()
         params = dict(symbol=symbol.upper())
 
+        if isinstance(expiry_date, datetime):
+            expiry_date = expiry_date.date()
+
         if expiry_date is None:
             cache_file = self.opt_cache_dir / f"{symbol_key}.txt"
 
