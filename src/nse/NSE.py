@@ -570,8 +570,12 @@ class NSE:
 
         If ``symbol`` is specified, only actions for that symbol are returned.
 
-        If ``from_date`` and ``to_date`` are both specified, only actions
-        within the date range are returned.
+        If either ``from_date`` or ``to_date`` is provided, results are filtered
+        to the given date range.
+
+        When only one of the two dates is provided, the other is defaulted by :func:`_utils.process_dates`:
+        ``to_date`` defaults to today, and ``from_date`` defaults to 30 days
+        before ``to_date``.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/actions.json>`__
 
@@ -580,12 +584,16 @@ class NSE:
         :type segment: str
         :param symbol: Optional stock symbol to filter actions.
         :type symbol: str or None
-        :param from_date: Optional start date of the range.
+        :param from_date: Optional start date of the range. A ``datetime``
+            value is normalized to its date component. Defaults to 30 days
+            before ``to_date`` if omitted.
         :type from_date: datetime.date or None
-        :param to_date: Optional end date of the range.
+        :param to_date: Optional end date of the range. A ``datetime``
+            value is normalized to its date component. Defaults to today if
+            omitted.
         :type to_date: datetime.date or None
 
-        :raises ValueError: If ``from_date`` is greater than ``to_date``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
 
         :return: A list of corporate actions.
         :rtype: list[dict]
@@ -620,9 +628,14 @@ class NSE:
         """Get all corporate announcements.
 
         If ``symbol`` is specified, only announcements for that symbol are
-        returned. If ``fno`` is ``True``, only announcements for FnO
-        securities are returned. If ``from_date`` and ``to_date`` are both
-        specified, only announcements within the date range are returned.
+        returned.
+
+        If ``fno`` is ``True``, only announcements for FnO securities are returned.
+
+        If either ``from_date`` or ``to_date`` is provided, results are filtered
+        to the given date range. When only one of the two is provided, the other
+        is defaulted by :func:`_utils.process_dates`: ``to_date`` defaults to
+        today, and ``from_date`` defaults to 30 days before ``to_date``.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/announcements.json>`__
 
@@ -634,12 +647,14 @@ class NSE:
         :param fno: If ``True``, restrict results to FnO stocks. Default
             ``False``.
         :type fno: bool
-        :param from_date: Optional start date of the range.
+        :param from_date: Optional start date of the range. Defaults to 30 days
+            before ``to_date`` if omitted.
         :type from_date: datetime.date or None
-        :param to_date: Optional end date of the range.
+        :param to_date: Optional end date of the range. Defaults to today if
+            omitted.
         :type to_date: datetime.date or None
 
-        :raises ValueError: If ``from_date`` is greater than ``to_date``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
 
         :return: A list of corporate announcements.
         :rtype: list[dict]
@@ -678,8 +693,12 @@ class NSE:
 
         If ``symbol`` is specified, only board meetings for that symbol are
         returned. If ``fno`` is ``True``, only board meetings for FnO
-        securities are returned. If ``from_date`` and ``to_date`` are both
-        specified, only meetings within the date range are returned.
+        securities are returned.
+
+        If either ``from_date`` or ``to_date`` is provided, results are filtered
+        to the given date range. When only one of the two is provided, the other
+        is defaulted by :func:`_utils.process_dates`: ``to_date`` defaults to
+        today, and ``from_date`` defaults to 30 days before ``to_date``.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/board_meetings.json>`__
 
@@ -690,12 +709,14 @@ class NSE:
         :param fno: If ``True``, restrict results to FnO stocks. Default
             ``False``.
         :type fno: bool
-        :param from_date: Optional start date of the range.
+        :param from_date: Optional start date of the range. Defaults to 30 days
+            before ``to_date`` if omitted.
         :type from_date: datetime.date or None
-        :param to_date: Optional end date of the range.
+        :param to_date: Optional end date of the range. Defaults to today if
+            omitted.
         :type to_date: datetime.date or None
 
-        :raises ValueError: If ``from_date`` is greater than ``to_date``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
 
         :return: A list of corporate board meetings.
         :rtype: list[dict]
@@ -775,8 +796,12 @@ class NSE:
         Revenue and EPS figures are **not** included here — use
         :meth:`results_comparison` for the numeric P&L summary per symbol.
 
-        If ``from_date`` and ``to_date`` are omitted, the API returns filings
-        for the current year to date.
+        If either ``from_date`` or ``to_date`` is provided, results are filtered
+        to the given broadcast-date window. When only one of the two is provided,
+        the other is defaulted by :func:`_utils.process_dates`: ``to_date``
+        defaults to today, and ``from_date`` defaults to 30 days before
+        ``to_date``. If both are omitted, no date filter is applied and the API
+        returns filings for the current year to date.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/financial_results.json>`__
 
@@ -792,12 +817,13 @@ class NSE:
         :param symbol: Optional stock symbol to filter filings.
         :type symbol: str or None
         :param from_date: Optional start of the broadcast-date window
-            (inclusive).
+            (inclusive). Defaults to 30 days before ``to_date`` if omitted.
         :type from_date: datetime.date or None
         :param to_date: Optional end of the broadcast-date window (inclusive).
+            Defaults to today if omitted.
         :type to_date: datetime.date or None
 
-        :raises ValueError: If ``from_date`` is greater than ``to_date``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
 
         :return: A list of financial-results filing records.
         :rtype: list[dict]
@@ -1145,19 +1171,18 @@ class NSE:
     ) -> List[Dict]:
         """List past IPOs within a date range.
 
-        If ``to_date`` is not provided, it defaults to the current date. If
-        ``from_date`` is not provided, it defaults to 90 days before
-        ``to_date``.
+        If ``to_date`` is not provided, it defaults to today. If ``from_date``
+        is not provided, it defaults to 90 days before ``to_date``.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/list_past_ipo.json>`__
 
         :param from_date: Optional start date. Defaults to 90 days before
-            ``to_date``.
+            ``to_date`` if omitted.
         :type from_date: datetime.date or None
-        :param to_date: Optional end date. Defaults to the current date.
+        :param to_date: Optional end date. Defaults to today if omitted.
         :type to_date: datetime.date or None
 
-        :raises ValueError: If ``to_date`` is earlier than ``from_date``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
 
         :return: List of past IPOs.
         :rtype: list[dict]
@@ -1185,9 +1210,8 @@ class NSE:
     ) -> dict:
         """Return exchange circulars and communications by department.
 
-        If ``to_date`` is not provided, it defaults to the current date. If
-        ``from_date`` is not provided, it defaults to 7 days before
-        ``to_date``.
+        If ``to_date`` is not provided, it defaults to today. If ``from_date``
+        is not provided, it defaults to 7 days before ``to_date``.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/circulars.json>`__
 
@@ -1198,12 +1222,12 @@ class NSE:
             accepted values.
         :type dept_code: str or None
         :param from_date: Optional start date. Defaults to 7 days before
-            ``to_date``.
+            ``to_date`` if omitted.
         :type from_date: datetime.date or None
-        :param to_date: Optional end date. Defaults to the current date.
+        :param to_date: Optional end date. Defaults to today if omitted.
         :type to_date: datetime.date or None
 
-        :raises ValueError: If ``to_date`` is earlier than ``from_date``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
 
         Below is the list of ``dept_code`` values and their description:
 
@@ -1772,8 +1796,11 @@ class NSE:
     ) -> List[Dict]:
         """Retrieve bulk, block, or short-selling deal data for a date range.
 
-        Downloads historical deal data based on the selected report type. The
-        requested date range must be valid and must not exceed one year.
+        Downloads historical deal data based on the selected report type.
+
+        If ``to_date`` is not provided, it defaults to today. If ``from_date``
+        is not provided, it defaults to 7 days before ``to_date``. The date
+        range must not exceed one year.
 
         Sample responses:
 
@@ -1781,15 +1808,20 @@ class NSE:
         - Block deals: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulk_deals-block_deals.json
         - Short selling: https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/bulk_deals-short_selling.json
 
+        Reference URL:
+            https://www.nseindia.com/report-detail/display-bulk-and-block-deals
+
         :param option_type: Type of deal report to fetch. Must be one of
             ``"bulk_deals"``, ``"block_deals"``, or ``"short_selling"``.
         :type option_type: str
-        :param from_date: Start date of the report (inclusive).
-        :type from_date: datetime.date
-        :param to_date: End date of the report (inclusive).
-        :type to_date: datetime.date
+        :param from_date: Optional start date of the report (inclusive).
+            Defaults to 7 days before ``to_date`` if omitted.
+        :type from_date: datetime.date or None
+        :param to_date: Optional end date of the report (inclusive). Defaults
+            to today if omitted.
+        :type to_date: datetime.date or None
 
-        :raises ValueError: If ``fromdate`` is later than ``todate``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
         :raises ValueError: If the date range exceeds one year.
         :raises RuntimeError: If no data is available for the specified date
             range and report type.
@@ -1877,8 +1909,9 @@ class NSE:
         """Retrieve historical daily price and volume data for an equity symbol.
 
         Fetches historical trade data for ``symbol`` and ``series`` between
-        ``from_date`` and ``to_date`` (both inclusive). If no dates are
-        provided, data for the last 30 days ending today is returned.
+        ``from_date`` and ``to_date`` (both inclusive). If ``to_date`` is
+        omitted, it defaults to today. If ``from_date`` is omitted, it defaults
+        to 30 days before ``to_date``.
 
         Data is fetched via NSE's Next API historical trade data endpoint.
 
@@ -1899,20 +1932,18 @@ class NSE:
         :param symbol: Exchange-traded symbol for which historical data is
             requested (e.g. ``HDFCBANK``, ``SGBAPR28I``, ``GOLDBEES``).
         :type symbol: str
-        :param from_date: Start date of the data range. If ``None``, defaults
-            to 30 days before ``to_date``.
+        :param from_date: Optional start date of the data range. Defaults to
+            30 days before ``to_date`` if omitted.
         :type from_date: datetime.date or None
-        :param to_date: End date of the data range. If ``None``, defaults to
-            today's date.
+        :param to_date: Optional end date of the data range. Defaults to today
+            if omitted.
         :type to_date: datetime.date or None
         :param series: Equity series for which historical data is requested.
             Must be one of ``ae``, ``af``, ``be``, ``bl``, ``eq``, ``il``,
             ``rl``, ``w3``, ``gb``, ``gs``. Default ``eq``.
         :type series: str
 
-        :raises TypeError: If ``from_date`` or ``to_date`` is not an instance
-            of :class:`datetime.date`.
-        :raises ValueError: If ``from_date`` occurs after ``to_date``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
 
         :return: A list of dictionaries, each representing one day of
             historical trade data. The list is ordered chronologically from
@@ -1948,6 +1979,9 @@ class NSE:
     ) -> List[Dict]:
         """Download historical India VIX data within a date range.
 
+        If ``to_date`` is omitted, it defaults to today. If ``from_date`` is
+        omitted, it defaults to 30 days before ``to_date``.
+
         Reference URL:
             https://www.nseindia.com/reports-indices-historical-vix
 
@@ -1960,16 +1994,14 @@ class NSE:
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_historical_vix_data.json>`__
 
-        :param from_date: Start date from which to fetch data. If ``None``,
-            defaults to 30 days before ``to_date``.
+        :param from_date: Optional start date from which to fetch data.
+            Defaults to 30 days before ``to_date`` if omitted.
         :type from_date: datetime.date or None
-        :param to_date: End date up to which to fetch data. If ``None``,
-            defaults to today's date.
+        :param to_date: Optional end date up to which to fetch data. Defaults
+            to today if omitted.
         :type to_date: datetime.date or None
 
-        :raises TypeError: If ``from_date`` or ``to_date`` is not an instance
-            of :class:`datetime.date`.
-        :raises ValueError: If ``from_date`` is greater than ``to_date``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
 
         :return: A list of rows, each row a dictionary with column names
             mapped to values. Returned in the order provided by NSE
@@ -2007,6 +2039,9 @@ class NSE:
     ) -> List[dict]:
         """Download historical futures and options data within a date range.
 
+        If ``to_date`` is omitted, it defaults to today. If ``from_date`` is
+        omitted, it defaults to 30 days before ``to_date``.
+
         Reference URL:
             https://www.nseindia.com/report-detail/fo_eq_security
 
@@ -2020,14 +2055,14 @@ class NSE:
 
         :param symbol: Symbol name.
         :type symbol: str
-        :param instrument: Instrument name. one of ``futidx``, ``futstk``,
+        :param instrument: Instrument name. One of ``futidx``, ``futstk``,
             ``optidx``, ``optstk``, ``futivx``. Default ``futidx``.
         :type instrument: str
-        :param from_date: Start date from which to fetch data. If ``None``,
-            defaults to 30 days before ``to_date``.
+        :param from_date: Optional start date from which to fetch data.
+            Defaults to 30 days before ``to_date`` if omitted.
         :type from_date: datetime.date or None
-        :param to_date: End date up to which to fetch data. If ``None``,
-            defaults to today's date.
+        :param to_date: Optional end date up to which to fetch data. Defaults
+            to today if omitted.
         :type to_date: datetime.date or None
         :param expiry: Optional expiry date of the instrument to filter
             results. When provided, the ``year`` parameter sent to NSE is
@@ -2037,12 +2072,11 @@ class NSE:
             ``instrument`` is ``optidx`` or ``optstk``. Must be ``ce`` or
             ``pe``.
         :type option_type: str or None
-        :param strike_price: Optional strike price filter.
+        :param strike_price: Optional strike price filter. Only applied when
+            ``instrument`` is ``optidx`` or ``optstk``.
         :type strike_price: float or None
 
-        :raises TypeError: If ``from_date``, ``to_date``, or ``expiry`` is
-            not an instance of :class:`datetime.date`.
-        :raises ValueError: If ``from_date`` is greater than ``to_date``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
         :raises ValueError: If ``instrument`` is ``optidx`` or ``optstk`` and
             ``option_type`` is not specified.
 
@@ -2100,6 +2134,9 @@ class NSE:
         (both inclusive) via NSE's ``/historicalOR/indicesHistory`` endpoint,
         returned in a flattened, row-based format.
 
+        If ``to_date`` is omitted, it defaults to today. If ``from_date`` is
+        omitted, it defaults to 30 days before ``to_date``.
+
         Reference URL:
             https://www.nseindia.com/reports-indices-historical-index-data
 
@@ -2115,16 +2152,14 @@ class NSE:
         :param index: Name of the index for which historical data is
             requested.
         :type index: str
-        :param from_date: Start date of the data range. If ``None``, defaults
-            to 30 days before ``to_date``.
+        :param from_date: Optional start date of the data range. Defaults to
+            30 days before ``to_date`` if omitted.
         :type from_date: datetime.date or None
-        :param to_date: End date of the data range. If ``None``, defaults to
-            today's date.
+        :param to_date: Optional end date of the data range. Defaults to today
+            if omitted.
         :type to_date: datetime.date or None
 
-        :raises TypeError: If ``from_date`` or ``to_date`` is not an instance
-            of :class:`datetime.date`.
-        :raises ValueError: If ``from_date`` occurs after ``to_date``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``.
 
         :return: A list of dictionaries, each representing one day of
             historical index data. The list is ordered chronologically from
