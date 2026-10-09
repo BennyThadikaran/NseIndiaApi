@@ -1791,8 +1791,8 @@ class NSE:
     def bulk_deals(
         self,
         option_type: Literal["block_deals", "bulk_deals", "short_selling"],
-        from_date: date,
-        to_date: date,
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
     ) -> List[Dict]:
         """Retrieve bulk, block, or short-selling deal data for a date range.
 
@@ -1822,7 +1822,7 @@ class NSE:
         :type to_date: datetime.date or None
 
         :raises ValueError: If ``from_date`` is later than ``to_date``.
-        :raises ValueError: If the date range exceeds one year.
+        :raises ValueError: If the date range exceeds 365 days.
         :raises RuntimeError: If no data is available for the specified date
             range and report type.
 
@@ -1830,10 +1830,10 @@ class NSE:
             requested report type.
         :rtype: list[dict]
         """
-        if (to_date - from_date).days > 365:
-            raise ValueError("The date range cannot exceed one year.")
+        start_date, end_date = _utils.process_dates(from_date, to_date, lookback_days=7)
 
-        start_date, end_date = _utils.process_dates(from_date, to_date)
+        if (end_date - start_date).days > 365:
+            raise ValueError("The date range cannot exceed 365 days.")
 
         params = {
             "optionType": option_type,
@@ -1845,12 +1845,15 @@ class NSE:
 
         data = self._transport.request(url, params=params).json()
 
-        if "data" not in data or len(data["data"]) < 1:
+        rows = data.get("data", [])
+
+        if not rows:
             raise RuntimeError(
-                f"No {option_type} data available from {from_date:%d-%m-%Y} to {to_date:%d-%m-%Y}."
+                f"No {option_type} data available from "
+                f"{start_date:%d-%m-%Y} to {end_date:%d-%m-%Y}."
             )
 
-        return data["data"]
+        return rows
 
     def download_document(
         self,
