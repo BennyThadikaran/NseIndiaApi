@@ -7,6 +7,13 @@ cookie handling, rate limits, and retries under flaky network conditions.
 **Python:** >= 3.8
 
 > [!IMPORTANT]
+> **Python 3.8 and 3.9 support restored in v5.1.0**
+>
+> This release restores compatibility with Python 3.8 and 3.9 while retaining support for Python 3.10 and above.
+>
+> If you use a shared rate limiter, see [Shared rate limiter configuration for Python 3.8 and 3.9](#python-38-and-39-users-shared-rate-limiter-configuration)
+
+> [!IMPORTANT]
 > **NseIndiaApi 5.0.0 is a major release with breaking changes.**
 >
 > Before upgrading from **4.x**, please read the **[v5.0.0 Migration Guide](https://bennythadikaran.github.io/NseIndiaApi/migration.html)**.
@@ -119,6 +126,24 @@ with NSE(download_folder=".") as nse:
     )
     print(len(data), "rows")
 ```
+
+## Python 3.8 and 3.9 users: Shared rate limiter configuration
+
+When using Python 3.8 or 3.9 with pyrate-limiter 3.9.0, if you pass a shared Limiter instance to NseIndiaApi, initialize it with the additional raise_when_fail=False and max_delay=2000 parameters:
+
+```py
+from pyrate_limiter import Duration, Limiter, Rate
+
+throttle = Limiter(
+Rate(3, Duration.SECOND),
+raise_when_fail=False,
+max_delay=2000,
+)
+```
+
+This maintains the default behaviour seen in pyrate-limiter v4.x.x versions.
+
+This requirement applies only to Python 3.8 and 3.9, which use pyrate-limiter 3.9.0. Python 3.10 and above use pyrate-limiter 4.5.x and do not require these additional parameters.
 
 ## Credits
 
