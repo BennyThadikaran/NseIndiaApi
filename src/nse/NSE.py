@@ -1811,6 +1811,12 @@ class NSE:
         Reference URL:
             https://www.nseindia.com/report-detail/display-bulk-and-block-deals
 
+        .. warning::
+           The behavior of raising :exc:`RuntimeError` when ``data`` is
+           missing or no data is available will change in a future major
+           release. Instead of raising an error, the method will return
+           the raw response, leaving it to the caller to handle.
+
         :param option_type: Type of deal report to fetch. Must be one of
             ``"bulk_deals"``, ``"block_deals"``, or ``"short_selling"``.
         :type option_type: str
