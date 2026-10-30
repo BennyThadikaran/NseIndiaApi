@@ -1168,6 +1168,7 @@ class NSE:
         self,
         from_date: Optional[date] = None,
         to_date: Optional[date] = None,
+        security_type: Literal["all", "equity", "sme", "debt", "invits"] = "all",
     ) -> List[Dict]:
         """List past IPOs within a date range.
 
@@ -1194,6 +1195,7 @@ class NSE:
         params = dict(
             from_date=start_date.strftime(DATE_FORMAT),
             to_date=end_date.strftime(DATE_FORMAT),
+            security_type=security_type,
         )
 
         return self._transport.request(
