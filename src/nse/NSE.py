@@ -2029,6 +2029,7 @@ class NSE:
                 params={
                     "from": chunk[0].strftime(DATE_FORMAT),
                     "to": chunk[1].strftime(DATE_FORMAT),
+                    "csv": True,
                 },
             ).json()["data"]
 
@@ -2099,6 +2100,7 @@ class NSE:
         params: Dict[str, Any] = {
             "instrumentType": instrument.upper(),
             "symbol": symbol.upper(),
+            "csv": True,
         }
 
         if expiry:
@@ -2188,6 +2190,7 @@ class NSE:
                     "indexType": index.upper(),
                     "from": chunk[0].strftime(DATE_FORMAT),
                     "to": chunk[1].strftime(DATE_FORMAT),
+                    "csv": True,
                 },
             ).json()["data"]
 
