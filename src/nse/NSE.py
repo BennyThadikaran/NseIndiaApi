@@ -984,7 +984,7 @@ class NSE:
         result = self._transport.request(self.next_api_quote_url, params=params).json()
         return result["equityResponse"][0]
 
-    def equity_quote(self, symbol) -> OHLCV:
+    def equity_quote(self, symbol: str) -> OHLCV:
         """Extract date and OHLCV data from :meth:`quote` for ``symbol``.
 
         A convenience wrapper over :meth:`quote` that returns the fields typically
