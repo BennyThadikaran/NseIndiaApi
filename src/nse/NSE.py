@@ -601,7 +601,7 @@ class NSE:
         params = dict(index=segment)
 
         if symbol:
-            params["symbol"] = symbol
+            params["symbol"] = symbol.upper()
 
         if from_date or to_date:
             start_date, end_date = _utils.process_dates(from_date, to_date)
@@ -662,7 +662,7 @@ class NSE:
         params: Dict[str, Any] = {"index": index}
 
         if symbol:
-            params["symbol"] = symbol
+            params["symbol"] = symbol.upper()
 
         if fno:
             params["fo_sec"] = True
@@ -777,7 +777,8 @@ class NSE:
         :rtype: dict[str, list[dict[str, str]]]
         """
         return self._transport.request(
-            f"{self.base_url}/annual-reports", params=dict(index=segment, symbol=symbol)
+            f"{self.base_url}/annual-reports",
+            params=dict(index=segment, symbol=symbol.upper()),
         ).json()
 
     def financial_results(
