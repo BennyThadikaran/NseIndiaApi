@@ -236,7 +236,7 @@ class TestNseApiH1(unittest.TestCase):
 
     def test_fetch_historical_fno_data(self):
         response = self.nse.fetch_historical_fno_data(
-            instrument="FUTIDX", symbol="NIFTY"
+            instrument="futidx", symbol="NIFTY"
         )
 
         self.assertIsInstance(response, list)
@@ -261,6 +261,32 @@ class TestNseApiH1(unittest.TestCase):
         self.assertIsInstance(response, dict)
         self.assertTrue("equityResponse" in response)
         self.assertEqual(response["equityResponse"][0]["metaData"]["symbol"], "ETERNAL")
+
+
+class TestFetchHistoricalFnoData(unittest.TestCase):
+    def setUp(self) -> None:
+        DIR = Path(__file__).parent
+        self.nse = NSE(DIR, use_http2=False)
+        self.addCleanup(self.nse.exit)
+        self.addCleanup(self.nse._transport.cookie_store.clear)
+
+    def test_empty_symbol_raises_value_error(self):
+        with self.assertRaisesRegex(ValueError, "`symbol` cannot be empty"):
+            self.nse.fetch_historical_fno_data(symbol="")
+
+    def test_whitespace_symbol_raises_value_error(self):
+        with self.assertRaisesRegex(ValueError, "`symbol` cannot be empty"):
+            self.nse.fetch_historical_fno_data(symbol="   ")
+
+    def test_invalid_instrument_raises_value_error(self):
+        with self.assertRaisesRegex(ValueError, "Invalid instrument"):
+            self.nse.fetch_historical_fno_data(symbol="hdfcbank", instrument="invalid")
+
+    def test_invalid_option_type_raises_value_error(self):
+        with self.assertRaisesRegex(
+            ValueError, "`option_type` must be either 'ce' or 'pe'"
+        ):
+            self.nse.fetch_historical_fno_data(symbol="hdfcbank", instrument="optstk")
 
 
 if __name__ == "__main__":

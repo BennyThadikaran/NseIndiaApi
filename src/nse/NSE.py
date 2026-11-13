@@ -2052,52 +2052,74 @@ class NSE:
     ) -> List[dict]:
         """Download historical futures and options data within a date range.
 
+        Fetches historical F&O (Futures and Options) data for the specified
+        symbol and instrument from NSE.
+
         If ``to_date`` is omitted, it defaults to today. If ``from_date`` is
         omitted, it defaults to 30 days before ``to_date``.
+
+        Date ranges are split into chunks of up to 90 days before making
+        requests to NSE. The results from all chunks are concatenated and
+        returned in reverse order, from **oldest to newest**.
 
         Reference URL:
             https://www.nseindia.com/report-detail/fo_eq_security
 
-        Each row is a dictionary with column names as keys and their
-        corresponding values.
-
-        Requests spanning more than one year are split into chunks and
-        concatenated.
+        Each row is returned as a dictionary containing column names as keys
+        and their corresponding values.
 
         `Sample response <https://github.com/BennyThadikaran/NseIndiaApi/blob/main/src/samples/fetch_historical_fno_data.json>`__
 
-        :param symbol: Symbol name.
+        :param symbol: Symbol name. Must not be empty or contain only whitespace.
         :type symbol: str
-        :param instrument: Instrument name. One of ``futidx``, ``futstk``,
-            ``optidx``, ``optstk``, ``futivx``. Default ``futidx``.
+
+        :param instrument: Instrument type. Supported values are ``futidx``
+            (index futures), ``futstk`` (stock futures), ``optidx`` (index
+            options), ``optstk`` (stock options), and ``futivx`` (India VIX
+            futures). Defaults to ``futidx``.
         :type instrument: str
-        :param from_date: Optional start date from which to fetch data.
-            Defaults to 30 days before ``to_date`` if omitted.
+
+        :param from_date: Start date for fetching historical data. Defaults
+            to 30 days before ``to_date`` if omitted.
         :type from_date: datetime.date or None
-        :param to_date: Optional end date up to which to fetch data. Defaults
-            to today if omitted.
+
+        :param to_date: End date for fetching historical data. Defaults to
+            today if omitted.
         :type to_date: datetime.date or None
-        :param expiry: Optional expiry date of the instrument to filter
-            results. When provided, the ``year`` parameter sent to NSE is
-            derived from this date.
+
+        :param expiry: Optional expiry date used to filter the results.
+            When provided, both ``expiryDate`` and ``year`` parameters are
+            included in the request. The year is derived from the expiry date.
         :type expiry: datetime.date or None
-        :param option_type: Optional filter for option type. Required when
-            ``instrument`` is ``optidx`` or ``optstk``. Must be ``ce`` or
-            ``pe``.
+
+        :param option_type: Option type. Required when ``instrument`` is
+            ``optidx`` or ``optstk``. Must be either ``ce`` (Call European)
+            or ``pe`` (Put European). Ignored for other instrument types.
         :type option_type: str or None
-        :param strike_price: Optional strike price filter. Only applied when
-            ``instrument`` is ``optidx`` or ``optstk``.
+
+        :param strike_price: Optional strike price filter. Applied only when
+            ``instrument`` is ``optidx`` or ``optstk``. Ignored for other
+            instrument types.
         :type strike_price: float or None
 
-        :raises ValueError: If ``from_date`` is later than ``to_date``.
+        :raises ValueError: If ``symbol`` is empty or contains only whitespace.
+        :raises ValueError: If ``instrument`` is not one of the supported
+            instrument types.
         :raises ValueError: If ``instrument`` is ``optidx`` or ``optstk`` and
-            ``option_type`` is not specified.
+            ``option_type`` is not ``ce`` or ``pe``.
+        :raises ValueError: If ``from_date`` is later than ``to_date``,
+            as determined by ``_utils.process_dates``.
 
-        :return: A list of rows, each row a dictionary with column names
-            mapped to values. The list is ordered chronologically from
-            **oldest to newest**.
+        :return: A list of dictionaries containing historical F&O data,
+            ordered chronologically from oldest to newest.
         :rtype: list[dict]
         """
+        if not symbol or not symbol.strip():
+            raise ValueError("`symbol` cannot be empty")
+
+        if instrument.lower() not in ("futidx", "futstk", "optidx", "optstk", "futivx"):
+            raise ValueError(f"Invalid instrument: {instrument}")
+
         start_date, end_date = _utils.process_dates(from_date, to_date)
 
         params: Dict[str, Any] = {
@@ -2111,17 +2133,15 @@ class NSE:
             params["year"] = expiry.year
 
         if instrument in ("optidx", "optstk"):
-            if not option_type:
-                raise ValueError(
-                    "`option_type` param is required for Stock or Index options."
-                )
-            else:
-                params["optionType"] = option_type.upper()
+            if option_type not in ("ce", "pe"):
+                raise ValueError("`option_type` must be either 'ce' or 'pe'")
 
-            if strike_price:
+            params["optionType"] = option_type.upper()
+
+            if strike_price is not None:
                 params["strikePrice"] = strike_price
 
-        date_chunks = _utils.split_date_range(start_date, end_date)
+        date_chunks = _utils.split_date_range(start_date, end_date, max_chunk_size=90)
 
         data = []
 
