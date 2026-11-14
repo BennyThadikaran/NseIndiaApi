@@ -6,19 +6,24 @@ cookie handling, rate limits, and retries under flaky network conditions.
 
 **Python:** >= 3.8
 
-> [!IMPORTANT]
-> **Python 3.8 and 3.9 support restored in v5.1.0**
->
-> This release restores compatibility with Python 3.8 and 3.9 while retaining support for Python 3.10 and above.
->
-> If you use a shared rate limiter, see [Shared rate limiter configuration for Python 3.8 and 3.9](#python-38-and-39-users-shared-rate-limiter-configuration)
+## Important Notices
 
-> [!IMPORTANT]
-> **NseIndiaApi 5.0.0 is a major release with breaking changes.**
->
-> Before upgrading from **4.x**, please read the **[v5.0.0 Migration Guide](https://bennythadikaran.github.io/NseIndiaApi/migration.html)**.
->
-> The guide explains the breaking changes and how to migrate existing code to v5.0.0.
+[!CAUTION]
+Breaking changes in v5.0.0
+
+Upgrading from 4.x? Read the **[v5.0.0 Migration Guide](https://bennythadikaran.github.io/NseIndiaApi/migration.html)**.
+
+[!WARNING]
+NSE domain update — v5.1.3
+
+NSE has changed its website domain from `nseindia.com` to `nseindia.in`.
+Upgrade to `v5.1.3 or later` to maintain compatibility with NSE APIs.
+
+[!NOTE]
+Python 3.8 and 3.9 support restored in v5.1.0
+
+Python 3.8 and 3.9 are supported again, alongside Python 3.10 and above.
+See [Shared rate limiter configuration for Python 3.8 and 3.9](#python-38-and-39-users-shared-rate-limiter-configuration) if you use a shared rate limiter.
 
 If you ❤️ my work so far, please 🌟 this repo.
 
