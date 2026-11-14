@@ -115,7 +115,7 @@ class NSE:
     methods individually.
     """
 
-    __version__ = "5.1.2"
+    __version__ = "5.1.3"
     SEGMENT_EQUITY = "equities"
     SEGMENT_SME = "sme"
     SEGMENT_MF = "mf"
