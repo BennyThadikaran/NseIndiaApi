@@ -131,7 +131,7 @@ class NSE:
     UDIFF_SWITCH_DATE = date(2024, 7, 8)
 
     _option_index = ("banknifty", "nifty", "finnifty", "niftyit")
-    base_url = "https://www.nseindia.com/api"
+    base_url = "https://www.nseindia.in/api"
     next_api_base_url = f"{base_url}/NextApi"
 
     next_api_quote_url = f"{next_api_base_url}/apiClient/GetQuoteApi"
@@ -200,7 +200,7 @@ class NSE:
             "Accept": "*/*",
             "Accept-Language": "en-US,en;q=0.5",
             "Accept-Encoding": "gzip, deflate",
-            "Referer": "https://www.nseindia.com/get-quotes/equity?symbol=HDFCBANK",
+            "Referer": "https://www.nseindia.in/get-quotes/equity?symbol=HDFCBANK",
         }
 
         self.dir = _utils.prepare_path(download_folder, is_folder=True)

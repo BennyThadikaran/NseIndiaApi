@@ -191,7 +191,7 @@ class Transport:
            This method calls :meth:`request`, which is decorated with :func:`retry`
            and therefore subject to the configured retry policy and throttle.
         """
-        r = self.request("https://www.nseindia.com/option-chain")
+        r = self.request("https://www.nseindia.in/option-chain")
         return r.cookies
 
     @retry
