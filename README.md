@@ -8,22 +8,24 @@ cookie handling, rate limits, and retries under flaky network conditions.
 
 ## Important Notices
 
-[!CAUTION]
-Breaking changes in v5.0.0
+> [!CAUTION]
+> Breaking changes in v5.0.0.
+> 
+> Upgrading from 4.x? Read the **[v5.0.0 Migration Guide](https://bennythadikaran.github.io/NseIndiaApi/migration.html)**.
 
-Upgrading from 4.x? Read the **[v5.0.0 Migration Guide](https://bennythadikaran.github.io/NseIndiaApi/migration.html)**.
-
-[!WARNING]
-NSE domain update — v5.1.3
-
-NSE has changed its website domain from `nseindia.com` to `nseindia.in`.
+> [!WARNING]
+> NSE domain update — v5.1.3
+> 
+> NSE has changed its website domain from `nseindia.com` to `nseindia.in`.
 Upgrade to `v5.1.3 or later` to maintain compatibility with NSE APIs.
+> 
+> Delete any stale `cookies.txt` file before running.
 
-[!NOTE]
-Python 3.8 and 3.9 support restored in v5.1.0
-
-Python 3.8 and 3.9 are supported again, alongside Python 3.10 and above.
-See [Shared rate limiter configuration for Python 3.8 and 3.9](#python-38-and-39-users-shared-rate-limiter-configuration) if you use a shared rate limiter.
+> [!NOTE]
+> Python 3.8 and 3.9 support restored in v5.1.0
+> 
+> Python 3.8 and 3.9 are supported again, alongside Python 3.10 and above.
+> See [Shared rate limiter configuration for Python 3.8 and 3.9](#python-38-and-39-users-shared-rate-limiter-configuration) if you use a shared rate limiter.
 
 If you ❤️ my work so far, please 🌟 this repo.
 
