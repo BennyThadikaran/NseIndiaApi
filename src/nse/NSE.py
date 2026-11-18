@@ -826,6 +826,11 @@ class NSE:
     ) -> List[Dict]:
         """Get corporate financial-results filings (metadata) for a date range.
 
+        .. note::
+            This method provides financial results prior to 2025.
+            For financial results from 2025 onwards, use
+            :meth:`financial_results_with_xbrl` instead.
+
         Returns one row per filing with broadcast/filing dates, the quarter
         covered (``from_date`` / ``to_date``), ``relatingTo`` (e.g. "Third
         Quarter"), consolidated/audited flags, and an optional XBRL link.
