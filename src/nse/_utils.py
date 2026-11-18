@@ -9,6 +9,28 @@ from zipfile import ZipFile
 logger = logging.getLogger(__file__)
 
 
+def is_financial_quarter_end(dt: date) -> bool:
+    """Check whether a date is the last day of an Indian financial quarter.
+
+    Financial quarters follow the April–March financial year and end on
+    June 30, September 30, December 31, and March 31.
+
+    :param dt: Date to check.
+    :type dt: datetime.date
+    :return: True if the date is a financial quarter-end date, otherwise False.
+    :rtype: bool
+    """
+    if dt.month not in (3, 6, 9, 12):
+        return False
+
+    month = 1 if dt.month == 12 else dt.month + 1
+    year = dt.year + 1 if month == 1 else dt.year
+
+    last_day = date(year, month, 1) - timedelta(days=1)
+
+    return dt.day == last_day
+
+
 def prepare_path(path: Union[str, Path], is_folder: bool = False):
     """Resolve and validate a filesystem path.
 

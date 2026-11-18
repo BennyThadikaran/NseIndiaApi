@@ -1,5 +1,6 @@
 import logging
 import tempfile
+from collections.abc import Iterator
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, TypedDict, Union
@@ -14,6 +15,40 @@ from .transport import Transport
 logger = logging.getLogger(__name__)
 
 DATE_FORMAT = "%d-%m-%Y"
+
+
+class FinancialResultXBRL(TypedDict):
+    """Result of :meth:`nse.NSE.iter_financial_results_with_xbrl`."""
+
+    attFileSize: str
+    audited: str
+    broadcast_Date: Optional[str]
+    cmName: str
+    consolidated: str
+    creation_Date: str
+    diff: str
+    ixbrl: str
+    ixbrlFileSize: str
+    pdf_attach: Optional[str]
+    qe_Date: str
+    revised_Date: Optional[str]
+    revision_Remark: Optional[str]
+    seq_Id: str
+    smName: str
+    symbol: str
+    type: str
+    type_Sub: str
+    xbrl: str
+    xbrlFileSize: str
+
+
+class FinancialResultsXBRLResponse(TypedDict):
+    """Result of :meth:`nse.NSE.financial_results_with_xbrl`."""
+
+    data: List[FinancialResultXBRL]
+    size: int
+    page: int
+    totalCount: int
 
 
 class OHLCV(TypedDict):
@@ -850,6 +885,184 @@ class NSE:
         url = f"{self.base_url}/corporates-financial-results"
 
         return self._transport.request(url, params=params).json()
+
+    def financial_results_with_xbrl(
+        self,
+        symbol: Optional[str] = None,
+        index: Literal["equities", "sme"] = "equities",
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
+        period_ended: Optional[date] = None,
+        page_no: int = 1,
+    ) -> FinancialResultsXBRLResponse:
+        """Get integrated financial-results filings with XBRL data from 2025 onwards.
+
+        Returns financial-results filings containing company details, filing dates,
+        quarter-end dates, audit and consolidation status, revision information,
+        and links to XBRL, iXBRL, and PDF documents.
+
+        Results are returned in paginated responses, with 20 records per page by
+        default.
+
+        The ``period_ended`` parameter can be used to filter results by a specific
+        financial quarter-end date. Valid quarter-end dates are June 30,
+        September 30, December 31, and March 31, following the April–March
+        financial year.
+
+        If either ``from_date`` or ``to_date`` is provided, results are filtered
+        to the given broadcast-date window. When only one of the two is provided,
+        the other is defaulted by :func:`_utils.process_dates`: ``to_date``
+        defaults to today, and ``from_date`` defaults to 365 days before
+        ``to_date``.
+
+        If both are omitted, no date filter is applied and the API returns all
+        available results from 2025 onwards for all companies in the selected
+        market segment (``equities`` by default).
+
+        Reference URL:
+            https://www.nseindia.in/companies-listing/corporate-integrated-filing
+
+        :param symbol: Optional stock symbol to filter filings. Leading and
+            trailing whitespace is removed, and the symbol is converted to
+            uppercase.
+        :type symbol: str or None
+        :param index: Market segment to retrieve filings for. Must be either
+            ``equities`` or ``sme``. Defaults to ``equities``.
+        :type index: str
+        :param from_date: Optional start of the broadcast-date window
+            (inclusive). Defaults to 365 days before ``to_date`` if omitted.
+        :type from_date: datetime.date or None
+        :param to_date: Optional end of the broadcast-date window (inclusive).
+            Defaults to today if omitted.
+        :type to_date: datetime.date or None
+        :param period_ended: Optional financial quarter-end date to filter
+            results. Must be the last day of a financial quarter
+            (June 30, September 30, December 31, or March 31).
+            If omitted, results from all quarters are returned.
+        :type period_ended: datetime.date or None
+        :param page_no: Page number to retrieve. Starts at 1.
+            Each page contains up to 20 records. Defaults to 1.
+        :type page_no: int
+
+        :raises ValueError: If ``period_ended`` is not a valid financial
+            quarter-end date.
+        :raises ValueError: If ``page_no`` is less than 1.
+        :raises ValueError: If ``symbol`` is an empty or whitespace-only string.
+
+        :return: A paginated response containing filing records and pagination
+            metadata (total count, page number, and page size).
+        :rtype: FinancialResultsXBRLResponse
+        """
+        if period_ended and not _utils.is_financial_quarter_end(period_ended):
+            raise ValueError(
+                "period_ended must be the last day of a financial quarter "
+                "(June 30, September 30, December 31, or March 31)."
+            )
+
+        if page_no < 1:
+            raise ValueError("`page_no` must be greater than or equal to 1")
+
+        params = dict(
+            index=index,
+            type="Integrated Filing- Financials",
+            page=page_no,
+            size=20,
+            period_ended=period_ended.strftime("%d-%b-%Y") if period_ended else "all",
+        )
+
+        if symbol is not None:
+            symbol = symbol.strip()
+            if not symbol:
+                raise ValueError("`symbol` cannot be an empty string")
+
+            params["symbol"] = symbol.upper()
+
+        if from_date or to_date:
+            start_date, end_date = _utils.process_dates(
+                from_date,
+                to_date,
+                lookback_days=365,
+            )
+
+            params["from_date"] = start_date.strftime(DATE_FORMAT)
+            params["to_date"] = end_date.strftime(DATE_FORMAT)
+
+        return self._transport.request(
+            f"{self.base_url}/integrated-filing-results",
+            params,
+        ).json()
+
+    def iter_financial_results_with_xbrl(
+        self,
+        symbol: Optional[str] = None,
+        index: Literal["equities", "sme"] = "equities",
+        from_date: Optional[date] = None,
+        to_date: Optional[date] = None,
+        period_ended: Optional[date] = None,
+    ) -> Iterator[FinancialResultXBRL]:
+        """Iterate over integrated financial-results filings with XBRL data.
+
+        Automatically fetches subsequent pages and yields individual filing
+        records, eliminating the need to handle pagination manually.
+
+        For details on available filters, default behaviour, and parameter
+        descriptions, see :meth:`financial_results_with_xbrl`.
+
+        :param symbol: Optional stock symbol to filter filings.
+        :type symbol: str or None
+        :param index: Market segment to retrieve filings for.
+            Must be either ``equities`` or ``sme``. Defaults to ``equities``.
+        :type index: str
+        :param from_date: Optional start of the broadcast-date window (inclusive).
+        :type from_date: datetime.date or None
+        :param to_date: Optional end of the broadcast-date window (inclusive).
+        :type to_date: datetime.date or None
+        :param period_ended: Optional financial quarter-end date to filter results.
+        :type period_ended: datetime.date or None
+
+        :raises ValueError: If any supplied filter arguments are invalid.
+
+        :return: An iterator yielding individual financial-results filing records.
+        :rtype: Iterator[FinancialResultXBRL]
+
+        Example:
+            Iterate over all filings for a particular symbol::
+
+                for result in nse.iter_financial_results_with_xbrl(
+                    symbol="reliance"
+                ):
+                    print(result["symbol"], result["qe_Date"], result["xbrl"])
+
+            Filter filings by quarter-end date::
+
+                for result in nse.iter_financial_results_with_xbrl(
+                    period_ended=date(2026, 9, 30)
+                ):
+                    print(result["cmName"], result["xbrl"])
+        """
+        data = self.financial_results_with_xbrl(
+            symbol=symbol,
+            index=index,
+            from_date=from_date,
+            to_date=to_date,
+            period_ended=period_ended,
+        )
+
+        yield from data["data"]
+
+        total_pages = (data["totalCount"] + data["size"] - 1) // data["size"]
+
+        for page_no in range(2, total_pages + 1):
+            data = self.financial_results_with_xbrl(
+                symbol=symbol,
+                index=index,
+                from_date=from_date,
+                to_date=to_date,
+                period_ended=period_ended,
+                page_no=page_no,
+            )
+
+            yield from data["data"]
 
     def results_comparison(self, symbol: str) -> Dict:
         """Get quarterly financial results comparison (P&L summary) for a symbol.
