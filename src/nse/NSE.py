@@ -52,7 +52,7 @@ class FinancialResultsXBRLResponse(TypedDict):
 
 
 class OHLCV(TypedDict):
-    """Result of :meth:`NSE.equity_quote`."""
+    """Result of :meth:`nse.NSE.equity_quote`."""
 
     date: str
     open: float
@@ -81,7 +81,7 @@ class StrikeRow(TypedDict):
 
 
 class CompiledOptionChain(TypedDict):
-    """Result of :meth:`NSE.compile_option_chain`."""
+    """Result of :meth:`nse.NSE.compile_option_chain`."""
 
     expiry: str
     timestamp: str
