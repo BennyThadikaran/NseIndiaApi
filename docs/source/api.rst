@@ -180,6 +180,10 @@ Corporate Announcements and Actions
 
 .. automethod:: nse.NSE.financial_results
 
+.. automethod:: nse.NSE.financial_results_with_xbrl
+
+.. automethod:: nse.NSE.iter_financial_results_with_xbrl
+
 .. automethod:: nse.NSE.results_comparison
 
 Futures and Options (FnO)
@@ -212,8 +216,6 @@ checkers and editor autocomplete; at runtime they behave like ordinary
 OHLCV
 -----
 
-Result of :meth:`NSE.equity_quote`.
-
 .. autoclass:: nse.NSE.OHLCV
    :members:
    :undoc-members:
@@ -236,5 +238,19 @@ OptionLeg
 ---------
 
 .. autoclass:: nse.NSE.OptionLeg
+   :members:
+   :undoc-members:
+
+FinancialResultXBRL
+-------------------
+
+.. autoclass:: nse.NSE.FinancialResultXBRL
+   :members:
+   :undoc-members:
+
+FinancialResultsXBRLResponse
+----------------------------
+
+.. autoclass:: nse.NSE.FinancialResultsXBRLResponse
    :members:
    :undoc-members:
