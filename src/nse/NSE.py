@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 from zipfile import ZipFile
 
+from .hosts import NSE_HOST
 from .transport import Transport
 
 
@@ -44,7 +45,7 @@ class NSE:
     UDIFF_SWITCH_DATE = datetime(2024, 7, 8).date()
 
     _optionIndex = ("banknifty", "nifty", "finnifty", "niftyit")
-    base_url = "https://www.nseindia.com/api"
+    base_url = f"{NSE_HOST}/api"
     next_api_url = f"{base_url}/NextApi/apiClient/GetQuoteApi"
     archive_url = "https://nsearchives.nseindia.com"
 
@@ -63,7 +64,7 @@ class NSE:
             "Accept": "*/*",
             "Accept-Language": "en-US,en;q=0.5",
             "Accept-Encoding": "gzip, deflate",
-            "Referer": "https://www.nseindia.com/get-quotes/equity?symbol=HDFCBANK",
+            "Referer": f"{NSE_HOST}/get-quotes/equity?symbol=HDFCBANK",
         }
 
         self.dir = NSE._getPath(download_folder, isFolder=True)
@@ -540,7 +541,6 @@ class NSE:
         url = f"{self.base_url}/corporate-announcements"
 
         return self._transport.request(url, params=params).json()
-        
 
     def event_calendar(
         self, index="equities") -> List[Dict]:

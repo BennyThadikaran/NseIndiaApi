@@ -4,6 +4,8 @@ from pathlib import Path
 from typing import Any, Dict
 
 import requests
+
+from .hosts import NSE_HOST
 from mthrottle import Throttle
 
 throttleConfig = {
@@ -29,7 +31,7 @@ class RequestTransport:
         self._session.cookies.update(self._getCookies())
 
     def _setCookies(self):
-        r = self.request("https://www.nseindia.com/option-chain")
+        r = self.request(f"{NSE_HOST}/option-chain")
 
         cookies = r.cookies
         self.cookie_path.write_text(
