@@ -180,6 +180,16 @@ Corporate Announcements and Actions
 
 .. automethod:: nse.NSE.results_comparison
 
+.. automethod:: nse.NSE.integrated_filing_results
+
+.. automethod:: nse.NSE.financial_results_xbrl
+
+.. automethod:: nse.NSE.download_xbrl
+
+.. automethod:: nse.NSE.fetch_xbrl_filings
+
+.. automethod:: nse.NSE.xbrl_filename
+
 Futures and Options (FnO)
 -------------------------
 

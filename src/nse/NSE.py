@@ -732,6 +732,546 @@ class NSE:
             params=dict(symbol=symbol.upper()),
         ).json()
 
+    INTEGRATED_FINANCIALS = "Integrated Filing- Financials"
+    INTEGRATED_GOVERNANCE = "Integrated Filing- Governance"
+
+    def integrated_filing_results(
+        self,
+        symbol: Optional[str] = None,
+        segment: Literal["equities", "sme"] = "equities",
+        filing_type: Optional[str] = INTEGRATED_FINANCIALS,
+        from_date: Optional[datetime] = None,
+        to_date: Optional[datetime] = None,
+        page_size: int = 500,
+    ) -> List[Dict]:
+        """Get SEBI Integrated Filing records (metadata) for a date range.
+
+        Since the quarter ended March 2025, listed companies file quarterly
+        results as an *Integrated Filing (Financials)*. These filings are not
+        returned by :meth:`financial_results`, which stops at the December 2024
+        quarter. Each row has the quarter end (``qe_Date``), ``consolidated``
+        (``Consolidated`` / ``Standalone``), ``type_Sub`` (``Original`` or
+        ``Revision``), ``broadcast_Date`` (originals) or ``revised_Date``
+        (revisions), and links to the raw ``xbrl`` file and the ``ixbrl`` page.
+
+        All pages are fetched and concatenated.
+
+        Reference URL:
+            https://www.nseindia.com/companies-listing/corporate-integrated-filing
+
+        :param symbol: Optional stock symbol to filter filings
+        :type symbol: str or None
+        :param segment: ``equities`` or ``sme``. Default ``equities``
+        :type segment: str
+        :param filing_type: :attr:`INTEGRATED_FINANCIALS` (default),
+            :attr:`INTEGRATED_GOVERNANCE`, or ``None`` for both
+        :type filing_type: str or None
+        :param from_date: Optional start of the date window (inclusive)
+        :type from_date: datetime.datetime
+        :param to_date: Optional end of the date window (inclusive)
+        :type to_date: datetime.datetime
+        :param page_size: Rows requested per page. Default 500
+        :type page_size: int
+        :raise ValueError: if ``from_date`` is greater than ``to_date``
+        :return: A list of integrated-filing records
+        :rtype: list[dict]
+        """
+        params: Dict[str, Any] = dict(index=segment, size=page_size)
+
+        if symbol:
+            params["symbol"] = symbol.upper()
+
+        if filing_type:
+            params["type"] = filing_type
+
+        if from_date and to_date:
+            if from_date > to_date:
+                raise ValueError("'from_date' cannot be greater than 'to_date'")
+
+            params.update(
+                from_date=from_date.strftime("%d-%m-%Y"),
+                to_date=to_date.strftime("%d-%m-%Y"),
+            )
+
+        url = f"{self.base_url}/integrated-filing-results"
+        rows: List[Dict] = []
+        page = 1  # NSE takes 1-based pages (and echoes them back 0-based)
+
+        while True:
+            data = self._transport.request(url, params={**params, "page": page}).json()
+
+            if isinstance(data, list):  # unpaged response
+                return data
+
+            batch = data.get("data") or []
+            rows.extend(batch)
+            total = int(data.get("totalCount") or 0)
+
+            if not batch or len(batch) < page_size or len(rows) >= total:
+                return rows
+
+            page += 1
+
+    # ------------------------------------------------------------------
+    # Financial-results XBRL helpers
+    # ------------------------------------------------------------------
+
+    _NSE_DT_FMTS = ("%d-%b-%Y %H:%M:%S", "%d-%b-%Y %H:%M", "%d-%b-%Y")
+
+    @staticmethod
+    def _parse_nse_dt(value: Optional[str]) -> Optional[datetime]:
+        """Parse NSE date strings like ``16-Jan-2025 20:20:21`` or ``01-Oct-2024``.
+
+        Returns ``None`` for empty, ``-`` or unparseable values.
+        """
+        if not value or value.strip() in ("-", ""):
+            return None
+
+        value = value.strip()
+
+        for fmt in NSE._NSE_DT_FMTS:
+            try:
+                return datetime.strptime(value, fmt)
+            except ValueError:
+                continue
+
+        return None
+
+    @staticmethod
+    def _normalise_result_filing(row: Dict) -> Optional[Dict]:
+        """Add normalised fields to a ``financial_results`` row.
+
+        Returns ``None`` if the row has no usable XBRL link or period dates.
+
+        Added keys:
+
+        - ``basis`` - ``"C"`` (consolidated) or ``"S"`` (standalone)
+        - ``period_from`` / ``period_to`` - ``datetime.date``
+        - ``broadcast_dt`` - ``datetime.datetime`` when NSE disseminated the
+          filing. **Use this as the point-in-time availability timestamp**
+          (not ``period_to``) to avoid look-ahead bias in backtests.
+        """
+        xbrl = (row.get("xbrl") or "").strip()
+
+        if not xbrl or xbrl == "-" or not xbrl.lower().endswith(".xml"):
+            return None
+
+        period_from = NSE._parse_nse_dt(row.get("fromDate"))
+        period_to = NSE._parse_nse_dt(row.get("toDate"))
+
+        if period_from is None or period_to is None:
+            return None
+
+        broadcast_dt = (
+            NSE._parse_nse_dt(row.get("exchdisstime"))
+            or NSE._parse_nse_dt(row.get("broadCastDate"))
+            or NSE._parse_nse_dt(row.get("filingDate"))
+        )
+
+        consolidated = (row.get("consolidated") or "").strip().lower()
+        basis = "C" if consolidated == "consolidated" else "S"
+
+        out = dict(row)
+        out.update(
+            xbrl=xbrl,
+            basis=basis,
+            period_from=period_from.date(),
+            period_to=period_to.date(),
+            broadcast_dt=broadcast_dt,
+            source="results",
+        )
+        return out
+
+    @staticmethod
+    def _normalise_integrated_filing(row: Dict) -> Optional[Dict]:
+        """Map an :meth:`integrated_filing_results` row to the record shape of
+        :meth:`_normalise_result_filing`.
+
+        Returns ``None`` for rows without an XBRL file or quarter end, and
+        for non-financial (governance) filings.
+
+        - ``period_from`` is the first day of the quarter ending ``qe_Date``.
+          The XBRL file also holds year-to-date figures under their own contexts.
+        - ``broadcast_dt`` is ``revised_Date`` for revisions, otherwise
+          ``broadcast_Date`` (falling back to ``creation_Date``).
+        - ``cumulative`` is set to ``Non-cumulative`` and ``relatingTo`` is
+          left as NSE sends it (absent), so filenames match the older filings.
+        """
+        if (row.get("type") or NSE.INTEGRATED_FINANCIALS) != NSE.INTEGRATED_FINANCIALS:
+            return None
+
+        xbrl = (row.get("xbrl") or "").strip()
+
+        if not xbrl or xbrl == "-" or not xbrl.lower().endswith(".xml"):
+            return None
+
+        period_to = NSE._parse_nse_dt(row.get("qe_Date"))
+
+        if period_to is None:
+            return None
+
+        period_to = period_to.date()
+        start_month = (period_to.month - 3) % 12 + 1
+        start_year = period_to.year - (1 if start_month > period_to.month else 0)
+        period_from = date(start_year, start_month, 1)
+
+        revision = (row.get("type_Sub") or "").strip().lower() == "revision"
+        stamps = ("revised_Date", "broadcast_Date", "creation_Date") if revision else (
+            "broadcast_Date", "creation_Date", "revised_Date")
+        broadcast_dt = next(
+            (dt for dt in (NSE._parse_nse_dt(row.get(k)) for k in stamps) if dt), None
+        )
+
+        consolidated = (row.get("consolidated") or "").strip().lower()
+
+        out = dict(row)
+        out.update(
+            xbrl=xbrl,
+            basis="C" if consolidated == "consolidated" else "S",
+            period_from=period_from,
+            period_to=period_to,
+            broadcast_dt=broadcast_dt,
+            cumulative="Non-cumulative",
+            seqNumber=row.get("seq_Id"),
+            source="integrated",
+        )
+        return out
+
+    def financial_results_xbrl(
+        self,
+        symbol: str,
+        from_date: Optional[datetime] = None,
+        to_date: Optional[datetime] = None,
+        period: Literal["quarterly", "annual", "half-yearly"] = "quarterly",
+        basis: Literal["consolidated", "standalone", "both"] = "both",
+        latest_only: bool = True,
+        segment: Literal["equities", "sme"] = "equities",
+        source: Literal["both", "results", "integrated"] = "both",
+    ) -> List[Dict]:
+        """List financial-results filings that carry an XBRL file, for one symbol.
+
+        NSE serves results from two endpoints:
+
+        - :meth:`financial_results` - filings up to the December 2024 quarter
+          (``source="results"``)
+        - :meth:`integrated_filing_results` - SEBI Integrated Filing
+          (Financials), from the March 2025 quarter on
+          (``source="integrated"``; quarterly only)
+
+        By default both are queried and merged. Each record's ``source`` key
+        says which endpoint it came from.
+
+        On top of the raw endpoints this method:
+
+        - Splits long date ranges into 1-year chunks for the NSE API.
+        - Drops filings without an XBRL link.
+        - Filters by consolidated / standalone basis.
+        - Collapses revised filings: with ``latest_only=True`` only the most
+          recently disseminated filing per (period, basis, cumulative) is
+          kept, with ``revision_count`` recording how many versions existed.
+        - Adds normalised ``basis``, ``period_from``, ``period_to`` and
+          ``broadcast_dt`` keys (see :meth:`_normalise_result_filing`).
+
+        ``from_date`` / ``to_date`` filter on the **broadcast date** of the
+        filing, not the reporting period. If both are omitted, NSE returns
+        filings for the current year to date.
+
+        Results are sorted by ``period_to`` then ``broadcast_dt`` ascending.
+
+        .. code-block:: python
+
+            from datetime import datetime
+
+            with NSE("./downloads") as nse:
+                filings = nse.financial_results_xbrl(
+                    "LINDEINDIA",
+                    from_date=datetime(2024, 1, 1),
+                    to_date=datetime.now(),
+                    basis="consolidated",
+                )
+
+                for f in filings:
+                    print(f["period_to"], f["basis"], f["broadcast_dt"], f["xbrl"])
+
+        :param symbol: Stock symbol e.g. ``LINDEINDIA``
+        :type symbol: str
+        :param from_date: Start of broadcast-date window (inclusive)
+        :type from_date: datetime.datetime or None
+        :param to_date: End of broadcast-date window (inclusive)
+        :type to_date: datetime.datetime or None
+        :param period: One of ``quarterly``, ``annual`` or ``half-yearly``.
+            Default ``quarterly``
+        :type period: str
+        :param basis: ``consolidated``, ``standalone`` or ``both``. Default ``both``
+        :type basis: str
+        :param latest_only: Keep only the latest revision per period. Default True
+        :type latest_only: bool
+        :param segment: ``equities`` or ``sme``. Default ``equities``
+        :type segment: str
+        :param source: ``both`` (default), ``results`` or ``integrated``.
+            Integrated filings are only queried for ``period="quarterly"``.
+        :type source: str
+        :raise ValueError: if only one of ``from_date`` / ``to_date`` is given,
+            or ``from_date`` is greater than ``to_date``
+        :return: List of normalised filing records
+        :rtype: list[dict]
+        """
+        if (from_date is None) != (to_date is None):
+            raise ValueError("Provide both 'from_date' and 'to_date', or neither")
+
+        if from_date and to_date and from_date > to_date:
+            raise ValueError("'from_date' cannot be greater than 'to_date'")
+
+        records: List[Dict] = []
+
+        if source in ("both", "results"):
+            records.extend(
+                self._results_xbrl_records(symbol, from_date, to_date, period, segment)
+            )
+
+        if source in ("both", "integrated") and period == "quarterly":
+            rows = self.integrated_filing_results(
+                symbol=symbol,
+                segment=segment,
+                from_date=from_date,
+                to_date=to_date,
+            )
+            records.extend(
+                rec for rec in map(NSE._normalise_integrated_filing, rows) if rec
+            )
+
+        return NSE._select_xbrl_records(records, basis, latest_only)
+
+    def _results_xbrl_records(
+        self,
+        symbol: str,
+        from_date: Optional[datetime],
+        to_date: Optional[datetime],
+        period: str,
+        segment: str,
+    ) -> List[Dict]:
+        """Normalised XBRL records from :meth:`financial_results`, fetched in
+        1-year chunks."""
+        if from_date and to_date:
+            chunks = [
+                (datetime.combine(s, datetime.min.time()),
+                 datetime.combine(e, datetime.min.time()))
+                for s, e in NSE._split_date_range(
+                    from_date.date() if isinstance(from_date, datetime) else from_date,
+                    to_date.date() if isinstance(to_date, datetime) else to_date,
+                    max_chunk_size=365,
+                )
+            ]
+        else:
+            chunks = [(None, None)]
+
+        rows: List[Dict] = []
+
+        for start, end in chunks:
+            data = self.financial_results(
+                segment=segment,
+                period=period,
+                symbol=symbol,
+                from_date=start,
+                to_date=end,
+            )
+
+            # NSE occasionally wraps the list in {"data": [...]}
+            if isinstance(data, dict):
+                data = data.get("data", [])
+
+            rows.extend(data or [])
+
+        return [rec for rec in map(NSE._normalise_result_filing, rows) if rec]
+
+    @staticmethod
+    def _select_xbrl_records(
+        candidates: List[Dict], basis: str, latest_only: bool
+    ) -> List[Dict]:
+        """De-duplicate by URL, filter by basis, collapse revisions, sort."""
+        records: List[Dict] = []
+        seen_urls = set()
+
+        for rec in candidates:
+            if rec["xbrl"] in seen_urls:
+                continue
+
+            if basis == "consolidated" and rec["basis"] != "C":
+                continue
+
+            if basis == "standalone" and rec["basis"] != "S":
+                continue
+
+            seen_urls.add(rec["xbrl"])
+            records.append(rec)
+
+        if latest_only:
+            groups: Dict[Tuple, List[Dict]] = {}
+
+            for rec in records:
+                key = (
+                    rec["period_from"],
+                    rec["period_to"],
+                    rec["basis"],
+                    (rec.get("cumulative") or "").strip().lower(),
+                )
+                groups.setdefault(key, []).append(rec)
+
+            records = []
+
+            for versions in groups.values():
+                versions.sort(
+                    key=lambda r: (
+                        r["broadcast_dt"] or datetime.min,
+                        int(r.get("seqNumber") or 0),
+                    )
+                )
+                latest = versions[-1]
+                latest["revision_count"] = len(versions)
+                records.append(latest)
+
+        records.sort(
+            key=lambda r: (r["period_to"], r["broadcast_dt"] or datetime.min, r["basis"])
+        )
+
+        return records
+
+    @staticmethod
+    def xbrl_filename(record: Dict) -> str:
+        """Deterministic local filename for an XBRL filing record.
+
+        Format: ``{SYMBOL}_{period_to:YYYYMMDD}_{C|S}_{N|Y}_{broadcast:YYYYMMDDHHMMSS}.xml``
+        where the fourth field is ``Y`` for cumulative (e.g. half-year/annual)
+        figures. Embedding the broadcast timestamp keeps every revision as a
+        separate immutable file.
+
+        :param record: A record from :meth:`financial_results_xbrl`
+        :type record: dict
+        :rtype: str
+        """
+        symbol = (record.get("symbol") or "UNKNOWN").upper()
+        period_to = record["period_to"].strftime("%Y%m%d")
+        cumulative = (record.get("cumulative") or "").strip().lower()
+        cum_flag = "N" if cumulative in ("", "non-cumulative") else "Y"
+        bdt = record.get("broadcast_dt")
+        bstamp = bdt.strftime("%Y%m%d%H%M%S") if bdt else "00000000000000"
+
+        return f"{symbol}_{period_to}_{record['basis']}_{cum_flag}_{bstamp}.xml"
+
+    def download_xbrl(
+        self,
+        record: Union[Dict, str],
+        folder: Union[str, Path, None] = None,
+        overwrite: bool = False,
+    ) -> Path:
+        """Download one financial-results XBRL file and validate it is XML.
+
+        Already-downloaded files are skipped unless ``overwrite=True``, so the
+        method is safe to re-run over the same filings.
+
+        :param record: A record from :meth:`financial_results_xbrl`, or a raw
+            XBRL URL (saved under its original filename).
+        :type record: dict or str
+        :param folder: Destination folder. Defaults to ``download_folder``.
+        :type folder: pathlib.Path or str or None
+        :param overwrite: Re-download even if the file exists. Default False
+        :type overwrite: bool
+        :raise RuntimeError: if NSE returns HTML or a non-XML payload
+        :return: Path to the saved XML file
+        :rtype: pathlib.Path
+        """
+        folder = NSE._getPath(folder, isFolder=True) if folder else self.dir
+
+        if isinstance(record, str):
+            url = record
+            target = folder / url.split("/")[-1]
+        else:
+            url = record["xbrl"]
+            target = folder / NSE.xbrl_filename(record)
+
+        if target.exists() and target.stat().st_size > 0 and not overwrite:
+            return target
+
+        file = self._transport.download(url, folder)
+
+        try:
+            with file.open("rb") as f:
+                head = f.read(2048).lstrip()
+        except FileNotFoundError as e:
+            raise RuntimeError(f"Failed to download XBRL: {url}") from e
+
+        if not (head.startswith(b"<?xml") or b"<xbrl" in head.lower()):
+            file.unlink(missing_ok=True)
+            raise RuntimeError(f"Downloaded file is not XBRL/XML: {url}")
+
+        if file != target:
+            file.replace(target)
+
+        return target
+
+    def fetch_xbrl_filings(
+        self,
+        symbol: str,
+        folder: Union[str, Path],
+        from_date: Optional[datetime] = None,
+        to_date: Optional[datetime] = None,
+        period: Literal["quarterly", "annual", "half-yearly"] = "quarterly",
+        basis: Literal["consolidated", "standalone", "both"] = "both",
+        latest_only: bool = True,
+        overwrite: bool = False,
+        source: Literal["both", "results", "integrated"] = "both",
+    ) -> List[Dict]:
+        """List and download all XBRL filings for a symbol in one call.
+
+        Combines :meth:`financial_results_xbrl` and :meth:`download_xbrl`, so
+        by default both the older results filings and the Integrated Filings
+        (March 2025 quarter on) are fetched. Files are saved under
+        ``folder/{SYMBOL}/``. A failed download does
+        not abort the batch; it is recorded on the record instead.
+
+        Each returned record gains:
+
+        - ``local_path`` - ``pathlib.Path`` of the XML, or ``None`` on failure
+        - ``error`` - error message string, or ``None``
+
+        .. code-block:: python
+
+            from datetime import datetime
+
+            with NSE("./downloads") as nse:
+                recs = nse.fetch_xbrl_filings(
+                    "LINDEINDIA",
+                    folder="~/IN_stocks_fundamentals/raw/xbrl",
+                    from_date=datetime(2023, 4, 1),
+                    to_date=datetime.now(),
+                    basis="consolidated",
+                )
+
+        :return: List of filing records with download results
+        :rtype: list[dict]
+        """
+        dest = NSE._getPath(folder, isFolder=True) / symbol.upper()
+
+        records = self.financial_results_xbrl(
+            symbol,
+            from_date=from_date,
+            to_date=to_date,
+            period=period,
+            basis=basis,
+            latest_only=latest_only,
+            source=source,
+        )
+
+        for rec in records:
+            try:
+                rec["local_path"] = self.download_xbrl(rec, dest, overwrite=overwrite)
+                rec["error"] = None
+            except (RuntimeError, ConnectionError, TimeoutError) as e:
+                rec["local_path"] = None
+                rec["error"] = str(e)
+
+        return records
+
     def shareholding(
         self, symbol: str, index: Literal["equities", "sme"] = "equities"
     ) -> List[dict]:
