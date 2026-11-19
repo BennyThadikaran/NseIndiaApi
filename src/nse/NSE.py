@@ -859,6 +859,22 @@ class NSE:
             f"{self.base_url}/live-analysis-volume-gainers"
         ).json()
 
+    def listTradedStocks(self) -> dict:
+        """
+        All stocks traded today (about 3,500, every series), live during the session and as of the last trade
+        after it. Same endpoint as nselib's ``capital_market.total_traded_stocks``.
+
+        Reference Page:
+            https://www.nseindia.com/market-data/stocks-traded
+
+        :return: A dictionary. ``count`` has the market summary (Advances, Declines, Unchange, Total) and
+            ``data`` a list of stocks, each with ``symbol``, ``series``, ``pchange``, ``lastPrice``,
+            ``previousClose``, ``totalTradedVolumecsv`` (shares) and ``totalTradedValuecsv`` (rupees).
+            The keys without the ``csv`` suffix are display strings such as ``"60.80 Cr"``.
+        """
+        data = self._transport.request(f"{self.base_url}/live-analysis-stocksTraded").json()
+        return data.get("total", data)
+
     def gainers(self, data: Dict, count: Optional[int] = None) -> List[Dict]:
         """Top gainers by percent change above zero.
 
